@@ -1,0 +1,46 @@
+# 06 — Roadmap
+
+Status key: **[P]** proposed unless marked. Each milestone ends with a **human playtest/review checkpoint** (see `04_AGENT_WORKFLOW.md`). Current milestone: **M0**.
+
+## M0 — Foundation
+- Create repo layout (`00_INDEX.md`), Godot project, test framework chosen and wired, headless test command, data validator skeleton, CI/build script.
+- Fill the **Commands** section of `CLAUDE.md`.
+- Done when: an agent can clone, run the tests headless, and export a Windows build with one command each.
+
+## M1 — Horde and performance spike
+- Isometric camera, ground plane, billboarded sprite rendering via MultiMesh, spatial hash, placeholder enemies chasing a center point.
+- Benchmark scene and perf report.
+- Done when: budgets in `02_TECH_ARCHITECTURE.md` measured on PC; Steam Deck result recorded (or estimated with a note); a go/no-go on the 3D billboard approach vs pure 2D fallback is written in `DECISIONS.md`.
+- Checkpoint: human sees the horde running and judges feel and readability.
+
+## M2 — Core loop vertical slice (placeholder art)
+- Guardian at center with HP and 2 active skills, 3 tower waifu types, gold drops, real-time placement, build phase between waves, one boss, win/lose screens.
+- Gamepad and mouse both work.
+- Done when: a full 15-minute run is playable start to finish.
+- Checkpoint: playtest; first fun/no-fun verdict.
+
+## M3 — Roguelite layer
+- XP and level-up 3-card draft, tower upgrades, synergy rules in data, hub screen with meta currency and permanent upgrades, save system, win-unlock of the Guardian as a tower.
+- Headless balance runner and first balance report.
+- Checkpoint: playtest + balance review.
+
+## M4 — Art pipeline v1
+- Art spike: pick ComfyUI workflows/models, build Asset Forge CLI, validators, manifest.
+- First complete waifu through the whole pipeline (design to layered parts to rigged to in-game), first horde enemy set from sprite sheets.
+- External import folder and spec tested with at least one asset.
+- Checkpoint: art approval of the style and the first characters.
+
+## M5 — Content
+- Roster to a target of N waifus (**N is open**), enemy archetypes, mini-bosses and final boss, outfits and bond system, wave/spawn tuning.
+- Checkpoints: art approvals, balance review, playtests.
+
+## M6 — Polish and Steam readiness
+- UI/UX pass, audio, VFX, settings, Steam Deck pass, GodotSteam (achievements, cloud saves), store assets, demo build.
+- Checkpoint: Steam page and marketing validated by the owner.
+
+## M7 — Early Access launch
+- Release build, store page published by the owner, post-launch plan (patches, new waifus/outfits).
+
+## Rules for the roadmap
+- Scope changes go through `DECISIONS.md`.
+- Agents work on the current milestone only; later milestones are not started early unless a task is explicitly created.
