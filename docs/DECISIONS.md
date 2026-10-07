@@ -29,3 +29,7 @@ Format: `ID | date | decision | status | notes`. Status: DECIDED (owner confirme
 | D-023 | 2026-10-07 | Each run's Guardian is the next locked waifu to rescue; victory unlocks her as a tower. Unlocked waifus are towers only | DECIDED | Refines D-013 |
 | D-024 | 2026-10-07 | Only special story bosses are recruitable; regular bosses are just enemies | DECIDED | Which bosses are recruitable is OPEN |
 | D-025 | 2026-10-07 | Launch roster target: 8-10 waifus at Early Access | DECIDED | Includes the waifus unlocked as Guardians |
+| D-026 | 2026-10-07 | Before each run the player picks the Guardian from a few locked waifus (not a fixed order, not random) | DECIDED | Refines D-023. How many are offered, and how they are chosen: OPEN |
+| D-027 | 2026-10-07 | Replay value after full unlock: difficulty tiers, endless mode, challenge modifiers | DECIDED | Replaying with an already-unlocked waifu as Guardian is NOT part of the plan |
+| D-028 | 2026-10-07 | No story or campaign: pure gameplay; waifus only have personality lines (barks) | DECIDED | Supersedes the "story" wording in D-024: "story bosses" now means named rival bosses, not a narrative |
+| D-029 | 2026-10-07 | A daily cloud routine reviews the docs, updates OPEN_QUESTIONS.md and opens a pull request; the owner answers in a session | DECIDED | See `04_AGENT_WORKFLOW.md` section 5 |

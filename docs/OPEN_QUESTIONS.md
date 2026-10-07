@@ -3,12 +3,11 @@
 Agents: do not implement items here without an owner answer. The design assistant converts these into forms for the owner.
 
 ## Design
-1. **Guardian order:** is the order of rescue fixed (story) or does it depend on the run (random/chosen among locked)? Decided so far: always a locked waifu (D-023).
-2. **Which bosses are recruitable?** Only special story bosses (D-024); how many, and when they appear.
+1. **Guardian pick details:** how many locked waifus are offered before a run (2? 3?), and are they the same each time or drawn at random from the locked pool? Decided so far: the player picks among a few locked waifus (D-026).
+2. **Which bosses are recruitable?** Only named "rival" bosses (D-024); how many, and when they appear.
 3. **Roles of the 8-10 launch waifus** (target count decided in D-025).
-3b. **Replay value after full unlock:** what do runs offer once every waifu is unlocked (endless mode, difficulty tiers, challenge modifiers)?
-4. **Outfit system depth:** pure stat trade-offs, or also bond-gated story snippets?
-5. **Story/setting:** is there a world/lore premise (why the horde, who is she)?
+4. **Outfit system depth:** pure stat trade-offs only (no story snippets, see D-028), or also bond-gated extras such as new voice lines?
+5. **Endgame details:** how many difficulty tiers, which challenge modifiers, scoring and rewards for endless mode (modes decided in D-027).
 6. **Audio direction:** music style, voice acting (none/Japanese/English), SFX sourcing.
 
 ## Tech

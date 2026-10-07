@@ -20,7 +20,9 @@ Tone: cute and comedic fantasy. **[D]** Characters are adult and stylized (chibi
 - Escalation: continuous spawn curve with waves; a **mini-boss every ~5 minutes** **[P]** and a **final boss at the end**.
 - Win: survive until the final boss is defeated. Lose: Guardian HP = 0.
 - **Win reward:** the Guardian protected in this run is unlocked as a **tower waifu** for future runs.
-- **Guardian each run:** the next **locked waifu** you "rescue". Unlocked waifus are towers only. **[D]** Rescue order (fixed vs varied) and replay value after everyone is unlocked: **[O]**, see `OPEN_QUESTIONS.md`.
+- **Guardian each run:** before the run, the player **picks the Guardian from a few locked waifus** she wants to "rescue". Unlocked waifus are towers only. **[D]** How many are offered and how they are drawn: **[O]**, see `OPEN_QUESTIONS.md`.
+- **After everyone is unlocked (replay value):** **difficulty tiers**, **endless mode** and **challenge modifiers** **[D]**. Details of each: **[O]**.
+- **No story or campaign.** Pure gameplay; waifus only have short personality lines (barks). **[D]**
 - **Roster target at Early Access launch: 8-10 waifus.** **[D]**
 
 ## 4. Player actions **[D]**
