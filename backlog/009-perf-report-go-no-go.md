@@ -1,8 +1,8 @@
 # 009 — Perf report, Steam Deck result and the 3D billboard go/no-go
-- Status: planned
+- Status: review
 - Milestone: M1
 - Depends on: 008
-- PR: -
+- PR: #13
 
 ## Goal
 Measure the budgets, record the Steam Deck result (or an estimate with a note), and write the go/no-go on the 3D billboard approach versus the pure 2D fallback.
