@@ -82,7 +82,7 @@ All displayed text (names, barks, card text) is stored as localisation keys, nev
 ## 7. Platform / Steam integration **[P]**
 - **GodotSteam** (achievements, cloud saves, later Steam Input).
 - Steam Deck: gamepad-first UI, readable text at 1280x800, no mouse-only interactions.
-- Saves: local JSON with versioning and migration.
+- Saves: local JSON with versioning and migration. The meta profile is saved; a run is not resumable after the app is closed except for an automatic suspend save at card and wave boundaries (D-053). **[D]**
 
 ## 8. Build and CI **[D]**
 - The repo is on GitHub. Builds, headless tests, balance runs and perf benchmarks run on the owner's PC (D-035), not in cloud CI. Minimum: a scripted `build.sh` (or equivalent) for the Windows export + tests, runnable by an agent on the owner's machine. Nightly runs are triggered by desktop-app scheduled tasks, or manually (D-049). GitHub Actions can be added later without changing the scripts.

@@ -30,6 +30,10 @@ Last reviewed: 2026-10-08 (daily docs review; owner answers recorded the same da
 | Q-17 Guardian offer | 3 locked waifus, fixed until one is rescued | D-050 |
 | Q-18 Cards vs gold | Cards unlock the right to build; gold pays | D-051 |
 | Q-19 Meta currency | Hearts + per-waifu bond | D-052 |
+| Q-20 Saves | Profile + suspend save | D-053 |
+| Q-21 Outfit depth | Cosmetic only, no effect | D-054 (new question: Q-36) |
+| Q-22 Rival bosses | 2 rivals at launch | D-055 |
+| Q-23 Who writes the roster | Agent drafts, owner approves | D-056 (task: `backlog/001-roster-proposal.md`) |
 | Q-24 Chibi vs adult look | No chibi, adult proportions everywhere | D-030 |
 | Q-35 How local routines run | Desktop app scheduled tasks, or manually | D-049 |
 | Q-33 Camera controls | Pan + zoom, cursor at screen centre | D-041 |
@@ -39,31 +43,12 @@ Last reviewed: 2026-10-08 (daily docs review; owner answers recorded the same da
 
 ## A. Blocks M3 (roguelite layer)
 
-### Q-20 Save system scope (blocks M3)
-Runs last 15-20 min; the Steam Deck can suspend mid-run.
-- A) **Save only the meta profile; a run is lost if the app is closed, except an automatic "suspend save" at card/wave boundaries** ★
-- B) Profile only, no mid-run save.
-- C) Full deterministic run resume (replay seed + commands) — possible thanks to the deterministic sim, more work.
-
-### Q-21 Outfit system depth (existing question)
-- A) **Pure stat trade-offs; bond unlocks new outfits only** ★
-- B) Stat trade-offs plus bond-gated extra barks (voice-less lines).
-- C) Stat trade-offs plus per-outfit passive effects (more build depth, more data to balance).
-Related: do outfits also change the tower's attack, or only stats? (★ only stats and visuals.)
-
-### Q-22 Rival bosses (existing question)
-Which bosses are recruitable (D-024), how many, and when.
-- A) **2 rival bosses at launch, appearing as the mini-boss at about 10:00 on higher difficulty tiers; defeating one for the first time unlocks her** ★
-- B) 1 rival at launch, on any difficulty, tied to a specific Guardian.
-- C) None at launch; added after Early Access.
-Also: do rival waifus count in the 8-10 roster (D-025)? ★ yes, a rival counts as one of the 8-10.
-
-### Q-23 Roles and identities of the 8-10 launch waifus (existing)
-Needs: role per waifu (damage / crowd control / support / tank / economy), tags for synergies, personality archetypes.
-- A) **Agent proposes a roster table (name placeholder, role, tags, archetype) in a PR for owner approval; balanced across 5 roles** ★
-- B) Owner provides the roster list.
-- C) Owner gives only archetypes ("tsundere, knight...") and the agent expands.
-Blocks the content in M5 but M3 synergy rules need tags, so decide before M3 closes. Also includes choosing the 2 starter waifus (D-031).
+### Q-36 What replaces "outfits as risk/reward" as the game's unique hook? (blocks M3 design, before synergy rules)
+The early brainstorm made outfits the gear system (lingerie/bikini = high damage, low defense). D-054 makes outfits purely cosmetic, so pillar 4 of the GDD no longer has a gameplay mechanism. The remaining differentiators are the Guardian-rescue roguelite loop, the 360° horde with free tower placement, and the adjacency synergies between waifus.
+- A) **Make relationship synergies the hook: waifus have named relationships (rivals, best friends, mentor/student) that give bonuses when placed near each other, and the roster/rescue order is designed around them** ★ (already in the GDD as the main build-depth layer; this promotes it to a pillar)
+- B) Add a "mood" system: each waifu's mood changes with events (kills, damage taken, neighbours) and gives temporary combat buffs tied to her personality; outfits stay cosmetic.
+- C) No extra hook: the loop plus horde plus cosmetics is enough; revisit after the M2 playtest.
+Recommended: A, with C as the fallback if the M2 playtest feels fine.
 
 ---
 

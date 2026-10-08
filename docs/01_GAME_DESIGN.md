@@ -11,7 +11,7 @@ Tone: cute and comedic fantasy. **[D]** All characters are clearly adult with ad
 1. **Protect her.** The protected waifu ("the Guardian") is the emotional stake. Lose condition = her HP reaches 0. **[D]**
 2. **Horde chaos.** Hundreds to thousands of enemies on screen, constant escalation, satisfying kills. **[D]**
 3. **Build over time.** Roguelite draft choices create different builds each run. **[D]**
-4. **Fanservice as a choice.** Outfits trade defense for power; suggestive outfits are risk/reward, not just cosmetics. **[P]**
+4. **Fanservice is cosmetic.** Outfits are purely cosmetic and have no gameplay effect (D-054). The mechanism that replaces the early "risk/reward outfits" hook is open (Q-36). **[D]**
 5. **Collect them all.** Winning unlocks new waifus; the roster is the long-term goal. **[D]**
 
 ## 3. Run structure **[D unless noted]**
@@ -50,13 +50,13 @@ Each waifu has: role (damage / crowd control / support / tank / economy), attack
 - Synergies are the main build-depth layer after the card draft.
 
 ### Outfits **[P]**
-- Each waifu can wear one outfit at a time. Outfits modify stats (example: lingerie/bikini = high damage, low defense; armor = the opposite).
+- Each waifu can wear one outfit at a time. Outfits are **purely cosmetic**: no stats, no passives, no change to attacks (D-054). **[D]**
 - Outfits unlock via a **Bond** level that rises when you use a waifu.
 - Visual rule: stays within `05_STEAM_AND_COMPLIANCE.md`.
 
 ## 6. Enemies **[P]**
 - Horde types in archetypes: swarmer (fast, weak), brute (slow, strong), ranged, flyer, elite, boss.
-- Regular bosses are enemies only. **Only special named rival bosses ("rivals") are recruitable** as waifus after being defeated (no story involved, see D-028). **[D]** How many, and when: **[O]** (`OPEN_QUESTIONS.md` Q-22).
+- Regular bosses are enemies only. **Only special named rival bosses ("rivals") are recruitable** as waifus after being defeated (no story involved, see D-028). **[D]** **2 rivals at launch**, appearing as the ~10:00 mini-boss on higher difficulty tiers; beating one for the first time unlocks her; they count toward the 8-10 roster (D-055). **[D]**
 - Counts target: see performance budgets in `02_TECH_ARCHITECTURE.md`.
 
 ## 7. Meta-progression **[D that it exists; details P]**
