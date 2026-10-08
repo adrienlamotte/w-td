@@ -1,8 +1,8 @@
 # 007 — View: MultiMesh billboard rendering for the horde and towers
-- Status: planned
+- Status: review
 - Milestone: M1
 - Depends on: 006
-- PR: -
+- PR: #11
 
 ## Goal
 Render enemies (and placeholder towers) as billboarded sprites through one MultiMeshInstance3D per type, animated by a shader, never one Node per enemy.
