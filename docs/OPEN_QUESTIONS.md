@@ -15,6 +15,12 @@ Last reviewed: 2026-10-08 (daily docs review; owner answers recorded the same da
 | Q-02 Data format | JSON + JSON Schema | D-034 |
 | Q-03 Where builds, tests and nightly runs execute | Everything on the owner's PC | D-035 (scheduling: Q-35) |
 | Q-04 Godot version | Pin at M0 start | D-036 |
+| Q-43 Wave length | 60 s waves | D-093 |
+| Q-44 Gold collection | Automatic on death | D-094 |
+| Q-45 M2 enemy types | Swarmer, brute, ranged + bosses | D-095 |
+| Q-46 After the final boss spawns | Horde continues | D-096 |
+| Q-47 Mini-bosses in M2 | At 5:00 and 10:00 | D-097 |
+| Q-48 Shots | Instant hit, visual effect only | D-098 |
 | Q-41 Enemy crowding | Soft separation | D-079 |
 | Q-42 Steam Deck for the M1 benchmark | No Deck: estimate from PC | D-080 |
 | Q-38 Steam Deck build | Windows build through Proton first | D-075 |
@@ -51,40 +57,6 @@ Last reviewed: 2026-10-08 (daily docs review; owner answers recorded the same da
 | Q-31 Name, price, Early Access, DLC | Keep WTD until M5; EUR 7.99-9.99 in Early Access; no DLC before launch | D-064 |
 | Q-33 Camera controls | Pan + zoom, cursor at screen centre | D-041 |
 | Q-34 Build radius and performance with no cap | Growable radius, rising costs, 300/150 stress target | D-042 |
-
----
-
-## M2 (current milestone)
-
-### Q-43 How long is a wave? (blocks M2 waves)
-D-032 fixes the 15-20 s break between waves, but not the wave length.
-- A) **60 s waves, then a 15-20 s break (about 12 waves before the 15:00 boss)** ★
-- B) 90 s waves (about 9 waves).
-- C) 2-minute waves (about 7 waves).
-
-### Q-44 How is gold collected? (blocks M2 economy)
-There is no player character to walk over drops.
-- A) **Automatic: gold counts the moment an enemy dies; coins fly to the Guardian as a visual** ★
-- B) Manual: gold stays on the ground until the cursor passes over it.
-- C) Automatic, but only for kills inside the build radius.
-
-### Q-45 Which enemy types are in M2? (blocks M2 content)
-- A) **Swarmer (fast, weak) and brute (slow, strong), plus the final boss** ★
-- B) Swarmer, brute and ranged, plus the final boss.
-- C) Swarmer only, plus the final boss.
-
-### Q-46 What happens after the final boss spawns at 15:00? (blocks M2 waves)
-- A) **The horde keeps coming while the boss is alive** ★
-- B) Spawns stop; only the boss and leftovers remain.
-
-### Q-47 Mini-bosses in M2? (blocks M2 waves)
-The GDD proposes a mini-boss every ~5 minutes; the roadmap's M2 lists one boss.
-- A) **None in M2: only the final boss; mini-bosses come later** ★
-- B) Mini-bosses at 5:00 and 10:00 already in M2.
-
-### Q-48 Do tower shots hit instantly or travel? (blocks M2 tower attacks)
-- A) **Instant hit in the simulation, with a visible shot effect drawn by the view (cheap, never misses)** ★
-- B) Real projectiles that travel and can miss moving enemies.
 
 ---
 

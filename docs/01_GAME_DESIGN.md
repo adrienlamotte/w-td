@@ -17,7 +17,7 @@ Tone: cute and comedic fantasy. **[D]** All characters are clearly adult with ad
 ## 3. Run structure **[D unless noted]**
 - Length: **15-20 minutes** per run.
 - Map: **open field, 360° swarm**, no lanes. Enemies path straight toward the Guardian; they attack whatever tower blocks their straight path, otherwise the Guardian. Enemies softly push each other apart so the horde spreads into a crowd (D-079). Towers have HP; a dead tower leaves a husk that can be rebuilt for a fraction of the cost; no repair in M2 (D-043). **[D]**
-- Escalation: continuous spawn curve with waves; a **mini-boss every ~5 minutes** **[P]** and a **final boss at the end**.
+- Escalation: continuous spawn curve with **60 s waves** (D-093); **mini-bosses at 5:00 and 10:00** (D-097, regular enemies) and a **final boss at the end**; the horde keeps coming while the final boss is alive (D-096). **[D]**
 - **Between waves:** a short break of 15-20 s with no new spawns; leftover enemies keep attacking, the clock keeps running, and building is allowed at any time (D-032). **[D]**
 - Win: kill the final boss, who spawns at a data-defined time (15:00 in M2, tuned toward 15-20 min later; D-047). Lose: Guardian HP = 0. **[D]**
 - **Loss:** keeps a reduced hearts reward (30-50% depending on time survived); the player picks a Guardian again from the offered locked waifus (D-048). **[D]**
@@ -55,7 +55,7 @@ Each waifu has: role (damage / crowd control / support / tank / economy), attack
 - Visual rule: stays within `05_STEAM_AND_COMPLIANCE.md`.
 
 ## 6. Enemies **[P]**
-- Horde types in archetypes: swarmer (fast, weak), brute (slow, strong), ranged, flyer, elite, boss.
+- Horde types in archetypes: swarmer (fast, weak), brute (slow, strong), ranged, flyer, elite, boss. M2 has swarmer, brute and ranged plus the bosses (D-095). Shots (towers and ranged enemies) hit instantly; the effect is visual only (D-098).
 - Regular bosses are enemies only. **Only special named rival bosses ("rivals") are recruitable** as waifus after being defeated (no story involved, see D-028). **[D]** **2 rivals at launch**, appearing as the ~10:00 mini-boss on higher difficulty tiers; beating one for the first time unlocks her; they count toward the 8-10 roster (D-055). **[D]**
 - Counts target: see performance budgets in `02_TECH_ARCHITECTURE.md`.
 
@@ -64,7 +64,7 @@ Each waifu has: role (damage / crowd control / support / tank / economy), attack
 - Unlocks: new waifus (via victory), outfits (via bond), starting perks.
 
 ## 8. Economy **[P]**
-- In-run: **gold** (drops, for building/upgrading towers) and **XP** (level-up cards).
+- In-run: **gold** (drops, for building/upgrading towers; collected automatically when an enemy dies, coins fly to the Guardian as a visual, D-094) and **XP** (level-up cards).
 - Meta: **hearts** (earned at run end, used in the hub) are the single meta currency and buy flat permanent upgrades from a data-defined tree (D-052). **[D]** **Bond** is tracked per waifu and only gates outfits. **[D]**
 
 ## 9. Controls and platforms **[D]**
