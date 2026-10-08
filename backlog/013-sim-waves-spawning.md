@@ -10,6 +10,7 @@ Drive spawns from the run data: 60 s waves with breaks, the spawn curve, mini-bo
 ## Context
 - D-032 (break: no new spawns, the clock keeps running), D-093, D-096, D-097, D-047
 - M1 `recycle_radius` stays for the benchmark only
+- From 011's plan: `EnemyCatalog.max_radius` covers horde (non-boss) types only, so the grid cell stays small; separation scans `ri + max_radius`, which misses boss overlaps. When bosses spawn here, add a boss separation pass (each boss scans `r_boss + max_radius` and the horde loop skips boss pairs), with a test.
 
 ## Acceptance criteria
 - Spawns follow the data timeline exactly; breaks spawn nothing; WaveStarted events.
