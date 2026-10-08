@@ -4,6 +4,7 @@ extends GutTest
 
 const TICKS: int = 30 * 60  # one simulated minute
 const ENEMIES: int = 1000
+const TOWERS: int = 50
 
 var _hash_a: int
 var _hash_a2: int
@@ -13,6 +14,10 @@ var _hash_b: int
 func _run(run_seed: int) -> int:
 	var world := SimWorld.new(run_seed)
 	world.spawn_ring(0, ENEMIES, 30.0)
+	for t in TOWERS:  # same towers for every run, on a spiral inside the build radius
+		var angle := t * 2.4
+		var r := 20.0 * sqrt((t + 0.5) / TOWERS)
+		world.towers.add(cos(angle) * r, sin(angle) * r, 8.0)
 	var start := Time.get_ticks_msec()
 	for i in TICKS:
 		world.step()
