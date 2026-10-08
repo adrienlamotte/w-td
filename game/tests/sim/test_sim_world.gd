@@ -23,3 +23,20 @@ func test_step_records_phase_times() -> void:
 	world.spawn_ring(0, 10, 5.0)
 	world.step()
 	assert_eq(world.phase_usec.size(), 4)
+
+
+func test_recycle_moves_arrived_enemy_back_to_ring() -> void:
+	var world := SimWorld.new(1)
+	world.recycle_radius = 10.0
+	world.enemies.add(0, 0.4, 0.0, 1.0)  # within one tick of contact (radius 0.35)
+	world.step()
+	assert_eq(world.enemies.count(), 1)
+	assert_eq(world.enemies.state[0], SimEnemies.State.MOVING)
+	assert_almost_eq(Vector2(world.enemies.pos_x[0], world.enemies.pos_z[0]).length(), 10.0, 1e-3)
+
+
+func test_recycle_off_by_default() -> void:
+	var world := SimWorld.new(1)
+	world.enemies.add(0, 0.4, 0.0, 1.0)  # within one tick of contact (radius 0.35)
+	world.step()
+	assert_eq(world.enemies.state[0], SimEnemies.State.AT_GUARDIAN)

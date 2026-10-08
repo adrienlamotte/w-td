@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Render",
+  "description": "Horde/tower sprite rendering tunables (D-087). Values are placeholders judged at CP-M1; per-type sizes move to sprite metadata in M4.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "enemy_sprite_height", "tower_sprite_height", "walk_frames", "walk_fps"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "id": {"type": "string", "pattern": "^render_[a-z0-9_]+$"},
+    "enemy_sprite_height": {"type": "number", "exclusiveMinimum": 0},
+    "tower_sprite_height": {"type": "number", "exclusiveMinimum": 0},
+    "walk_frames": {"type": "integer", "minimum": 1, "maximum": 16},
+    "walk_fps": {"type": "number", "exclusiveMinimum": 0}
+  }
+}
