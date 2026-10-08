@@ -1,5 +1,5 @@
 # 003 — Sim: uniform spatial hash grid
-- Status: review
+- Status: done
 - Milestone: M1
 - Depends on: 002
 - PR: #6
@@ -51,3 +51,4 @@ Size: about 120 lines of code and 120 of tests; one PR.
 ## Questions
 
 ## Review log
+- 2026-10-08 lead-dev: approved, PR #6 squash-merged into m1/dev. test.ps1 green twice (21/21, 5/5 test scripts loaded, no parse/script errors in GUT output), validate.ps1 OK. Ring early-stop bound and edge clamping checked. Note for 008: rebuild is about 1.8-2.0 ms per 3000 enemies in headless debug; measure in release in the benchmark.
