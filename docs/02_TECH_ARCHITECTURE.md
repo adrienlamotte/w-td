@@ -75,7 +75,7 @@ All displayed text (names, barks, card text) is stored as localisation keys, nev
 - A validator in `/tools` checks all data files (missing assets, invalid stats, broken references) and runs in CI.
 
 ## 6. Testing **[P]**
-- Unit/integration tests with a Godot test framework (**GUT**, D-033) run headless: `godot --headless ...`.
+- Unit/integration tests with a Godot test framework (**GUT**, D-033) run headless: `godot --headless ...`. The run fails if GUT ignores any test script (parse error, or not extending GutTest), via the post-run hook `tests/gut_post_run.gd`; a runtime error inside a test fails that test (GUT default).
 - **Sim determinism test:** same seed + same commands = same result.
 - **Balance runner:** headless bot plays N runs with scripted strategies, outputs win rate, time-to-death, DPS curves into `/reports`.
 - **Screenshot tests:** scripted scenes captured by a non-headless run for visual regression (human reviews diffs).
