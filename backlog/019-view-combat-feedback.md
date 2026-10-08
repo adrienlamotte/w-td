@@ -10,6 +10,7 @@ Make combat readable: hits, deaths, shots, coins, skills, husks, and distinct pl
 ## Context
 - D-098 (shot effect is visual only), D-094 (coins fly to the Guardian), D-087 (MultiMesh rendering)
 - M1 known gap: a removed enemy's slot can jump for one frame (fix it here)
+- From 012's plan: `world.events` (SimEvents, SoA) is cleared at the start of every `step()`; the driver runs up to 5 steps per frame, so read events after each step.
 
 ## Acceptance criteria
 - Placeholder visuals distinct per enemy type; bosses visibly bigger; tower types distinct; husks visible.
