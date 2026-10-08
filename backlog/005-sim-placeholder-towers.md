@@ -1,5 +1,5 @@
 # 005 — Sim: placeholder tower arrays with targeting queries
-- Status: review
+- Status: done
 - Milestone: M1
 - Depends on: 003
 - PR: #9
@@ -62,3 +62,4 @@ Size: about 50 lines of code, about 80 of tests. One PR.
 ## Questions
 
 ## Review log
+- 2026-10-08 lead-dev: PR #9 approved and squash-merged into m1/dev. All criteria met, matches plan (D-085 PROPOSED, docs updated). Tests 35/35 twice, validator OK. Reviewer timing (headless debug, 300 towers / 3000 enemies): TARGETING 4.1-5.7 ms none in range, 11.3-12.2 ms enemies packed among towers; dense cells, not empty rings, are the costly case. Cheap options for 008/009 if release numbers need it: (`nearest` already early-outs by ring and uses squared distances) precompute each tower's cell and clamped ring bounds once at `add` (towers do not move), a tighter per-cell distance bound instead of the conservative `(k - 1) * cell_size` ring gap so packed far cells are skipped, inline the scan in `retarget` to drop 300 calls per tick. Retarget-every-N / keep-valid-target stays M2 design.
