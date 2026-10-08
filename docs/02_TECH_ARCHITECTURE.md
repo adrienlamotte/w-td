@@ -5,7 +5,7 @@ Status key: **[D]** decided, **[P]** proposed, **[O]** open.
 ## 1. Engine and languages
 - **Engine: Godot 4.x, version pinned at the start of M0 (D-036)** **[D]**. Reasons: all project files are text (scenes `.tscn`, resources `.tres`, scripts), so agents can read/diff/edit them; runs headless from CLI for tests and screenshots; light; free; good Steam support through GodotSteam.
 - **Language: GDScript** for gameplay and tools inside Godot **[P]**. Static typing required (`var x: int`, typed function signatures).
-- **Performance escape hatch:** if profiling proves GDScript cannot hit budgets, move only the hot loop (horde simulation) to a **GDExtension in Rust or C++** **[P]**. Do not do this before a profile shows the need.
+- **Performance escape hatch:** if profiling proves GDScript cannot hit budgets, move only the hot loop (horde simulation) to a **GDExtension in Rust or C++** **[P]**. Do not do this before a profile shows the need. M1 measured no need yet; the triggers to revisit are in `reports/perf_m1.md` section 6.
 - **Tooling language:** Python 3 for tools (`/tools`): asset forge, validators, balance runner **[P]**.
 - Alternative considered: Bevy (Rust). Rejected for now: slow compiles, fast-changing API, no editor.
 
@@ -76,7 +76,18 @@ All displayed text (names, barks, card text) is stored as localisation keys, nev
 | PC (mid-range) | 60 FPS with ~3000 enemies + 50 towers (typical); stress case 300 towers (D-042) |
 | Steam Deck | 40-60 FPS with ~1500 enemies + 50 towers (typical); stress case 150 towers (D-042) |
 - Sim step budget: under 4 ms per frame at max load on PC (at a 30 Hz tick, the per-tick cost may be up to 8 ms; see section 3a and D-038).
-- Numbers are initial guesses; M1 spike will measure and update this section.
+- **Measured in M1 (task 009, `reports/perf_m1.md`)**: release export, i7-13700K + RTX 5070 Ti, 2560x1440, vsync off, median of 3 runs. The Deck columns are an **estimate** from PC numbers (D-080: no Deck; expected `k_cpu` 2.2, pessimistic 2.74, from public single-thread benchmarks); a real Deck run is still due by M6.
+
+| Scenario | 1%-low FPS | Frame p99 | Sim step / tick | Top phase | Deck tick frame, expected / pessimistic (estimate) |
+|---|---|---|---|---|---|
+| `pc_typical` 3000/50 | 125 | 6.8 ms | 5.7 ms (PASS) | separation 79% | - |
+| `pc_stress` 3000/300 | 112 | 7.6 ms | 6.6 ms (PASS) | separation 68% | - |
+| `pc_piled` 3000/300, piled at the Guardian | 90 | 10.2 ms | 8.6 ms (over 8 ms by ~8%; M1 placeholder worst case) | separation 75% | - |
+| `deck_typical` 1500/50 | (PC) 333 | 2.5 ms | 2.4 ms | separation 68% | 6.1 / 7.6 ms |
+| `deck_stress` 1500/150 | (PC) 282 | 3.0 ms | 2.8 ms | separation 60% | 7.0 / 8.8 ms |
+| `deck_piled` 1500/150, piled | (PC) 140 | 7.0 ms | 4.0 ms | separation 67% | 15.4 / 19.2 ms (40-60 FPS) |
+
+View cost on PC: GPU <= 0.24 ms, render CPU ~0.03 ms, MultiMesh fill <= 0.6 ms per frame. Frames are CPU-bound; the slowest frames are the ones that run a sim tick. Owner confirms at CP-M1.
 
 ## 5. Content as data **[D]**
 - Waifu, enemy, outfit, card, wave definitions in `game/data/` as JSON files validated by JSON Schema (D-034).
@@ -87,7 +98,7 @@ All displayed text (names, barks, card text) is stored as localisation keys, nev
 - **Sim determinism test:** same seed + same commands = same result.
 - **Balance runner:** headless bot plays N runs with scripted strategies, outputs win rate, time-to-death, DPS curves into `/reports`.
 - **Screenshot tests:** scripted scenes captured by a non-headless run for visual regression (human reviews diffs).
-- **Perf benchmark scene (task 008, D-088):** `scripts\bench.ps1` exports the release build and starts it with the user arg `--bench` (release templates refuse a scene path argument), which opens `view/bench/bench.tscn`. Scenarios live in `data/bench/bench_m1.json` (seed, spawn rings, recycle radius, tower range, and per scenario enemies, towers, `piled`, warm-up, camera zoom, `render_scale`): `pc_typical` 3000/50, `pc_stress` 3000/300, `deck_typical` 1500/50, `deck_stress` 1500/150 (both at `render_scale` 0.5, about 1280x720 3D pixels, as the Deck pixel proxy) and `pc_piled` 3000/300 with no recycle (the crowd piled at the Guardian). Moving cases spawn on rings 24-44 and recycle at 40, so the crowd keeps crossing the tower field (towers on a sunflower spiral over the build radius). Each scenario runs in the real main scene with vsync off and no FPS cap, warms up, then measures for `measure_sec` of wall time. Output `reports/perf_<date>.json`: the machine (OS, CPU, GPU, Godot version, release flag, window size, commit) and per scenario: frames, average FPS (frames / time), 1%-low FPS (1e6 / mean of the slowest 1% of frame times), average / p99 / max frame ms; sim ticks, ticks per second, step and per-phase ms per tick (from `phase_usec_sum`); view fill ms per frame; `cpu_gpu` (`process_ms_avg` = sim steps + fill per frame, `render_cpu_ms_avg`, `gpu_ms_avg` from the viewport's measured render times) for the Deck estimate (D-080); `mean_speed` of the enemies over the last tick (recycle jumps excluded; near 0 when piled).
+- **Perf benchmark scene (task 008, D-088):** `scripts\bench.ps1` exports the release build and starts it with the user arg `--bench` (release templates refuse a scene path argument), which opens `view/bench/bench.tscn`. Scenarios live in `data/bench/bench_m1.json` (seed, spawn rings, recycle radius, tower range, and per scenario enemies, towers, `piled`, warm-up, camera zoom, `render_scale`): `pc_typical` 3000/50, `pc_stress` 3000/300, `deck_typical` 1500/50, `deck_stress` 1500/150 (both at `render_scale` 0.5, about 1280x720 3D pixels, as the Deck pixel proxy) `pc_piled` 3000/300 and `deck_piled` 1500/150 (`render_scale` 0.5) with no recycle (the crowd piled at the Guardian). Moving cases spawn on rings 24-44 and recycle at 40, so the crowd keeps crossing the tower field (towers on a sunflower spiral over the build radius). Each scenario runs in the real main scene with vsync off and no FPS cap, warms up, then measures for `measure_sec` of wall time. Output `reports/perf_<date>.json`: the machine (OS, CPU, GPU, Godot version, release flag, window size, `vsync_mode` and `max_fps` as proof of an uncapped run, commit) and per scenario: frames, average FPS (frames / time), 1%-low FPS (1e6 / mean of the slowest 1% of frame times), average / p99 / max frame ms; sim ticks, ticks per second, step and per-phase ms per tick (from `phase_usec_sum`); view fill ms per frame; `cpu_gpu` (`process_ms_avg` = sim steps + fill per frame, `render_cpu_ms_avg`, `gpu_ms_avg` from the viewport's measured render times) for the Deck estimate (D-080); `mean_speed` of the enemies over the last tick (recycle jumps excluded; near 0 when piled).
 
 ## 7. Platform / Steam integration **[P]**
 - **GodotSteam** (achievements, cloud saves, later Steam Input).

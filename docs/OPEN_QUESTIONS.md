@@ -69,6 +69,7 @@ Interim rule until decided: the first test character (`waifu_test01`) is committ
 
 ### Q-32 Steam Deck performance (measured in M1)
 Not a question for the owner: results will go to `DECISIONS.md`. Kept so that nothing from the earlier list is dropped.
+Estimated in `reports/perf_m1.md` (D-080); real Deck run pending, by M6.
 
 ---
 
