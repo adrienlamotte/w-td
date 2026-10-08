@@ -10,6 +10,8 @@ func test_loads_swarmer_stats_from_json() -> void:
 	assert_almost_eq(catalog.speed[t], float(json.speed), 1e-6)
 	assert_almost_eq(catalog.radius[t], float(json.radius), 1e-6)
 	assert_almost_eq(catalog.hp[t], float(json.hp), 1e-6)
+	assert_almost_eq(catalog.separation_strength[t], float(json.separation_strength), 1e-6)
+	assert_almost_eq(catalog.max_radius, float(Array(catalog.radius).max()), 1e-6)
 
 
 func test_unknown_id_is_minus_one() -> void:

@@ -7,6 +7,9 @@ var ids: PackedStringArray = PackedStringArray()
 var speed: PackedFloat32Array = PackedFloat32Array()
 var radius: PackedFloat32Array = PackedFloat32Array()
 var hp: PackedFloat32Array = PackedFloat32Array()
+var separation_strength: PackedFloat32Array = PackedFloat32Array()
+## Largest radius over all types, computed at load.
+var max_radius: float = 0.0
 
 
 static func load_dir(path: String = "res://data/enemies") -> EnemyCatalog:
@@ -28,6 +31,8 @@ static func load_dir(path: String = "res://data/enemies") -> EnemyCatalog:
 		catalog.speed.append(data.speed)
 		catalog.radius.append(data.radius)
 		catalog.hp.append(data.hp)
+		catalog.separation_strength.append(data.separation_strength)
+		catalog.max_radius = maxf(catalog.max_radius, data.radius)
 	return catalog
 
 
