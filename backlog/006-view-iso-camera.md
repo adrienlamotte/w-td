@@ -1,8 +1,8 @@
 # 006 — View: isometric camera, ground plane and tick interpolation
-- Status: planned
+- Status: review
 - Milestone: M1
 - Depends on: 002
-- PR: -
+- PR: #10
 
 ## Goal
 Show the sim in a 3D scene with an orthographic isometric-style camera over a flat ground plane, interpolating positions between sim ticks, with the PC camera controls from D-041.
