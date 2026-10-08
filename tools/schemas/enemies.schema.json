@@ -4,15 +4,16 @@
   "description": "Example schema from 02_TECH_ARCHITECTURE.md 3b. Values are placeholders, not balance decisions.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version", "id", "archetype", "hp", "speed", "contact_damage", "radius", "xp", "drops", "sprite", "tags"],
+  "required": ["schema_version", "id", "archetype", "hp", "speed", "contact_damage", "radius", "separation_strength", "xp", "drops", "sprite", "tags"],
   "properties": {
-    "schema_version": {"const": 1},
+    "schema_version": {"const": 2},
     "id": {"type": "string", "pattern": "^enemy_[a-z0-9_]+$"},
     "archetype": {"type": "string"},
     "hp": {"type": "number", "exclusiveMinimum": 0},
     "speed": {"type": "number", "minimum": 0},
     "contact_damage": {"type": "number", "minimum": 0},
     "radius": {"type": "number", "exclusiveMinimum": 0},
+    "separation_strength": {"type": "number", "minimum": 0, "maximum": 1},
     "xp": {"type": "integer", "minimum": 0},
     "drops": {
       "type": "array",
