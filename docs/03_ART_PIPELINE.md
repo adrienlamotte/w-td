@@ -25,7 +25,23 @@ Status key: **[D]** decided, **[P]** proposed, **[O]** open.
 | Ground tiles/props | Static textures | 512 px | varies | Must keep horde readable |
 | UI | Vector/PNG | per UI spec | | Gamepad-friendly sizing |
 
-All sprites: **transparent background (PNG, RGBA)**, consistent light direction, consistent outline style, feet on a defined pivot.
+All sprites: **transparent background (PNG, RGBA)**, consistent light direction, consistent outline style, feet on a defined pivot. **Pivot [P]:** bottom-centre of the frame for enemies, props and bosses; for waifu layers each part carries its own pivot in `parts.json` and the root pivot is the feet on the ground.
+
+### Canonical names **[P]**
+- *Waifu part names:* `body_torso`, `body_arm_l`, `body_arm_r`, `body_leg_l`, `body_leg_r`, `head`, `hair_back`, `hair_front`, `face_neutral`, `face_happy`, `face_hurt`, `face_angry`, `outfit_top`, `outfit_bottom`, `outfit_extra_<n>`, `accessory_<n>`. A missing optional part is allowed; the validator lists required ones.
+- *Enemy animation names:* `walk` (6-8 frames), `attack` (4), `death` (4-6); `idle` optional. Frame cells are 256x256 and the sheet is one horizontal strip.
+- *`parts.json` example:*
+```json
+{"schema_version": 1, "canvas": [1024, 2048],
+ "parts": [{"name": "body_torso", "pivot": [512, 1100], "z": 10, "parent": null},
+           {"name": "head", "pivot": [512, 700], "z": 20, "parent": "body_torso"}]}
+```
+- *Enemy `<asset_id>.json` example:*
+```json
+{"schema_version": 1, "frame_size": 256, "faces": "right",
+ "anims": [{"name": "walk", "frames": 8, "fps": 12, "loop": true}]}
+```
+These are proposals for the validator to enforce; the canvas width of the waifu layers is not yet defined (only 2048 px height is) and will be fixed in the M4 art spike.
 
 ## 4. Local generation pipeline (ComfyUI) **[P]**
 Stages (each stage's output is stored; every stage can be rerun):

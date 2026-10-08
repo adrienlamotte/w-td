@@ -20,10 +20,25 @@ Tone: cute and comedic fantasy. **[D]** Characters are adult and stylized (chibi
 - Escalation: continuous spawn curve with waves; a **mini-boss every ~5 minutes** **[P]** and a **final boss at the end**.
 - Win: survive until the final boss is defeated. Lose: Guardian HP = 0.
 - **Win reward:** the Guardian protected in this run is unlocked as a **tower waifu** for future runs.
-- **Guardian each run:** before the run, the player **picks the Guardian from a few locked waifus** she wants to "rescue". Unlocked waifus are towers only. **[D]** How many are offered and how they are drawn: **[O]**, see `OPEN_QUESTIONS.md`.
-- **After everyone is unlocked (replay value):** **difficulty tiers**, **endless mode** and **challenge modifiers** **[D]**. Details of each: **[O]**.
+- **Guardian each run:** before the run, the player **picks the Guardian from a few locked waifus** she wants to "rescue". Unlocked waifus are towers only. **[D]** How many are offered and how they are drawn: **[O]**, see `OPEN_QUESTIONS.md` Q-17.
+- **After everyone is unlocked (replay value):** **difficulty tiers**, **endless mode** and **challenge modifiers** **[D]**. Details of each: **[O]** (Q-27). Who the Guardian is in these modes: **[O]** (Q-28).
 - **No story or campaign.** Pure gameplay; waifus only have short personality lines (barks). **[D]**
 - **Roster target at Early Access launch: 8-10 waifus.** **[D]**
+
+### Known rule gaps (implementation blockers) **[O]**
+Agents must not guess these; each has options and a recommended default in `OPEN_QUESTIONS.md`.
+| Gap | Question |
+|---|---|
+| Build phase vs continuous spawning (what happens to enemies and the clock) | Q-08 |
+| Tower placement (free, grid, slots), cap, sell/move | Q-09 |
+| Do enemies damage towers, tower HP/death | Q-10 |
+| Guardian HP and which 2 skills, does she auto-attack | Q-11 |
+| Which 3 tower types exist in M2 | Q-12 |
+| Starting roster in the very first run (nothing is unlocked yet) | Q-13 |
+| Gamepad building UX | Q-14 |
+| Run end condition and exact length (15-20 min, boss timing) | Q-15 |
+| What a loss gives and keeps | Q-16 |
+| How cards interact with gold-based building | Q-18 |
 
 ## 4. Player actions **[D]**
 - **Build:** both real-time during action (spending resources dropped by kills) **and** short build phases between waves.
@@ -45,7 +60,7 @@ Each waifu has: role (damage / crowd control / support / tank / economy), attack
 
 ## 6. Enemies **[P]**
 - Horde types in archetypes: swarmer (fast, weak), brute (slow, strong), ranged, flyer, elite, boss.
-- Regular bosses are enemies only. **Only special story bosses ("rivals") are recruitable** as waifus after being defeated. **[D]** How many, and when: **[O]**.
+- Regular bosses are enemies only. **Only special named rival bosses ("rivals") are recruitable** as waifus after being defeated (no story involved, see D-028). **[D]** How many, and when: **[O]** (`OPEN_QUESTIONS.md` Q-22).
 - Counts target: see performance budgets in `02_TECH_ARCHITECTURE.md`.
 
 ## 7. Meta-progression **[D that it exists; details P]**

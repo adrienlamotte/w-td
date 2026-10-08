@@ -31,7 +31,7 @@ Status key: **[P]** proposed unless marked. Each milestone ends with a **human p
 - Checkpoint: art approval of the style and the first characters.
 
 ## M5 — Content
-- Roster to a target of N waifus (**N is open**), enemy archetypes, mini-bosses and final boss, outfits and bond system, wave/spawn tuning.
+- Roster to the target of 8-10 waifus (D-025; includes starter waifus and recruitable rivals, see `OPEN_QUESTIONS.md` Q-13, Q-22), enemy archetypes, mini-bosses and final boss, outfits and bond system, wave/spawn tuning.
 - Checkpoints: art approvals, balance review, playtests.
 
 ## M6 — Polish and Steam readiness

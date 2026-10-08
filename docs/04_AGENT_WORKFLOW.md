@@ -54,6 +54,6 @@ Agents prepare a short **review pack** for each checkpoint (build instructions, 
 Every finished task ends with a 3-6 line report (what changed, tests, human action needed, new open questions). Nightly reports are short and list only failures and decisions needed.
 
 ## 9. Open questions **[O]**
-- Where the automation runs (owner's machine vs a cloud environment) and how the local ComfyUI is reachable from it.
-- Repo host and CI.
+- Where the automation runs (owner's machine vs a cloud environment) and how the local ComfyUI is reachable from it. Note: cloud routines (such as the daily docs review, D-029) cannot reach the owner's local ComfyUI or GPU; art generation and GPU perf runs therefore need the owner's machine. See `OPEN_QUESTIONS.md` Q-03.
+- Repo host and CI: the repo is hosted on GitHub; CI provider still to be confirmed (Q-03).
 - Who covers asset generation time (agents can run ComfyUI jobs on the owner's machine, but only when it is on).

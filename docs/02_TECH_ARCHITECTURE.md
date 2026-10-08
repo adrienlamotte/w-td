@@ -17,6 +17,8 @@ Status key: **[D]** decided, **[P]** proposed, **[O]** open.
 - **Fallback decision:** if 3D billboarding costs too much on Steam Deck, switch the view layer to pure 2D with iso-looking art. Because the simulation is independent of rendering (below), this is a contained change.
 
 ## 3. Architecture: simulation / view split **[D]**
+> Status note: `DECISIONS.md` D-020 still lists this split as PROPOSED while this section and `CLAUDE.md` rule 3 treat it as mandatory. Owner confirmation requested in `OPEN_QUESTIONS.md` Q-05.
+
 ```
 game/
   sim/      <- pure game rules. No Node/scene dependencies. Deterministic with a seed.
@@ -30,12 +32,37 @@ game/
 - Spatial queries (nearest enemy, collisions) through a **uniform spatial hash grid**.
 - Why: (1) performance, (2) **headless balance simulation** (run thousands of runs overnight), (3) swappable view layer, (4) agents can test rules without launching the game.
 
+### 3a. Concrete sim contract **[P]** (details for implementers; owner confirmation in Q-06)
+- **Tick:** fixed `SIM_DT = 1/30 s`; the view interpolates positions between the previous and current tick. Render rate is independent.
+- **Units:** 1 world unit = 1 metre-ish; Guardian at (0, 0); ground plane x/z; the sim never uses floats from the view or from `delta`.
+- **Determinism:** one `RandomNumberGenerator` per concern (spawns, loot, cards, combat), each seeded from the run seed; no use of global `randf()`; iteration order over entity arrays is by index; no dictionaries iterated in unordered fashion for results.
+- **Commands (only way to change the sim from outside):** `PlaceTower{waifu_id, pos}`, `SellTower{tower_id}`, `UseSkill{skill_id}`, `PickCard{index}`, `ChooseGuardian{waifu_id}`, `StartRun{seed, config}`, `Pause{bool}`. Commands carry the tick they apply to so a run can be replayed from `(seed, commands)`.
+- **Events out (for the view):** `EnemyDied`, `EnemyHit`, `TowerPlaced`, `TowerDied`, `SkillUsed`, `LevelUp`, `GuardianHit`, `WaveStarted`, `RunEnded`. The view reads events and state arrays; it never calls back into rules.
+- **Entity arrays (SoA, `PackedFloat32Array` / `PackedInt32Array`):** enemy `pos_x, pos_z, hp, type_id, state, anim_frame, target_id`; tower `pos_x, pos_z, hp, waifu_id, level, cooldown`.
+- **Spatial hash:** cell size equal to the largest enemy collision diameter x 2 (starting value 2.0 units), rebuilt each tick.
+
+### 3b. Data schema example **[P]** (final format pending Q-02)
+```json
+{
+  "id": "enemy_swarmer_01",
+  "archetype": "swarmer",
+  "hp": 8,
+  "speed": 3.2,
+  "contact_damage": 1,
+  "radius": 0.35,
+  "xp": 1,
+  "drops": [{"type": "gold", "amount": 1, "chance": 0.6}],
+  "sprite": "enemies/swarmer_01",
+  "tags": []
+}
+```
+All displayed text (names, barks, card text) is stored as localisation keys, never literals, so adding a language is data only. Every data file has a `schema_version` integer; the validator rejects unknown fields and dangling ids. All numbers shown above are placeholders and not balance decisions.
 ## 4. Performance budgets (targets, validated in milestone M1) **[P]**
 | Platform | Target |
 |---|---|
 | PC (mid-range) | 60 FPS with ~3000 enemies + 50 towers |
 | Steam Deck | 40-60 FPS with ~1500 enemies + 50 towers |
-- Sim step budget: under 4 ms/frame at max load on PC.
+- Sim step budget: under 4 ms per frame at max load on PC (at a 30 Hz tick, the per-tick cost may be up to 8 ms; see section 3a and Q-06).
 - Numbers are initial guesses; M1 spike will measure and update this section.
 
 ## 5. Content as data **[D]**

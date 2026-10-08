@@ -2,7 +2,7 @@
 
 Status legend: **DECIDED** = confirmed by the owner. **PROPOSED** = our recommendation, awaiting confirmation. **OPEN** = not yet discussed.
 
-Last updated: 2026-10-07 (first brainstorm session).
+Last updated: 2026-10-08 (daily docs review; open questions restructured with stable `Q-nn` IDs).
 
 ## Files
 - `CLAUDE.md` — agent entry point, hard rules, doc map. Place at repo root.
