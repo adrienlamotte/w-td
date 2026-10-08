@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "id": "camera_default",
+  "yaw_deg": 45,
+  "pitch_deg": 30,
+  "distance": 40,
+  "zoom_sizes": [16, 24, 36],
+  "default_zoom": 1,
+  "pan_speed": 20,
+  "edge_scroll_px": 24,
+  "bounds_radius": 20,
+  "bounds_margin": 6
+}

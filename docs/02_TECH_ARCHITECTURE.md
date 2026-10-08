@@ -16,6 +16,7 @@ Status key: **[D]** decided, **[P]** proposed, **[O]** open.
 - Sprite animation for the horde through a shader reading frame index from per-instance custom data (no AnimatedSprite nodes).
 - **Base resolution [D]:** 2560x1440, scaled down to 1280x800 on Steam Deck (D-039).
 - **Movable camera [D]:** the player can move the camera (D-040), so the sim world is larger than the screen and the view culls off-screen entities. Controls and bounds: D-041.
+- **Camera rig [P]:** `view/iso_camera.gd` is a `Node3D` at the focus point on the ground with a child orthographic `Camera3D` placed by yaw, pitch and distance. Its tunables (angle, distance, the 3 zoom sizes, pan speed, edge-scroll margin, bounds radius + margin) live in `data/camera/*.json` (schema `tools/schemas/camera.schema.json`, D-086). The angle is a placeholder (pitch 30, yaw 45) until CP-M1. Input actions `cam_pan_*` and `cam_zoom_in/out` are in `project.godot`.
 - **Fallback decision:** if 3D billboarding costs too much on Steam Deck, switch the view layer to pure 2D with iso-looking art. Because the simulation is independent of rendering (below), this is a contained change.
 
 ## 3. Architecture: simulation / view split **[D]**
@@ -36,6 +37,7 @@ game/
 
 ### 3a. Concrete sim contract **[P]** (details for implementers; the 30 Hz tick is decided, D-038)
 - **Tick:** fixed `SIM_DT = 1/30 s`; the view interpolates positions between the previous and current tick. Render rate is independent.
+- **View driver (D-086):** `view/sim_driver.gd` (RefCounted) accumulates frame time and runs one `step()` per `SIM_DT`, at most 5 per frame; time beyond that is dropped (no spiral of death). Before each step it copies `pos_x`/`pos_z` into `prev_x`/`prev_z`; rendering uses `lerp(prev, current, alpha)` with `alpha = accumulator / SIM_DT`, and the current position for enemies added after the last step. Caveat: after a swap-remove (D-081) `prev[i]` belongs to another enemy for one tick; nothing removes enemies in M1, the fix comes with enemy death (M2).
 - **Units:** 1 world unit = 1 metre-ish; Guardian at (0, 0); ground plane x/z; the sim never uses floats from the view or from `delta`.
 - **Determinism:** one `RandomNumberGenerator` per concern (spawns, loot, cards, combat), each seeded from the run seed as `hash([run_seed, "<concern>"])` (e.g. `_spawn_rng` uses `"spawns"`); no use of global `randf()`; iteration order over entity arrays is by index; no dictionaries iterated in unordered fashion for results.
 - **Commands (only way to change the sim from outside):** `PlaceTower{waifu_id, pos}`, `SellTower{tower_id}`, `UseSkill{skill_id}`, `PickCard{index}`, `ChooseGuardian{waifu_id}`, `StartRun{seed, config}`, `Pause{bool}`. Commands carry the tick they apply to so a run can be replayed from `(seed, commands)`.
