@@ -85,7 +85,7 @@ Reasons: Steam AI disclosure (see `05_STEAM_AND_COMPLIANCE.md`), reproducibility
 ## 7. External-tool import spec (for manual generation by the owner) **[D]**
 You can generate art with any outside tool and drop it in. Follow this so agents can ingest it without guessing.
 
-**Drop folder:** `assets_src/incoming/<asset_id>/`
+**Drop folder:** `assets_src/incoming/<asset_id>/` (the first character has its own brief: `08_FIRST_CHARACTER_BRIEF.md`)
 
 **Required files per asset type**
 - *Waifu layers:* one PNG per part, transparent background, same canvas size (2048 px tall), named `<asset_id>__<part>.png`, plus a `parts.json` (part name, pivot x/y in px, draw order, parent part). Part list: see section 3.
@@ -109,6 +109,6 @@ Negative: nudity, explicit, child, childlike, chibi, extra limbs, text, watermar
 For parts: generate the full character first, then separate parts or re-generate "<part> only, isolated, transparent background" using the full character as image reference.
 
 ## 8. Open questions **[O]**
-- Final art style reference (a few reference images from the owner would help).
+- Style: the owner generates the first character with an external tool (D-060); the exact deliverables are in `08_FIRST_CHARACTER_BRIEF.md`. Style references and local models/LoRAs will be chosen after seeing it.
 - Specific models/LoRAs for the style (choose in the art spike).
 - Whether to hand-touch key characters (recommended for IP protection; see compliance doc).

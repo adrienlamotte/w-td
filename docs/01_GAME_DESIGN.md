@@ -11,7 +11,7 @@ Tone: cute and comedic fantasy. **[D]** All characters are clearly adult with ad
 1. **Protect her.** The protected waifu ("the Guardian") is the emotional stake. Lose condition = her HP reaches 0. **[D]**
 2. **Horde chaos.** Hundreds to thousands of enemies on screen, constant escalation, satisfying kills. **[D]**
 3. **Build over time.** Roguelite draft choices create different builds each run. **[D]**
-4. **Fanservice is cosmetic.** Outfits are purely cosmetic and have no gameplay effect (D-054). The mechanism that replaces the early "risk/reward outfits" hook is open (Q-36). **[D]**
+4. **Relationships are the hook; fanservice is cosmetic.** Outfits are purely cosmetic (D-054). The unique gameplay hook is relationship synergies between waifus (D-057). **[D]**
 5. **Collect them all.** Winning unlocks new waifus; the roster is the long-term goal. **[D]**
 
 ## 3. Run structure **[D unless noted]**
@@ -23,7 +23,7 @@ Tone: cute and comedic fantasy. **[D]** All characters are clearly adult with ad
 - **Loss:** keeps a reduced hearts reward (30-50% depending on time survived); the player picks a Guardian again from the offered locked waifus (D-048). **[D]**
 - **Win reward:** the Guardian protected in this run is unlocked as a **tower waifu** for future runs.
 - **Guardian each run:** before the run, the player **picks the Guardian from a few locked waifus** she wants to "rescue". Unlocked waifus are towers only. **[D]** **3 locked waifus are offered, always the same three until one is rescued**; when fewer than 3 remain, all remaining are shown (D-050). **[D]** The order in which locked waifus enter the offer is data-defined: **[O]** (Q-23).
-- **After everyone is unlocked (replay value):** **difficulty tiers**, **endless mode** and **challenge modifiers** **[D]**. Details of each: **[O]** (Q-27). Who the Guardian is in these modes: **[O]** (Q-28).
+- **After everyone is unlocked (replay value):** **difficulty tiers**, **endless mode** and **challenge modifiers** **[D]**. Launch scope (D-059): 3 difficulty tiers (Normal, Hard, Nightmare), an endless mode scored by survival time and kills, and 4-6 challenge modifiers. **[D]** In these modes any waifu chosen by the player can be the Guardian, with no new unlocks (D-058). **[D]**
 - **No story or campaign.** Pure gameplay; waifus only have short personality lines (barks). **[D]**
 - **Roster target at Early Access launch: 8-10 waifus.** **[D]**
 - **Starter roster:** 2 waifus are unlocked from the start as towers and count toward the 8-10; Guardians are picked among the remaining locked waifus (D-031). **[D]** Which two: **[O]** (Q-23).
@@ -47,7 +47,7 @@ Each waifu has: role (damage / crowd control / support / tank / economy), attack
 
 ### Synergies
 - **Adjacency and relationships:** waifus with matching tags near each other get bonuses (e.g. "rivals" get a damage bonus, "best friends" share shields). Implemented through tag rules in data.
-- Synergies are the main build-depth layer after the card draft.
+- Synergies are the main build-depth layer after the card draft, and the game's unique hook (D-057): waifus have named relationships (rivals, best friends, mentor/student) that give bonuses when placed near each other, and the roster and rescue order are designed around them. **[D]**
 
 ### Outfits **[P]**
 - Each waifu can wear one outfit at a time. Outfits are **purely cosmetic**: no stats, no passives, no change to attacks (D-054). **[D]**
