@@ -16,10 +16,11 @@ Tone: cute and comedic fantasy. **[D]** All characters are clearly adult with ad
 
 ## 3. Run structure **[D unless noted]**
 - Length: **15-20 minutes** per run.
-- Map: **open field, 360° swarm**, no lanes. Enemies path straight toward the Guardian and attack towers in the way.
+- Map: **open field, 360° swarm**, no lanes. Enemies path straight toward the Guardian; they attack whatever tower blocks their straight path, otherwise the Guardian. Towers have HP; a dead tower leaves a husk that can be rebuilt for a fraction of the cost; no repair in M2 (D-043). **[D]**
 - Escalation: continuous spawn curve with waves; a **mini-boss every ~5 minutes** **[P]** and a **final boss at the end**.
 - **Between waves:** a short break of 15-20 s with no new spawns; leftover enemies keep attacking, the clock keeps running, and building is allowed at any time (D-032). **[D]**
-- Win: survive until the final boss is defeated. Lose: Guardian HP = 0.
+- Win: kill the final boss, who spawns at a data-defined time (15:00 in M2, tuned toward 15-20 min later; D-047). Lose: Guardian HP = 0. **[D]**
+- **Loss:** keeps a reduced hearts reward (30-50% depending on time survived); the player picks a Guardian again from the offered locked waifus (D-048). **[D]**
 - **Win reward:** the Guardian protected in this run is unlocked as a **tower waifu** for future runs.
 - **Guardian each run:** before the run, the player **picks the Guardian from a few locked waifus** she wants to "rescue". Unlocked waifus are towers only. **[D]** How many are offered and how they are drawn: **[O]**, see `OPEN_QUESTIONS.md` Q-17.
 - **After everyone is unlocked (replay value):** **difficulty tiers**, **endless mode** and **challenge modifiers** **[D]**. Details of each: **[O]** (Q-27). Who the Guardian is in these modes: **[O]** (Q-28).
@@ -31,21 +32,15 @@ Tone: cute and comedic fantasy. **[D]** All characters are clearly adult with ad
 Agents must not guess these; each has options and a recommended default in `OPEN_QUESTIONS.md`.
 | Gap | Question |
 |---|---|
-| Placement radius around the Guardian, grid size, performance budget with no tower cap | Q-34 |
-| Camera controls (pan, zoom, bounds, gamepad) | Q-33 |
-| Do enemies damage towers, tower HP/death | Q-10 |
-| Guardian HP and which 2 skills, does she auto-attack | Q-11 |
-| Which 3 tower types exist in M2 | Q-12 |
-| Gamepad building UX | Q-14 |
-| Run end condition and exact length (15-20 min, boss timing) | Q-15 |
-| What a loss gives and keeps | Q-16 |
 | How cards interact with gold-based building | Q-18 |
 
 ## 4. Player actions **[D]**
 - **Build:** both real-time during action (spending resources dropped by kills) **and** during the short breaks between waves (D-032).
 - **Placement (D-040):** free placement on a fine grid inside a radius around the Guardian; **no tower cap**; towers can be sold for a partial gold refund but not moved. The player can move the camera (controls: Q-33). **[D]**
 - **Towers = waifus.** Each tower is a waifu character placed around the Guardian, with her own attack, role and personality.
-- **Guardian active skills:** the Guardian stays at the center and has active skills the player triggers (cooldown-based; e.g. shield, heal, area blast). The Guardian does not move. **[D]**
+- **Guardian active skills:** the Guardian stays at the center and has active skills the player triggers (cooldown-based). The Guardian does not move and has no auto-attack. **[D]** M2 skills: Area blast (~12 s cooldown) and Shield (~25 s cooldown); Heal comes later as an upgrade (D-044). Numbers are placeholders in data.
+- **M2 tower types:** ranged single-target damage, area (splash) damage, crowd control (slow) (D-045). **[D]**
+- **Build radius and costs:** the buildable area starts at about 20 world units around the Guardian and grows via meta upgrades or cards; each extra copy of a tower costs more, which is the soft limit (D-042). **[D]**
 - **Level-ups:** killing enemies grants XP; on level-up the game pauses and offers a choice of **3 cards**. **[P]** Card types: new tower waifu, tower upgrade, Guardian skill upgrade, global perk.
 
 ## 5. Waifu towers **[P]**
@@ -75,6 +70,8 @@ Each waifu has: role (damage / crowd control / support / tank / economy), attack
 
 ## 9. Controls and platforms **[D]**
 - Windows PC (mouse + keyboard) and **Steam Deck** (gamepad). Gamepad must be a first-class input from the start; no feature may require a mouse only.
+- **Camera (D-041):** PC uses WASD/arrows, edge scroll and mouse-wheel zoom; gamepad pans with the right stick, zooms with the bumpers and recentres on the Guardian with a button. The camera is limited to the buildable radius plus a margin and has 3 zoom levels. **[D]**
+- **Gamepad building (D-046):** hold a button to open a radial tower menu, release to select; the placement cursor is at the screen centre (the world moves under it, snapped to the grid); A places, B cancels, skills are on the triggers. A slow-time-while-placing toggle is an accessibility option. Exact mapping goes in a controls spec. **[D]**
 
 ## 10. Art direction **[P]**
 - Adult-proportioned stylized waifus (no chibi, D-030), 2.5D: 3D isometric camera, billboarded 2D art. Base resolution 2560x1440 (D-039). Details in `03_ART_PIPELINE.md`.

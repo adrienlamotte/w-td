@@ -19,69 +19,21 @@ Last reviewed: 2026-10-08 (daily docs review; owner answers recorded the same da
 | Q-06 Sim tick rate | 30 Hz | D-038 |
 | Q-07 Base resolution | 2560x1440 | D-039 |
 | Q-08 Between waves | Short break, building always allowed | D-032 |
-| Q-09 Tower placement | Free grid placement, no cap, sell not move, movable camera | D-040 (follow-ups: Q-33, Q-34) |
+| Q-09 Tower placement | Free grid placement, no cap, sell not move, movable camera | D-040 (follow-ups answered: D-041, D-042) |
+| Q-10 Do enemies hurt towers | Yes, towers have HP; dead towers leave a rebuildable husk | D-043 |
+| Q-11 Guardian skills in M2 | Area blast + Shield, no auto-attack | D-044 |
+| Q-12 Tower types in M2 | Ranged, area, slow | D-045 |
 | Q-13 Towers in the very first run | 2 starter waifus | D-031 |
+| Q-14 Gamepad building | Radial menu + centre cursor | D-046 |
+| Q-15 Run end | Fixed timeline, kill the final boss | D-047 |
+| Q-16 Loss rewards | Reduced hearts, pick a Guardian again | D-048 |
 | Q-24 Chibi vs adult look | No chibi, adult proportions everywhere | D-030 |
+| Q-33 Camera controls | Pan + zoom, cursor at screen centre | D-041 |
+| Q-34 Build radius and performance with no cap | Growable radius, rising costs, 300/150 stress target | D-042 |
 
 ---
 
-## A. Blocks M1/M2 (current priorities)
-
-### Q-10 Do enemies hurt towers? (blocks M2)
-`01_GAME_DESIGN.md` section 3 says enemies "attack towers in the way". Not specified: tower HP, death, repair.
-- A) **Towers have HP; enemies attack whatever blocks their straight path, otherwise the Guardian; dead towers leave a rebuildable husk (pay a fraction of the cost); no repair in M2** ★
-- B) Towers are invulnerable; enemies just walk through to the Guardian (simplest, removes the tank role).
-- C) Towers have HP and are lost permanently when killed (harsher; tank/support roles matter more).
-Recommended: A.
-
-### Q-11 Guardian numbers and skills for M2 (blocks M2)
-M2 needs "Guardian with HP and 2 active skills". Candidate set from the pitch: shield, heal, area blast.
-- A) **Skills: Area blast (damage ring, ~12 s cooldown) and Shield (absorb damage, ~25 s cooldown); heal deferred to M3 upgrades** ★ (all numbers are placeholders in data, tuned by the balance runner)
-- B) Skills: Area blast and Heal.
-- C) Skills: Shield and Heal.
-Also: does the Guardian attack on its own (★ no, skills only, to keep her role distinct from towers)?
-
-### Q-12 The three M2 tower types (blocks M2)
-Roles available: damage / crowd control / support / tank / economy.
-- A) **Ranged damage (single target), area damage (splash), crowd control (slow)** ★
-- B) Ranged damage, tank (blocks and absorbs), support (heals/buffs).
-- C) Ranged damage, area damage, tank.
-Feeds Q-17 (roles of the 8-10 launch waifus).
-
-### Q-14 Gamepad building UX (blocks M2: "gamepad and mouse both work")
-- A) **Radial/quick menu for tower choice + a free-moving cursor with right stick, A to place, B to cancel; skills on face buttons / triggers** ★
-- B) Cursor snaps between valid slots with d-pad/left stick (pairs with Q-09 option B).
-- C) Pause-and-place mode (time slows to 10-20% while placing).
-Recommended: A, with the "slow time while placing" as an accessibility toggle.
-**Conflict to resolve:** option A uses the right stick for the cursor, but D-040 makes the camera movable and the gamepad needs a way to pan it. Decide together with Q-33 (its recommended option moves the placement cursor to the screen centre and frees the right stick for panning).
-
-### Q-15 Run end condition and length (blocks M2)
-D-006 says 15-20 min; section 3 says a final boss at the end; M2 says "a full 15-minute run".
-- A) **Fixed timeline: the final boss spawns at a data-defined time (default 15:00 in M2, tuned to 15-20 min later); winning requires killing her** ★
-- B) Timer ends the run at a fixed length; boss is a mid-run event; surviving is the win.
-- C) Variable length: player can trigger the final boss early for a bonus (risk/reward).
-Recommended: A.
-
-### Q-16 Win/lose consequences and retry (blocks M2 screens, M3 meta)
-Undefined: what the player keeps after a loss, whether the same locked waifu can be rescued again (obviously yes under D-026, but is the choice re-offered?), and rewards for partial progress.
-- A) **Loss keeps a reduced hearts reward (e.g. 30-50% scaled by time survived), and the player picks a Guardian again from the offered locked waifus** ★
-- B) Loss gives nothing except unlocking bond XP for towers used.
-- C) Loss gives full hearts (low frustration), win gives the waifu plus a bonus.
-Recommended: A.
-
-### Q-33 Camera controls (blocks M1/M2)
-D-040 says the player can move the camera. Not defined: how, how far, zoom, and the gamepad bindings.
-- A) **PC: WASD/arrows, edge scroll and mouse-wheel zoom; gamepad: right stick pans, bumpers zoom, a button recentres on the Guardian, and the placement cursor sits at the screen centre (the world moves under it, snapped to the grid). Camera is limited to the buildable radius plus a margin; 3 zoom levels** ★
-- B) The camera follows the placement cursor automatically; no manual pan.
-- C) Free pan only during the break between waves; the camera is locked on the Guardian during waves.
-Recommended: A (resolves the right-stick conflict noted in Q-14).
-
-### Q-34 Placement radius and performance budget without a tower cap (blocks M1/M2)
-D-040 removes the tower cap, so the old "50 towers" budget is no longer an upper bound.
-- A) **Starting build radius of about 20 world units around the Guardian, growable via meta upgrades or cards; the cost of each additional copy of a tower rises (soft limit through the economy); performance stress target of 300 towers on PC and 150 on Steam Deck, validated in M1** ★ (numbers are placeholders)
-- B) Whole map buildable (no radius), same soft cost limit.
-- C) Fixed radius that never grows.
-Recommended: A.
+## A. Blocks M0 (current priority)
 
 ### Q-35 How are the local routines scheduled? (blocks M0 automation)
 D-035 puts builds, tests, balance and perf runs and ComfyUI jobs on the owner's PC, so the cloud cannot trigger them.

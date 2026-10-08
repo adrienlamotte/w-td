@@ -15,7 +15,7 @@ Status key: **[D]** decided, **[P]** proposed, **[O]** open.
 - Waifus/towers (few instances): can be regular nodes with skeletal 2D parts (see `03_ART_PIPELINE.md`).
 - Sprite animation for the horde through a shader reading frame index from per-instance custom data (no AnimatedSprite nodes).
 - **Base resolution [D]:** 2560x1440, scaled down to 1280x800 on Steam Deck (D-039).
-- **Movable camera [D]:** the player can move the camera (D-040), so the sim world is larger than the screen and the view culls off-screen entities. Controls and bounds: Q-33.
+- **Movable camera [D]:** the player can move the camera (D-040), so the sim world is larger than the screen and the view culls off-screen entities. Controls and bounds: D-041.
 - **Fallback decision:** if 3D billboarding costs too much on Steam Deck, switch the view layer to pure 2D with iso-looking art. Because the simulation is independent of rendering (below), this is a contained change.
 
 ## 3. Architecture: simulation / view split **[D]**
@@ -42,6 +42,7 @@ game/
 - **Events out (for the view):** `EnemyDied`, `EnemyHit`, `TowerPlaced`, `TowerDied`, `SkillUsed`, `LevelUp`, `GuardianHit`, `WaveStarted`, `RunEnded`. The view reads events and state arrays; it never calls back into rules.
 - **Entity arrays (SoA, `PackedFloat32Array` / `PackedInt32Array`):** enemy `pos_x, pos_z, hp, type_id, state, anim_frame, target_id`; tower `pos_x, pos_z, hp, waifu_id, level, cooldown`.
 - **Spatial hash:** cell size equal to the largest enemy collision diameter x 2 (starting value 2.0 units), rebuilt each tick.
+- **Build area:** towers snap to a fine grid inside the build radius, which starts at about 20 units from the Guardian and can grow (D-042). Tower count is not capped, so tower arrays must grow dynamically and the M1 benchmark must include the 300-tower stress case.
 
 ### 3b. Data schema example **[P]** (JSON + JSON Schema is decided, D-034)
 ```json
@@ -62,8 +63,8 @@ All displayed text (names, barks, card text) is stored as localisation keys, nev
 ## 4. Performance budgets (targets, validated in milestone M1) **[P]**
 | Platform | Target |
 |---|---|
-| PC (mid-range) | 60 FPS with ~3000 enemies + 50 towers (typical); stress case with many more towers tracked in Q-34 |
-| Steam Deck | 40-60 FPS with ~1500 enemies + 50 towers (typical); same stress case |
+| PC (mid-range) | 60 FPS with ~3000 enemies + 50 towers (typical); stress case 300 towers (D-042) |
+| Steam Deck | 40-60 FPS with ~1500 enemies + 50 towers (typical); stress case 150 towers (D-042) |
 - Sim step budget: under 4 ms per frame at max load on PC (at a 30 Hz tick, the per-tick cost may be up to 8 ms; see section 3a and D-038).
 - Numbers are initial guesses; M1 spike will measure and update this section.
 
