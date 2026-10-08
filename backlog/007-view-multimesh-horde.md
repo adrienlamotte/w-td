@@ -1,5 +1,5 @@
 # 007 — View: MultiMesh billboard rendering for the horde and towers
-- Status: review
+- Status: done
 - Milestone: M1
 - Depends on: 006
 - PR: #11
@@ -69,3 +69,4 @@ Note for the owner (CP-M1): sprite heights and walk speed are placeholders in `g
 ## Questions
 
 ## Review log
+- 2026-10-08 lead-dev: approved and merged PR #11 (squash) into m1/dev. Ran `scripts	est.ps1` (52/52 GUT, 6/6 Python) and `scriptsalidate.ps1` (OK) on the branch; `scripts\export.ps1` builds and `build\windows\WTD.exe` runs 8 s with no errors. Checked: one MultiMesh per type + one for towers, no Node per enemy; batcher/renderer are view only (no rules); `recycle_radius` off by default, `_spawn_rng`, index order, covered by the determinism test; no binary art. Accepted deviation: one fill pass per enemy type (packed-array copy-on-write), ponytail-noted. Sprite sizes, walk fps and demo counts (needs-human:playtest) are judged at CP-M1.
