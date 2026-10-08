@@ -12,18 +12,18 @@ Status key: **[D]** decided, **[P]** proposed, **[O]** open.
 - The assistant chooses the docs format: **markdown in the repo** (easy to diff, edit and read by agents).
 - Decisions go to `DECISIONS.md`; unanswered items to `OPEN_QUESTIONS.md`.
 
-## 2a. Development loop roles **[P]** (D-070)
+## 2a. Development loop roles **[D]** (D-070, D-077)
 | Role | Runs as | Does | Never does |
 |---|---|---|---|
-| Product owner / supervisor | `/dev-loop` skill (`.claude/skills/dev-loop/SKILL.md`), in the owner's Claude Code session | plans each milestone (`docs/plans/M<n>.md` + task files), picks the next step, posts questions/approvals/checkpoints on the Owner Desk and records the answers, writes review packs, stops for humans | write gameplay code, decide design alone |
+| Product owner / supervisor | `/dev-loop` skill (`.claude/skills/dev-loop/SKILL.md`), in the owner's Claude Code session | plans each milestone (`docs/plans/M<n>.md` + task files), picks the next step, asks the owner questions, approvals and checkpoints in the session and records the answers, writes review packs, stops for humans | write gameplay code, decide design alone |
 | Lead developer | `lead-dev` subagent (`.claude/agents/lead-dev.md`) | writes each task's technical plan, splits big tasks, reviews PRs (runs the tests itself), merges approved task PRs into the milestone branch | implement features, touch `main` |
 | Senior game developer | `game-dev` subagent (`.claude/agents/game-dev.md`) | implements one planned task per branch and PR, with tests and docs | merge, change scope, guess design |
 
-- Start a run with `/dev-loop`. It keeps going until a stop (Q-40 ★). To have it pick up the owner's answers on its own, wrap it: `/loop /dev-loop`.
+- Start a run with `/dev-loop`. It keeps going until a stop (D-074).
 - **Stops:** milestone checkpoint; previous checkpoint not accepted; everything blocked on the owner; red tests on the milestone branch; anything that would publish, spend, touch credentials or push to `main`.
-- **Owner Desk [P] (D-072):** https://claude.ai/artifact/Cosi7LM4xG1sbJLqryt1CW is the owner's form. The product owner posts open questions (`Q-nn`, mirrored in `OPEN_QUESTIONS.md`), approvals (`A-…`) and checkpoints (`CP-M<n>`), each with options and one ★ recommended. The owner answers whenever they like. The product owner turns each answer into a `DECISIONS.md` entry and marks it recorded. `OPEN_QUESTIONS.md` and `DECISIONS.md` stay the source of truth; the desk is how the owner answers.
+- **Owner questions (D-077):** the product owner asks the owner directly in the Claude Code session with a multiple-choice form (up to 4 questions per form, recommended option first, the owner can always answer "Other"). The agents never ask the owner themselves: they write their questions into the task file and the product owner asks them. Questions are batched: the loop keeps working on whatever is not blocked and asks when nothing else can move, at a stop, or at the end of a run. Every question also lives in `OPEN_QUESTIONS.md` until answered, then becomes a `DECISIONS.md` entry.
 
-## 3. Plans and backlog **[P]** (D-071)
+## 3. Plans and backlog **[D]** (D-071)
 Three levels:
 1. **Global roadmap:** `06_ROADMAP.md`: milestones, acceptance criteria, checkpoints, current milestone.
 2. **Milestone plan:** `docs/plans/M<n>.md`, written by the product owner when the milestone starts. Sections: goal and "done when" (copied from the roadmap), scope in and out, task list (number, title, depends on, status), human gates (checkpoint, approvals), open questions that block it, risks.
@@ -49,10 +49,10 @@ Three levels:
 - The loop only runs tasks whose `Milestone:` is the current one. Tasks without a milestone (for example design proposals like `001`) are run on request.
 - Alternative: Trello board (connector exists). Not chosen; revisit if the owner wants a visual board.
 
-## 4. Git and review **[P]**
-- **Branches (Q-39 ★, until the owner answers):** one milestone branch `m<n>/dev`, created from `main` when the milestone starts. One branch per task, `task/NNN-short-title`, with a PR into `m<n>/dev`; the lead dev merges it (squash) after review. At the checkpoint the product owner opens the PR `m<n>/dev` → `main`, and **only the owner merges into `main`**.
+## 4. Git and review **[D]** (D-073)
+- **Branches (D-073):** one milestone branch `m<n>/dev`, created from `main` when the milestone starts. One branch per task, `task/NNN-short-title`, with a PR into `m<n>/dev`; the lead dev merges it (squash) after review. At the checkpoint the product owner opens the PR `m<n>/dev` → `main`, and **only the owner merges into `main`**.
 - Merge a task PR only if: headless tests pass, data validator passes, docs updated, lead-dev review passed.
-- Tasks that need human validation are labeled `needs-human:<playtest|art|balance|steam>` and are not merged until the human signs off on the Owner Desk (or are merged behind a feature flag).
+- Tasks that need human validation are labeled `needs-human:<playtest|art|balance|steam>` and are not merged until the owner approves them in the session (or are merged behind a feature flag).
 - All agents use the owner's GitHub account, so review verdicts are PR comments, not formal GitHub reviews.
 
 ## 5. Recurring routines (loops) **[P]**

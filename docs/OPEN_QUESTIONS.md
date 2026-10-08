@@ -15,6 +15,9 @@ Last reviewed: 2026-10-08 (daily docs review; owner answers recorded the same da
 | Q-02 Data format | JSON + JSON Schema | D-034 |
 | Q-03 Where builds, tests and nightly runs execute | Everything on the owner's PC | D-035 (scheduling: Q-35) |
 | Q-04 Godot version | Pin at M0 start | D-036 |
+| Q-38 Steam Deck build | Windows build through Proton first | D-075 |
+| Q-39 How task PRs are merged | Milestone branch, owner merges into `main` | D-073 |
+| Q-40 Length of a loop run | Until a real stop | D-074 |
 | Q-05 Which proposed decisions to confirm | Sim/view split only | D-037 |
 | Q-06 Sim tick rate | 30 Hz | D-038 |
 | Q-07 Base resolution | 2560x1440 | D-039 |
@@ -61,23 +64,6 @@ Interim rule until decided: the first test character (`waifu_test01`) is committ
 ---
 
 ## B. Long-term / business (not blocking until M5-M6)
-
-### Q-39 How do finished tasks get merged? (blocks M1 start; on the Owner Desk)
-- A) **One branch per milestone (`m<n>/dev`); the lead dev merges each reviewed task PR into it; the owner merges the milestone PR into `main` at the checkpoint** ★ (safe to assume: the loop uses it until answered)
-- B) Every task PR targets `main` and the owner merges each one; the loop waits between tasks.
-- C) The lead dev merges task PRs straight into `main` after review.
-
-### Q-40 How long does one run of the development loop go before checking in? (blocks M1 start; on the Owner Desk)
-A run always stops at checkpoints, art/balance/Steam approvals and when everything is blocked on the owner.
-- A) **Keep going until one of those stops** ★ (safe to assume)
-- B) Stop after every finished task.
-- C) Stop after 3 finished tasks.
-
-### Q-38 Steam Deck build: native Linux export or the Windows build through Proton? (blocks the M1 Deck measurement and M6)
-M0 only exports Windows (D-068). The Deck can run the Windows build through Proton, or Godot can export a native Linux build. This affects where the M1 Deck numbers are measured and how GodotSteam is packaged.
-- A) **Windows build through Proton first; add a native Linux export only if M1 shows a problem** ★ (safe to assume: this is what M0 does)
-- B) Native Linux export for the Deck from M1.
-- C) Ship both.
 
 ### Q-32 Steam Deck performance (measured in M1)
 Not a question for the owner: results will go to `DECISIONS.md`. Kept so that nothing from the earlier list is dropped.
