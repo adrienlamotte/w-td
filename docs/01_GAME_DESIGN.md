@@ -22,7 +22,7 @@ Tone: cute and comedic fantasy. **[D]** All characters are clearly adult with ad
 - Win: kill the final boss, who spawns at a data-defined time (15:00 in M2, tuned toward 15-20 min later; D-047). Lose: Guardian HP = 0. **[D]**
 - **Loss:** keeps a reduced hearts reward (30-50% depending on time survived); the player picks a Guardian again from the offered locked waifus (D-048). **[D]**
 - **Win reward:** the Guardian protected in this run is unlocked as a **tower waifu** for future runs.
-- **Guardian each run:** before the run, the player **picks the Guardian from a few locked waifus** she wants to "rescue". Unlocked waifus are towers only. **[D]** How many are offered and how they are drawn: **[O]**, see `OPEN_QUESTIONS.md` Q-17.
+- **Guardian each run:** before the run, the player **picks the Guardian from a few locked waifus** she wants to "rescue". Unlocked waifus are towers only. **[D]** **3 locked waifus are offered, always the same three until one is rescued**; when fewer than 3 remain, all remaining are shown (D-050). **[D]** The order in which locked waifus enter the offer is data-defined: **[O]** (Q-23).
 - **After everyone is unlocked (replay value):** **difficulty tiers**, **endless mode** and **challenge modifiers** **[D]**. Details of each: **[O]** (Q-27). Who the Guardian is in these modes: **[O]** (Q-28).
 - **No story or campaign.** Pure gameplay; waifus only have short personality lines (barks). **[D]**
 - **Roster target at Early Access launch: 8-10 waifus.** **[D]**
@@ -32,7 +32,6 @@ Tone: cute and comedic fantasy. **[D]** All characters are clearly adult with ad
 Agents must not guess these; each has options and a recommended default in `OPEN_QUESTIONS.md`.
 | Gap | Question |
 |---|---|
-| How cards interact with gold-based building | Q-18 |
 
 ## 4. Player actions **[D]**
 - **Build:** both real-time during action (spending resources dropped by kills) **and** during the short breaks between waves (D-032).
@@ -41,7 +40,7 @@ Agents must not guess these; each has options and a recommended default in `OPEN
 - **Guardian active skills:** the Guardian stays at the center and has active skills the player triggers (cooldown-based). The Guardian does not move and has no auto-attack. **[D]** M2 skills: Area blast (~12 s cooldown) and Shield (~25 s cooldown); Heal comes later as an upgrade (D-044). Numbers are placeholders in data.
 - **M2 tower types:** ranged single-target damage, area (splash) damage, crowd control (slow) (D-045). **[D]**
 - **Build radius and costs:** the buildable area starts at about 20 world units around the Guardian and grows via meta upgrades or cards; each extra copy of a tower costs more, which is the soft limit (D-042). **[D]**
-- **Level-ups:** killing enemies grants XP; on level-up the game pauses and offers a choice of **3 cards**. **[P]** Card types: new tower waifu, tower upgrade, Guardian skill upgrade, global perk.
+- **Level-ups:** killing enemies grants XP; on level-up the game pauses and offers a choice of **3 cards**. **[P]** Card types: new tower waifu, tower upgrade, Guardian skill upgrade, global perk. **Rules (D-051) [D]:** cards never give a tower for free; a "new tower waifu" card unlocks the right to build that tower this run and gold pays each placement; tower upgrade levels are bought with gold; no reroll, banish or skip in M3.
 
 ## 5. Waifu towers **[P]**
 Each waifu has: role (damage / crowd control / support / tank / economy), attack pattern, 3-5 upgrade levels, tags (for synergies), 2-4 outfits, personality lines for barks.
@@ -66,7 +65,7 @@ Each waifu has: role (damage / crowd control / support / tank / economy), attack
 
 ## 8. Economy **[P]**
 - In-run: **gold** (drops, for building/upgrading towers) and **XP** (level-up cards).
-- Meta: **hearts/affection** (earned at run end, used in the hub).
+- Meta: **hearts** (earned at run end, used in the hub) are the single meta currency and buy flat permanent upgrades from a data-defined tree (D-052). **[D]** **Bond** is tracked per waifu and only gates outfits. **[D]**
 
 ## 9. Controls and platforms **[D]**
 - Windows PC (mouse + keyboard) and **Steam Deck** (gamepad). Gamepad must be a first-class input from the start; no feature may require a mouse only.

@@ -27,44 +27,17 @@ Last reviewed: 2026-10-08 (daily docs review; owner answers recorded the same da
 | Q-14 Gamepad building | Radial menu + centre cursor | D-046 |
 | Q-15 Run end | Fixed timeline, kill the final boss | D-047 |
 | Q-16 Loss rewards | Reduced hearts, pick a Guardian again | D-048 |
+| Q-17 Guardian offer | 3 locked waifus, fixed until one is rescued | D-050 |
+| Q-18 Cards vs gold | Cards unlock the right to build; gold pays | D-051 |
+| Q-19 Meta currency | Hearts + per-waifu bond | D-052 |
 | Q-24 Chibi vs adult look | No chibi, adult proportions everywhere | D-030 |
+| Q-35 How local routines run | Desktop app scheduled tasks, or manually | D-049 |
 | Q-33 Camera controls | Pan + zoom, cursor at screen centre | D-041 |
 | Q-34 Build radius and performance with no cap | Growable radius, rising costs, 300/150 stress target | D-042 |
 
 ---
 
-## A. Blocks M0 (current priority)
-
-### Q-35 How are the local routines scheduled? (blocks M0 automation)
-D-035 puts builds, tests, balance and perf runs and ComfyUI jobs on the owner's PC, so the cloud cannot trigger them.
-- A) **Scheduled tasks in the Claude desktop app, running on the PC while it is on and the app is open; the loop procedure lives in the repo docs; the owner can also run them manually** ★
-- B) Manual only: the owner starts a loop in Claude Code on the PC during work sessions.
-- C) Windows Task Scheduler launching Claude Code in headless mode (more setup, independent of the desktop app).
-Recommended: A.
-
----
-
-## B. Blocks M3 (roguelite layer)
-
-### Q-17 Guardian pick details (D-026 left these open)
-How many locked waifus are offered before a run and whether they are always the same.
-- A) **3 offered, drawn at random from the locked pool; the player can reroll once per run start** ★ (when fewer than 3 locked remain, show all of them)
-- B) 3 offered, always the same three until one is rescued (predictable, easier to balance).
-- C) 2 offered (simpler UI).
-- D) All locked waifus are shown (needs a bigger screen but zero randomness).
-
-### Q-18 Level-up card system rules (blocks M3)
-`01_GAME_DESIGN.md` section 4 lists four card types but not their interaction with gold-based building.
-- A) **Cards never give free towers; "new tower waifu" cards unlock the right to build that tower this run (then gold pays for each placement)** ★
-- B) Cards give the tower itself for free (no gold needed for the first copy).
-- C) Remove "new tower waifu" cards; only upgrade, Guardian and perk cards remain.
-Also: tower upgrade levels (3-5 per waifu): bought with gold (★) or with cards only? Reroll/banish/skip mechanics for the 3 cards: none (★) for M3.
-
-### Q-19 Meta-currency and permanent upgrades (blocks M3)
-Section 7/8 are [P] and thin: "hearts" buy permanent upgrades; "bond" unlocks outfits.
-- A) **One meta currency (hearts) buys flat permanent upgrades from a data-defined tree; bond is per-waifu and only gates outfits** ★
-- B) Hearts split by waifu (each waifu has her own affection currency).
-- C) No permanent stat upgrades; meta progression is only unlocks (waifus, outfits, starting perks).
+## A. Blocks M3 (roguelite layer)
 
 ### Q-20 Save system scope (blocks M3)
 Runs last 15-20 min; the Steam Deck can suspend mid-run.
@@ -94,7 +67,7 @@ Blocks the content in M5 but M3 synergy rules need tags, so decide before M3 clo
 
 ---
 
-## C. Art (decide before any art work in M4)
+## B. Art (decide before any art work in M4)
 
 ### Q-25 Style references and models (existing)
 - A) **Owner provides 5-10 reference images; the art spike (M4) evaluates 2-3 models/LoRAs against them** ★
@@ -108,7 +81,7 @@ Blocks the content in M5 but M3 synergy rules need tags, so decide before M3 clo
 
 ---
 
-## D. Long-term / business (not blocking until M5-M6)
+## C. Long-term / business (not blocking until M5-M6)
 
 ### Q-27 Endgame details (modes decided in D-027)
 Also see Q-28 below, which is the gap this creates.

@@ -85,7 +85,7 @@ All displayed text (names, barks, card text) is stored as localisation keys, nev
 - Saves: local JSON with versioning and migration.
 
 ## 8. Build and CI **[D]**
-- The repo is on GitHub. Builds, headless tests, balance runs and perf benchmarks run on the owner's PC (D-035), not in cloud CI. Minimum: a scripted `build.sh` (or equivalent) for the Windows export + tests, runnable by an agent on the owner's machine. How nightly runs are triggered: Q-35. GitHub Actions can be added later without changing the scripts.
+- The repo is on GitHub. Builds, headless tests, balance runs and perf benchmarks run on the owner's PC (D-035), not in cloud CI. Minimum: a scripted `build.sh` (or equivalent) for the Windows export + tests, runnable by an agent on the owner's machine. Nightly runs are triggered by desktop-app scheduled tasks, or manually (D-049). GitHub Actions can be added later without changing the scripts.
 
 ## 9. Coding standards for agents
 - Typed GDScript, small files, one responsibility per file.
