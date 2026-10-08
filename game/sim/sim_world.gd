@@ -9,6 +9,8 @@ const SIM_DT: float = 1.0 / TICK_RATE
 var tick: int = 0
 var catalog: EnemyCatalog
 var enemies: SimEnemies = SimEnemies.new()
+## Derived each tick from enemy positions; not part of state_hash().
+var grid: SpatialGrid
 # One RNG per concern, each seeded from the run seed (3a). Others add theirs the same way.
 var _spawn_rng: RandomNumberGenerator = RandomNumberGenerator.new()
 
@@ -16,6 +18,11 @@ var _spawn_rng: RandomNumberGenerator = RandomNumberGenerator.new()
 func _init(run_seed: int, p_catalog: EnemyCatalog = null) -> void:
 	catalog = p_catalog if p_catalog else EnemyCatalog.load_dir()
 	_spawn_rng.seed = hash([run_seed, "spawns"])
+	# Cell size = largest enemy collision diameter x 2 (3a).
+	var max_radius := 0.0
+	for r in catalog.radius:
+		max_radius = maxf(max_radius, r)
+	grid = SpatialGrid.new(4.0 * max_radius)
 
 
 ## Spawns count enemies of type_id on a ring of ring_radius around the Guardian,
@@ -30,6 +37,7 @@ func spawn_ring(p_type_id: int, count: int, ring_radius: float) -> void:
 ## Advances the simulation by exactly one tick of SIM_DT.
 func step() -> void:
 	enemies.chase_guardian(catalog.speed, catalog.radius, SIM_DT)
+	grid.rebuild(enemies.pos_x, enemies.pos_z)
 	tick += 1
 
 
