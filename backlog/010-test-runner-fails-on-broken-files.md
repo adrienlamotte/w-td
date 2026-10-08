@@ -1,8 +1,8 @@
 # 010 — Test runner: a broken test file must fail the run
-- Status: planned
+- Status: review
 - Milestone: M1
 - Depends on: -
-- PR: -
+- PR: #7
 
 ## Goal
 `scripts\test.ps1` must report failure when a GUT test file fails to parse or load. Today GUT skips such a file with only a warning and the run still prints "ALL TESTS PASSED" (found by game-dev in 003). The whole development loop trusts that signal.
