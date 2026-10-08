@@ -1,0 +1,9 @@
+; Engine configuration file. Godot version is pinned in tools/godot_version.txt (D-036).
+
+config_version=5
+
+[application]
+
+config/name="WTD"
+run/main_scene="res://view/main.tscn"
+config/features=PackedStringArray("4.7")

@@ -1,0 +1,7 @@
+# Godot
+game/.godot/
+# Build output
+build/
+# Python
+tools/.venv/
+__pycache__/

@@ -29,7 +29,7 @@ game/
   input/    <- keyboard/mouse/gamepad mapping to sim commands
   tests/    <- headless tests
 ```
-- The sim exposes a fixed-timestep `step(dt)` and a command queue (`PlaceTower`, `UseSkill`, `PickCard`...).
+- The sim exposes a fixed-timestep `step()` (each call advances exactly one `SIM_DT` tick; the caller accumulates frame time, D-069) and a command queue (`PlaceTower`, `UseSkill`, `PickCard`...).
 - The sim stores entities in **packed arrays** (structure-of-arrays: positions, hp, types) for speed.
 - Spatial queries (nearest enemy, collisions) through a **uniform spatial hash grid**.
 - Why: (1) performance, (2) **headless balance simulation** (run thousands of runs overnight), (3) swappable view layer, (4) agents can test rules without launching the game.
@@ -85,7 +85,7 @@ All displayed text (names, barks, card text) is stored as localisation keys, nev
 - Saves: local JSON with versioning and migration. The meta profile is saved; a run is not resumable after the app is closed except for an automatic suspend save at card and wave boundaries (D-053). **[D]**
 
 ## 8. Build and CI **[D]**
-- The repo is on GitHub. Builds, headless tests, balance runs and perf benchmarks run on the owner's PC (D-035), not in cloud CI. Minimum: a scripted `build.sh` (or equivalent) for the Windows export + tests, runnable by an agent on the owner's machine. Nightly runs are triggered by desktop-app scheduled tasks, or manually (D-049). GitHub Actions can be added later without changing the scripts.
+- The repo is on GitHub. Builds, headless tests, balance runs and perf benchmarks run on the owner's PC (D-035), not in cloud CI. The scripts are PowerShell files in `/scripts` (`test.ps1`, `validate.ps1`, `run.ps1`, `export.ps1`, D-068), listed in the Commands section of `CLAUDE.md`. Nightly runs are triggered by desktop-app scheduled tasks, or manually (D-049). GitHub Actions can be added later without changing the scripts.
 
 ## 9. Coding standards for agents
 - Typed GDScript, small files, one responsibility per file.

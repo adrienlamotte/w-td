@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "id": "enemy_swarmer_01",
+  "archetype": "swarmer",
+  "hp": 8,
+  "speed": 3.2,
+  "contact_damage": 1,
+  "radius": 0.35,
+  "xp": 1,
+  "drops": [{"type": "gold", "amount": 1, "chance": 0.6}],
+  "sprite": "enemies/swarmer_01",
+  "tags": []
+}
