@@ -39,7 +39,7 @@ func alpha() -> float:
 
 
 # ponytail: after a swap-remove (D-081) prev[i] belongs to another enemy for one tick.
-# Nothing removes enemies in M1; with enemy death (M2) the sim marks moved slots or the view snaps them.
+# HordeBatcher snaps on jumps above 2 units (D-087); these helpers do not.
 func interp_x(i: int) -> float:
 	var cur := world.enemies.pos_x[i]
 	return cur if i >= prev_x.size() else lerpf(prev_x[i], cur, alpha())
