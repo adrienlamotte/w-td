@@ -60,6 +60,15 @@ Last reviewed: 2026-10-08 (daily docs review; owner answers recorded the same da
 
 ---
 
+## M2 (current milestone)
+
+### Q-49 Can the player build while the game is paused? (blocks tasks 020/021, not the sim)
+- A) **No: pause stops everything; building happens in real time and during the breaks (D-032)** ★
+- B) Yes: the pause doubles as a planning pause (easier game).
+- C) Only with the slow-time-while-placing accessibility option on (D-046).
+
+---
+
 ## A. Deferred until the first real asset arrives
 
 ### Q-37 Where are large art files stored? (DEFERRED by the owner: decide when the first real asset arrives)
