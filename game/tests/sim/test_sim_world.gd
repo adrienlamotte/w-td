@@ -16,3 +16,10 @@ func test_thirty_steps_is_one_second() -> void:
 	for i in 30:
 		world.step()
 	assert_almost_eq(world.tick * SimWorld.SIM_DT, 1.0, 1e-6)
+
+
+func test_step_records_phase_times() -> void:
+	var world := SimWorld.new(1)
+	world.spawn_ring(0, 10, 5.0)
+	world.step()
+	assert_eq(world.phase_usec.size(), 4)

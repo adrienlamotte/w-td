@@ -23,7 +23,7 @@ func _init(p_cell_size: float, p_half_extent: float = 64.0) -> void:
 
 
 ## Cell coordinate of a world coordinate, clamped to the grid.
-func _cell_coord(v: float) -> int:
+func cell_coord(v: float) -> int:
 	return clampi(floori((v + half_extent) / cell_size), 0, dim - 1)
 
 
@@ -35,7 +35,7 @@ func rebuild(xs: PackedFloat32Array, zs: PackedFloat32Array) -> void:
 	_enemy_cell.resize(count)
 	cell_start.fill(0)
 	for i in count:
-		var c := _cell_coord(zs[i]) * dim + _cell_coord(xs[i])
+		var c := cell_coord(zs[i]) * dim + cell_coord(xs[i])
 		_enemy_cell[i] = c
 		cell_start[c] += 1
 	# Inclusive prefix sum: cell_start[c] = end of cell c.
@@ -57,9 +57,9 @@ func query_radius(x: float, z: float, r: float, xs: PackedFloat32Array,
 		zs: PackedFloat32Array, out: PackedInt32Array) -> void:
 	out.clear()
 	var r2 := r * r
-	var x0 := _cell_coord(x - r)
-	var x1 := _cell_coord(x + r)
-	for gz in range(_cell_coord(z - r), _cell_coord(z + r) + 1):
+	var x0 := cell_coord(x - r)
+	var x1 := cell_coord(x + r)
+	for gz in range(cell_coord(z - r), cell_coord(z + r) + 1):
 		var row := gz * dim
 		for c in range(row + x0, row + x1 + 1):
 			for k in range(cell_start[c], cell_start[c + 1]):
@@ -78,8 +78,8 @@ func nearest(x: float, z: float, max_range: float, xs: PackedFloat32Array,
 		zs: PackedFloat32Array) -> int:
 	var best := -1
 	var best_d2 := max_range * max_range
-	var cx := _cell_coord(x)
-	var cz := _cell_coord(z)
+	var cx := cell_coord(x)
+	var cz := cell_coord(z)
 	var k_max := mini(int(max_range / cell_size) + 1, dim)
 	for k in k_max + 1:
 		# Any enemy in ring k is at least (k - 1) * cell_size away (clamping keeps this true).
