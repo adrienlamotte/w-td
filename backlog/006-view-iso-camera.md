@@ -1,5 +1,5 @@
 # 006 — View: isometric camera, ground plane and tick interpolation
-- Status: review
+- Status: done
 - Milestone: M1
 - Depends on: 002
 - PR: #10
@@ -54,3 +54,4 @@ Note for the owner (CP-M1): the camera angle, zoom sizes and pan speed are place
 ## Questions
 
 ## Review log
+- 2026-10-08 lead-dev: approved, squash-merged PR #10 into m1/dev. Tests 44/44 + Python green, validator OK. `scripts\export.ps1` run on the PR branch: `camera_default.json` is in the pack, `WTD.exe --quit-after 120` exits 0 with no errors. Driver `duplicate()` per tick is correct (packed arrays are shared on assignment); pan basis, clamp and zoom logic checked by reading. Controls not tried by hand: part of CP-M1 (owner). Nit for later, not blocking: schema allows `pitch_deg` 90, where `look_at` with the default up vector fails; use `exclusiveMaximum` if anyone edits the schema.
