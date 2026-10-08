@@ -17,6 +17,7 @@ All task-file edits are committed on the milestone branch `m<n>/dev`, never on a
    - the headless tests to add (at least one per new system; determinism if the sim changes);
    - performance notes when the horde, towers or per-tick work are involved;
    - the order of steps.
+   - any decision number the task will add: take the next free `D-nnn` after both `docs/DECISIONS.md` and the numbers already reserved in other task plans (`grep -o "D-[0-9]*" backlog/*.md`), so tasks never collide.
 3. A task must fit one reviewable PR (about 400 changed lines of code, data excluded). If it is bigger, split it into new task files (next free numbers, same format) and say so.
 4. Set `Status: planned`, commit `Plan NNN: <title>`, push, return a 3-line summary.
 
