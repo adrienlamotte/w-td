@@ -1,5 +1,5 @@
 # 010 — Test runner: a broken test file must fail the run
-- Status: review
+- Status: done
 - Milestone: M1
 - Depends on: -
 - PR: #7
@@ -35,7 +35,7 @@ Files (all test infra, `game/tests/`, no GUT file changed):
 Tests (`game/tests/tools/test_gut_post_run.gd`, adapt the WIP):
 - Stubs: `StubLogger` gets `warnings: Array[String]` and `get_warnings()`; `StubGut` no longer needs a collector. Cases: no warnings -> exit code null, no errors; an unrelated warning only -> null; one `Ignoring script res://tests/sim/test_x.gd because ...` warning -> exit code 1 and the error names the path.
 - Contract test (guards the coupling to GUT's text): create `GutUtils.TestCollector.new()`, give it a fresh logger (`set_logger(GutUtils.Logger.new())` or whatever `GutUtils.get_logger()` builds; check `utils.gd`), call `add_script("res://tests/fixtures/not_a_gut_test.gd")`, assert that one warning starts with `gut_post_run.gd`'s `IGNORED_PREFIX` and contains the path. If a GUT upgrade rewords the message, this test fails. Make sure the fresh logger does not print into or pollute the main run's logger (otherwise the hook would fail the real run); if it cannot be isolated, assert that the hook ignores it, or flag it in the PR.
-- End-to-end check, manual, recorded in the PR (broken files not committed): (a) `game/tests/sim/test_aa_broken.gd` and `test_zz_broken.gd` with a syntax error: `scripts	est.ps1` exits non-zero, prints `TESTS FAILED` and names both files. (b) a test doing `null.free()`: run fails (already true). Remove them; `scripts	est.ps1` twice green; `scriptsalidate.ps1`.
+- End-to-end check, manual, recorded in the PR (broken files not committed): (a) `game/tests/sim/test_aa_broken.gd` and `test_zz_broken.gd` with a syntax error: `scripts\test.ps1` exits non-zero, prints `TESTS FAILED` and names both files. (b) a test doing `null.free()`: run fails (already true). Remove them; `scripts\test.ps1` twice green; `scripts\validate.ps1`.
 
 Performance: none (runs once after the suite).
 Order: hook change, fixture, unit + contract tests, e2e checks, doc sentence, test.ps1 twice, validate.ps1.
@@ -57,3 +57,4 @@ Options:
 **Answer (lead-dev, 2026-10-08): A**, with a contract test. Reasons: GUT is pinned and vendored; A is about 5 lines and reports the exact path GUT dropped. B duplicates GUT's file discovery (dirs, subdirs, prefix, suffix) and would falsely fail filtered runs (`-gselect`, `-gtest`, `-gunit_test_name`), where files are legitimately not collected. A's weakness, coupling to the warning text, is covered by a unit test that feeds GUT's real collector a fixture not extending GutTest (same code path as a parse error) and asserts the prefix the hook matches; a GUT upgrade that rewords the message breaks that test. C parses console text in PowerShell; D is slow. Technical choice, no DECISIONS entry.
 
 ## Review log
+- 2026-10-08 lead-dev: approved, merged PR #7 (squash). Re-ran myself: a temporary `tests/sim/test_aa_broken.gd` with a parse error -> exit 1, `TEST SCRIPT FAILED TO LOAD` names the file; removed it (and its .uid), `scripts\test.ps1` twice green (25 GUT + 4 Python), no `[GUT WARNING]` lines; `scripts\validate.ps1` OK. All criteria met. Also fixed mangled `scripts\...` paths in the plan text.
