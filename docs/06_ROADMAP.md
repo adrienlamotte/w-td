@@ -1,6 +1,6 @@
 # 06 — Roadmap
 
-Status key: **[P]** proposed unless marked. Each milestone ends with a **human playtest/review checkpoint** (see `04_AGENT_WORKFLOW.md`). Current milestone: **M1** (plan: `docs/plans/M1.md`).
+Status key: **[P]** proposed unless marked. Each milestone ends with a **human playtest/review checkpoint** (see `04_AGENT_WORKFLOW.md`). Current milestone: **M2** (plan: `docs/plans/M2.md`).
 
 This is the global roadmap. Each milestone gets a detailed plan in `docs/plans/M<n>.md` and task files in `backlog/` when it starts; the development loop (`04_AGENT_WORKFLOW.md` 2a) keeps them in sync.
 

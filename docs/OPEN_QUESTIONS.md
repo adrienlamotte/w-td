@@ -54,6 +54,40 @@ Last reviewed: 2026-10-08 (daily docs review; owner answers recorded the same da
 
 ---
 
+## M2 (current milestone)
+
+### Q-43 How long is a wave? (blocks M2 waves)
+D-032 fixes the 15-20 s break between waves, but not the wave length.
+- A) **60 s waves, then a 15-20 s break (about 12 waves before the 15:00 boss)** ★
+- B) 90 s waves (about 9 waves).
+- C) 2-minute waves (about 7 waves).
+
+### Q-44 How is gold collected? (blocks M2 economy)
+There is no player character to walk over drops.
+- A) **Automatic: gold counts the moment an enemy dies; coins fly to the Guardian as a visual** ★
+- B) Manual: gold stays on the ground until the cursor passes over it.
+- C) Automatic, but only for kills inside the build radius.
+
+### Q-45 Which enemy types are in M2? (blocks M2 content)
+- A) **Swarmer (fast, weak) and brute (slow, strong), plus the final boss** ★
+- B) Swarmer, brute and ranged, plus the final boss.
+- C) Swarmer only, plus the final boss.
+
+### Q-46 What happens after the final boss spawns at 15:00? (blocks M2 waves)
+- A) **The horde keeps coming while the boss is alive** ★
+- B) Spawns stop; only the boss and leftovers remain.
+
+### Q-47 Mini-bosses in M2? (blocks M2 waves)
+The GDD proposes a mini-boss every ~5 minutes; the roadmap's M2 lists one boss.
+- A) **None in M2: only the final boss; mini-bosses come later** ★
+- B) Mini-bosses at 5:00 and 10:00 already in M2.
+
+### Q-48 Do tower shots hit instantly or travel? (blocks M2 tower attacks)
+- A) **Instant hit in the simulation, with a visible shot effect drawn by the view (cheap, never misses)** ★
+- B) Real projectiles that travel and can miss moving enemies.
+
+---
+
 ## A. Deferred until the first real asset arrives
 
 ### Q-37 Where are large art files stored? (DEFERRED by the owner: decide when the first real asset arrives)
