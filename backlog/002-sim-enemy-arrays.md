@@ -1,5 +1,5 @@
 # 002 — Sim: enemy arrays, spawning and chasing the Guardian
-- Status: review
+- Status: done
 - Milestone: M1
 - Depends on: -
 - PR: #5
@@ -52,3 +52,4 @@ Size: about 250-300 lines of code and tests; one PR.
 ## Questions
 
 ## Review log
+- 2026-10-08 lead-dev: approved PR #5, squash-merged into m1/dev. Tests 13/13 GUT + tools tests green, validator OK. All criteria met; sim/view split clean; D-081 PROPOSED.
