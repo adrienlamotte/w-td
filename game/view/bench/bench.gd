@@ -142,6 +142,8 @@ func _machine() -> Dictionary:
 		"godot": Engine.get_version_info().string,
 		"release": not OS.is_debug_build(),
 		"window_size": [DisplayServer.window_get_size().x, DisplayServer.window_get_size().y],
+		"vsync_mode": DisplayServer.window_get_vsync_mode(),
+		"max_fps": Engine.max_fps,
 		"commit": _commit,
 		"datetime": Time.get_datetime_string_from_system(),
 	}

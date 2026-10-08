@@ -1,0 +1,270 @@
+{
+  "bench": "bench_m1",
+  "machine": {
+    "commit": "8af7b96",
+    "cpu": "13th Gen Intel(R) Core(TM) i7-13700K",
+    "cpu_threads": 24,
+    "datetime": "2026-10-08T17:22:55",
+    "godot": "4.7.2-stable (official)",
+    "gpu": "NVIDIA GeForce RTX 5070 Ti",
+    "gpu_api": "1.4.351",
+    "gpu_vendor": "NVIDIA",
+    "max_fps": 0,
+    "os": "Windows 10.0.26200",
+    "release": true,
+    "rendering_method": "forward_plus",
+    "vsync_mode": 0,
+    "window_size": [
+      2560,
+      1440
+    ]
+  },
+  "scenarios": [
+    {
+      "cpu_gpu": {
+        "gpu_ms_avg": 0.175208643215856,
+        "process_ms_avg": 0.755495149300743,
+        "render_cpu_ms_avg": 0.041392276878718
+      },
+      "enemies": 3000,
+      "frame": {
+        "avg_fps": 793.642341883862,
+        "frame_ms_avg": 1.26001341816807,
+        "frame_ms_max": 26.282,
+        "frame_ms_p99": 9.041,
+        "frames": 15874,
+        "low1_fps": 89.3870930695019
+      },
+      "mean_speed": 3.42594531593133,
+      "name": "pc_typical",
+      "piled": false,
+      "render_scale": 1.0,
+      "render_size": [
+        2560,
+        1440
+      ],
+      "sim": {
+        "phase_ms_avg": {
+          "grid": 0.787441666666667,
+          "movement": 0.293588333333333,
+          "separation": 4.79925833333333,
+          "targeting": 0.19913
+        },
+        "step_ms_avg": 6.07941833333333,
+        "ticks": 600,
+        "ticks_per_sec": 29.9978206583292
+      },
+      "towers": 50,
+      "view": {
+        "fill_ms_avg": 0.525707383142245
+      },
+      "warmup_sec": 5.0,
+      "zoom": 1
+    },
+    {
+      "cpu_gpu": {
+        "gpu_ms_avg": 0.156272162322708,
+        "process_ms_avg": 0.759217476727324,
+        "render_cpu_ms_avg": 0.0342823129819785
+      },
+      "enemies": 3000,
+      "frame": {
+        "avg_fps": 1068.84978623004,
+        "frame_ms_avg": 0.935585161622304,
+        "frame_ms_max": 16.25,
+        "frame_ms_p99": 7.889,
+        "frames": 21377,
+        "low1_fps": 105.611071610256
+      },
+      "mean_speed": 3.44138746648393,
+      "name": "pc_stress",
+      "piled": false,
+      "render_scale": 1.0,
+      "render_size": [
+        2560,
+        1440
+      ],
+      "sim": {
+        "phase_ms_avg": {
+          "grid": 0.737488333333333,
+          "movement": 0.274406666666667,
+          "separation": 4.47722666666667,
+          "targeting": 1.11804833333333
+        },
+        "step_ms_avg": 6.60717,
+        "ticks": 600,
+        "ticks_per_sec": 29.9999940000012
+      },
+      "towers": 300,
+      "view": {
+        "fill_ms_avg": 0.573770407447256
+      },
+      "warmup_sec": 5.0,
+      "zoom": 2
+    },
+    {
+      "cpu_gpu": {
+        "gpu_ms_avg": 0.0622389915791443,
+        "process_ms_avg": 0.289900035052359,
+        "render_cpu_ms_avg": 0.0281784166627836
+      },
+      "enemies": 1500,
+      "frame": {
+        "avg_fps": 2282.23301646097,
+        "frame_ms_avg": 0.438167353108706,
+        "frame_ms_max": 4.183,
+        "frame_ms_p99": 2.522,
+        "frames": 45646,
+        "low1_fps": 331.808662825642
+      },
+      "mean_speed": 2.99599204513517,
+      "name": "deck_typical",
+      "piled": false,
+      "render_scale": 0.5,
+      "render_size": [
+        1280,
+        720
+      ],
+      "sim": {
+        "phase_ms_avg": {
+          "grid": 0.438415,
+          "movement": 0.13875,
+          "separation": 1.63351,
+          "targeting": 0.177265
+        },
+        "step_ms_avg": 2.38794,
+        "ticks": 600,
+        "ticks_per_sec": 29.9991195258419
+      },
+      "towers": 50,
+      "view": {
+        "fill_ms_avg": 0.258511435832274
+      },
+      "warmup_sec": 5.0,
+      "zoom": 1
+    },
+    {
+      "cpu_gpu": {
+        "gpu_ms_avg": 0.0602595498627332,
+        "process_ms_avg": 0.346910735703167,
+        "render_cpu_ms_avg": 0.0315652386554326
+      },
+      "enemies": 1500,
+      "frame": {
+        "avg_fps": 1959.27956389968,
+        "frame_ms_avg": 0.510391686018322,
+        "frame_ms_max": 25.466,
+        "frame_ms_p99": 3.032,
+        "frames": 39187,
+        "low1_fps": 267.67419874022
+      },
+      "mean_speed": 2.99599204513517,
+      "name": "deck_stress",
+      "piled": false,
+      "render_scale": 0.5,
+      "render_size": [
+        1280,
+        720
+      ],
+      "sim": {
+        "phase_ms_avg": {
+          "grid": 0.446858333333333,
+          "movement": 0.140843333333333,
+          "separation": 1.66052333333333,
+          "targeting": 0.531493333333333
+        },
+        "step_ms_avg": 2.77971833333333,
+        "ticks": 600,
+        "ticks_per_sec": 29.9989215387707
+      },
+      "towers": 150,
+      "view": {
+        "fill_ms_avg": 0.304349911960599
+      },
+      "warmup_sec": 5.0,
+      "zoom": 2
+    },
+    {
+      "cpu_gpu": {
+        "gpu_ms_avg": 0.237615152395566,
+        "process_ms_avg": 0.885905254997508,
+        "render_cpu_ms_avg": 0.037733872505714
+      },
+      "enemies": 3000,
+      "frame": {
+        "avg_fps": 902.942234696782,
+        "frame_ms_avg": 1.10749055872418,
+        "frame_ms_max": 15.001,
+        "frame_ms_p99": 10.199,
+        "frames": 18059,
+        "low1_fps": 90.1337584976105
+      },
+      "mean_speed": 0.101019953299437,
+      "name": "pc_piled",
+      "piled": true,
+      "render_scale": 1.0,
+      "render_size": [
+        2560,
+        1440
+      ],
+      "sim": {
+        "phase_ms_avg": {
+          "grid": 0.743515,
+          "movement": 0.03181,
+          "separation": 6.45673,
+          "targeting": 1.415925
+        },
+        "step_ms_avg": 8.64798,
+        "ticks": 600,
+        "ticks_per_sec": 29.9997420022188
+      },
+      "towers": 300,
+      "view": {
+        "fill_ms_avg": 0.598581039924691
+      },
+      "warmup_sec": 20.0,
+      "zoom": 1
+    },
+    {
+      "cpu_gpu": {
+        "gpu_ms_avg": 0.0802574385679582,
+        "process_ms_avg": 0.496807405022537,
+        "render_cpu_ms_avg": 0.0407625243335204
+      },
+      "enemies": 1500,
+      "frame": {
+        "avg_fps": 776.429344929611,
+        "frame_ms_avg": 1.28794719896974,
+        "frame_ms_max": 23.6,
+        "frame_ms_p99": 10.509,
+        "frames": 15530,
+        "low1_fps": 79.3267360784137
+      },
+      "mean_speed": 0.0626091283428832,
+      "name": "deck_piled",
+      "piled": true,
+      "render_scale": 0.5,
+      "render_size": [
+        1280,
+        720
+      ],
+      "sim": {
+        "phase_ms_avg": {
+          "grid": 0.494321666666667,
+          "movement": 0.01961,
+          "separation": 2.94840833333333,
+          "targeting": 0.935035
+        },
+        "step_ms_avg": 4.397375,
+        "ticks": 600,
+        "ticks_per_sec": 29.9972702484074
+      },
+      "towers": 150,
+      "view": {
+        "fill_ms_avg": 0.326915260785576
+      },
+      "warmup_sec": 20.0,
+      "zoom": 1
+    }
+  ]
+}

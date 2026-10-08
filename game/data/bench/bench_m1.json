@@ -15,6 +15,7 @@
     {"name": "pc_stress", "enemies": 3000, "towers": 300, "piled": false, "warmup_sec": 5, "zoom": 2, "render_scale": 1.0},
     {"name": "deck_typical", "enemies": 1500, "towers": 50, "piled": false, "warmup_sec": 5, "zoom": 1, "render_scale": 0.5},
     {"name": "deck_stress", "enemies": 1500, "towers": 150, "piled": false, "warmup_sec": 5, "zoom": 2, "render_scale": 0.5},
-    {"name": "pc_piled", "enemies": 3000, "towers": 300, "piled": true, "warmup_sec": 20, "zoom": 1, "render_scale": 1.0}
+    {"name": "pc_piled", "enemies": 3000, "towers": 300, "piled": true, "warmup_sec": 20, "zoom": 1, "render_scale": 1.0},
+    {"name": "deck_piled", "enemies": 1500, "towers": 150, "piled": true, "warmup_sec": 20, "zoom": 1, "render_scale": 0.5}
   ]
 }
