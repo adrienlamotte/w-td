@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Guardian skill",
+  "description": "Guardian skill (D-044, D-099). All numbers are placeholders, not balance decisions.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "placeholder", "name_key", "kind", "cooldown_sec"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "id": {"type": "string", "pattern": "^skill_[a-z0-9_]+$"},
+    "placeholder": {"type": "boolean", "description": "true while the numbers are placeholders"},
+    "name_key": {"type": "string", "pattern": "^[a-z0-9_.]+$"},
+    "kind": {"enum": ["area_blast", "shield"]},
+    "cooldown_sec": {"type": "number", "exclusiveMinimum": 0},
+    "radius": {"type": "number", "exclusiveMinimum": 0, "description": "area_blast: disk around the Guardian"},
+    "damage": {"type": "number", "minimum": 0},
+    "absorb": {"type": "number", "exclusiveMinimum": 0, "description": "shield: damage absorbed"},
+    "duration_sec": {"type": "number", "exclusiveMinimum": 0}
+  },
+  "allOf": [
+    {"if": {"properties": {"kind": {"const": "area_blast"}}}, "then": {"required": ["radius", "damage"]}},
+    {"if": {"properties": {"kind": {"const": "shield"}}}, "then": {"required": ["absorb", "duration_sec"]}}
+  ]
+}

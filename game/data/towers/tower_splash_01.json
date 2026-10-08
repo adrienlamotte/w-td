@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "id": "tower_splash_01",
+  "placeholder": true,
+  "name_key": "tower.splash_01.name",
+  "attack": "splash",
+  "cost": 80,
+  "cost_per_copy": 15,
+  "hp": 80,
+  "radius": 0.5,
+  "range": 5,
+  "damage": 3,
+  "cooldown_sec": 1.2,
+  "splash_radius": 1.5,
+  "sell_refund": 0.5,
+  "rebuild_fraction": 0.3,
+  "husk_blocks": true,
+  "sprite": "towers/splash_01",
+  "tags": []
+}

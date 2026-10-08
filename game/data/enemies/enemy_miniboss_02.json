@@ -1,0 +1,24 @@
+{
+  "schema_version": 3,
+  "id": "enemy_miniboss_02",
+  "placeholder": true,
+  "name_key": "enemy.miniboss_02.name",
+  "archetype": "miniboss",
+  "hp": 1200,
+  "speed": 1.4,
+  "damage": 15,
+  "attack_range": 0,
+  "attack_cooldown_sec": 1.5,
+  "radius": 0.8,
+  "separation_strength": 0.1,
+  "xp": 80,
+  "drops": [
+    {
+      "type": "gold",
+      "amount": 40,
+      "chance": 1
+    }
+  ],
+  "sprite": "enemies/miniboss_02",
+  "tags": []
+}

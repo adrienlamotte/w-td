@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Guardian",
+  "description": "Guardian (D-043, D-044, D-099). All numbers are placeholders, not balance decisions.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "placeholder", "name_key", "hp", "contact_radius", "skills", "sprite"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "id": {"type": "string", "pattern": "^guardian_[a-z0-9_]+$"},
+    "placeholder": {"type": "boolean", "description": "true while the numbers are placeholders"},
+    "name_key": {"type": "string", "pattern": "^[a-z0-9_.]+$"},
+    "hp": {"type": "number", "exclusiveMinimum": 0},
+    "contact_radius": {"type": "number", "exclusiveMinimum": 0},
+    "skills": {"type": "array", "minItems": 1, "maxItems": 4, "uniqueItems": true, "items": {"type": "string", "pattern": "^skill_[a-z0-9_]+$"}},
+    "sprite": {"type": "string"}
+  }
+}

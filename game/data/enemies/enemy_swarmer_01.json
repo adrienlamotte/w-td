@@ -1,14 +1,24 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "id": "enemy_swarmer_01",
+  "placeholder": true,
+  "name_key": "enemy.swarmer_01.name",
   "archetype": "swarmer",
   "hp": 8,
   "speed": 3.2,
-  "contact_damage": 1,
+  "damage": 1,
+  "attack_range": 0,
+  "attack_cooldown_sec": 1.0,
   "radius": 0.35,
   "separation_strength": 0.5,
   "xp": 1,
-  "drops": [{"type": "gold", "amount": 1, "chance": 0.6}],
+  "drops": [
+    {
+      "type": "gold",
+      "amount": 1,
+      "chance": 0.6
+    }
+  ],
   "sprite": "enemies/swarmer_01",
   "tags": []
 }

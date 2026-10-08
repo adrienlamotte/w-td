@@ -1,0 +1,24 @@
+{
+  "schema_version": 3,
+  "id": "enemy_brute_01",
+  "placeholder": true,
+  "name_key": "enemy.brute_01.name",
+  "archetype": "brute",
+  "hp": 40,
+  "speed": 1.6,
+  "damage": 4,
+  "attack_range": 0,
+  "attack_cooldown_sec": 1.5,
+  "radius": 0.4,
+  "separation_strength": 0.3,
+  "xp": 4,
+  "drops": [
+    {
+      "type": "gold",
+      "amount": 3,
+      "chance": 0.8
+    }
+  ],
+  "sprite": "enemies/brute_01",
+  "tags": []
+}
