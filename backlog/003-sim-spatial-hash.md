@@ -1,8 +1,8 @@
 # 003 — Sim: uniform spatial hash grid
-- Status: planned
+- Status: review
 - Milestone: M1
 - Depends on: 002
-- PR: -
+- PR: #6
 
 ## Goal
 Add the uniform spatial hash grid used for all spatial queries, rebuilt every tick.
