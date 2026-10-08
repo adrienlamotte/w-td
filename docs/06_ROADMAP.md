@@ -3,7 +3,7 @@
 Status key: **[P]** proposed unless marked. Each milestone ends with a **human playtest/review checkpoint** (see `04_AGENT_WORKFLOW.md`). Current milestone: **M0**.
 
 ## M0 — Foundation
-- Create repo layout (`00_INDEX.md`), Godot project, test framework chosen and wired, headless test command, data validator skeleton, CI/build script.
+- Create repo layout (`00_INDEX.md`), Godot project, GUT wired (D-033), headless test command, JSON Schema data validator skeleton (D-034), local build script (D-035), Godot version pinned and recorded (D-036).
 - Fill the **Commands** section of `CLAUDE.md`.
 - Done when: an agent can clone, run the tests headless, and export a Windows build with one command each.
 

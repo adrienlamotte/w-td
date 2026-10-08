@@ -6,7 +6,7 @@ Status key: **[D]** decided, **[P]** proposed, **[O]** open.
 - Art is **AI-generated**, **local** (ComfyUI on the owner's machine, NVIDIA 16 GB+ VRAM) **[D]**.
 - The owner can also generate assets with **external tools** and import them manually; this doc defines the import spec (section 7) **[D]**.
 - Animation: **hybrid** — **skeletal/layered waifus** (parts animated in-engine), **sprite-frame animation for the horde** **[D]**.
-- Style: chibi, cute comedic fantasy, 2.5D billboards **[P]**.
+- Style: cute and comedic fantasy, **adult proportions, no chibi** (D-030) **[D]**; 2.5D billboards **[P]**.
 - Human approval is required for every waifu (character design, outfits) before integration **[D]**.
 
 ## 2. Why this approach
@@ -24,6 +24,8 @@ Status key: **[D]** decided, **[P]** proposed, **[O]** open.
 | Projectiles/VFX | Sprite sheets or particles | 128 px | varies | Prefer shaders/particles when possible |
 | Ground tiles/props | Static textures | 512 px | varies | Must keep horde readable |
 | UI | Vector/PNG | per UI spec | | Gamepad-friendly sizing |
+
+Note: the "In-game size" column is given at a 1080p reference. The base resolution is 2560x1440 (D-039), so multiply on-screen sizes by about 1.33 (waifus ~215-265 px tall, horde ~85-130 px). Source sizes are unchanged. Because there is no chibi style (D-030), readability of adult-proportioned waifus at tower scale must be validated in the M4 art spike.
 
 All sprites: **transparent background (PNG, RGBA)**, consistent light direction, consistent outline style, feet on a defined pivot. **Pivot [P]:** bottom-centre of the frame for enemies, props and bosses; for waifu layers each part carries its own pivot in `parts.json` and the root pivot is the feet on the ground.
 
@@ -99,10 +101,10 @@ You can generate art with any outside tool and drop it in. Follow this so agents
 
 ### Prompt template (starting point, adapt per tool)
 ```
-Chibi anime girl, <hair/eyes/personality>, wearing <outfit>, full body, front view,
+Adult anime woman with adult proportions, <hair/eyes/personality>, wearing <outfit>, full body, front view,
 flat even lighting, clean line art, soft cel shading, transparent or plain white background,
 adult character, <style reference>.
-Negative: nudity, explicit, extra limbs, text, watermark, cropped, dark background.
+Negative: nudity, explicit, child, childlike, chibi, extra limbs, text, watermark, cropped, dark background.
 ```
 For parts: generate the full character first, then separate parts or re-generate "<part> only, isolated, transparent background" using the full character as image reference.
 

@@ -5,7 +5,7 @@ Status key: **[D]** decided, **[P]** proposed, **[O]** open.
 ## 1. Pitch
 You protect a waifu at the center of an open field while an enormous horde swarms from every direction. You build defenses out of other waifus, level up and draft upgrades like in Vampire Survivors, and use the protected waifu's active skills. Win a run and the waifu you protected joins your roster as a tower. **[D]**
 
-Tone: cute and comedic fantasy. **[D]** Characters are adult and stylized (chibi). **[P]**
+Tone: cute and comedic fantasy. **[D]** All characters are clearly adult with adult proportions; no chibi (D-030). **[D]**
 
 ## 2. Pillars
 1. **Protect her.** The protected waifu ("the Guardian") is the emotional stake. Lose condition = her HP reaches 0. **[D]**
@@ -18,30 +18,32 @@ Tone: cute and comedic fantasy. **[D]** Characters are adult and stylized (chibi
 - Length: **15-20 minutes** per run.
 - Map: **open field, 360° swarm**, no lanes. Enemies path straight toward the Guardian and attack towers in the way.
 - Escalation: continuous spawn curve with waves; a **mini-boss every ~5 minutes** **[P]** and a **final boss at the end**.
+- **Between waves:** a short break of 15-20 s with no new spawns; leftover enemies keep attacking, the clock keeps running, and building is allowed at any time (D-032). **[D]**
 - Win: survive until the final boss is defeated. Lose: Guardian HP = 0.
 - **Win reward:** the Guardian protected in this run is unlocked as a **tower waifu** for future runs.
 - **Guardian each run:** before the run, the player **picks the Guardian from a few locked waifus** she wants to "rescue". Unlocked waifus are towers only. **[D]** How many are offered and how they are drawn: **[O]**, see `OPEN_QUESTIONS.md` Q-17.
 - **After everyone is unlocked (replay value):** **difficulty tiers**, **endless mode** and **challenge modifiers** **[D]**. Details of each: **[O]** (Q-27). Who the Guardian is in these modes: **[O]** (Q-28).
 - **No story or campaign.** Pure gameplay; waifus only have short personality lines (barks). **[D]**
 - **Roster target at Early Access launch: 8-10 waifus.** **[D]**
+- **Starter roster:** 2 waifus are unlocked from the start as towers and count toward the 8-10; Guardians are picked among the remaining locked waifus (D-031). **[D]** Which two: **[O]** (Q-23).
 
 ### Known rule gaps (implementation blockers) **[O]**
 Agents must not guess these; each has options and a recommended default in `OPEN_QUESTIONS.md`.
 | Gap | Question |
 |---|---|
-| Build phase vs continuous spawning (what happens to enemies and the clock) | Q-08 |
-| Tower placement (free, grid, slots), cap, sell/move | Q-09 |
+| Placement radius around the Guardian, grid size, performance budget with no tower cap | Q-34 |
+| Camera controls (pan, zoom, bounds, gamepad) | Q-33 |
 | Do enemies damage towers, tower HP/death | Q-10 |
 | Guardian HP and which 2 skills, does she auto-attack | Q-11 |
 | Which 3 tower types exist in M2 | Q-12 |
-| Starting roster in the very first run (nothing is unlocked yet) | Q-13 |
 | Gamepad building UX | Q-14 |
 | Run end condition and exact length (15-20 min, boss timing) | Q-15 |
 | What a loss gives and keeps | Q-16 |
 | How cards interact with gold-based building | Q-18 |
 
 ## 4. Player actions **[D]**
-- **Build:** both real-time during action (spending resources dropped by kills) **and** short build phases between waves.
+- **Build:** both real-time during action (spending resources dropped by kills) **and** during the short breaks between waves (D-032).
+- **Placement (D-040):** free placement on a fine grid inside a radius around the Guardian; **no tower cap**; towers can be sold for a partial gold refund but not moved. The player can move the camera (controls: Q-33). **[D]**
 - **Towers = waifus.** Each tower is a waifu character placed around the Guardian, with her own attack, role and personality.
 - **Guardian active skills:** the Guardian stays at the center and has active skills the player triggers (cooldown-based; e.g. shield, heal, area blast). The Guardian does not move. **[D]**
 - **Level-ups:** killing enemies grants XP; on level-up the game pauses and offers a choice of **3 cards**. **[P]** Card types: new tower waifu, tower upgrade, Guardian skill upgrade, global perk.
@@ -75,7 +77,7 @@ Each waifu has: role (damage / crowd control / support / tank / economy), attack
 - Windows PC (mouse + keyboard) and **Steam Deck** (gamepad). Gamepad must be a first-class input from the start; no feature may require a mouse only.
 
 ## 10. Art direction **[P]**
-- Chibi waifus, 2.5D: 3D isometric camera, billboarded 2D art. Details in `03_ART_PIPELINE.md`.
+- Adult-proportioned stylized waifus (no chibi, D-030), 2.5D: 3D isometric camera, billboarded 2D art. Base resolution 2560x1440 (D-039). Details in `03_ART_PIPELINE.md`.
 - Readability first: the horde must stay readable against the background; effects must not hide the Guardian.
 
 ## 11. Audio **[O]**

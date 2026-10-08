@@ -4,77 +4,28 @@ Agents: do not implement items here without an owner answer. The design assistan
 
 Format: each question has a stable ID (`Q-nn`, never reused), a milestone it blocks, 2-4 options and a **recommended default** (marked ★). Until the owner answers, agents use the ★ default only where the item says "safe to assume" and flag it in their report; otherwise they do not implement. The list is ordered by priority: blockers for the current milestone (M0) first, then M1, M2, M3 and later, then compliance-critical and long-term items.
 
-Last reviewed: 2026-10-08 (daily docs review).
+Last reviewed: 2026-10-08 (daily docs review; owner answers recorded the same day).
 
 ---
 
-## A. Blocks M0 (current milestone) and M1
-
-### Q-01 Test framework (blocks M0)
-Needed to wire the headless test command (`02_TECH_ARCHITECTURE.md` section 6).
-- A) **GUT** ★ — long-established, plain GDScript, CLI runner (`gut_cmdln.gd`), JUnit XML export for CI.
-- B) **gdUnit4** — richer assertions/mocking, CLI runner and JUnit/HTML reports, heavier setup.
-- C) Let the agent run a 1-hour spike with both in M0 and pick the one that is easier to run headless in the cloud container (record in `DECISIONS.md`).
-Recommended: A, unless the spike (C) shows a headless problem.
-
-### Q-02 Data file format (blocks M0: validator skeleton)
-`02_TECH_ARCHITECTURE.md` section 5 says "JSON or .tres". The validator, balance runner and the asset forge are in Python, which favours plain files.
-- A) **JSON files + JSON Schema** ★ — easy to diff, validated in Python and in GDScript, trivial for the headless sim to load.
-- B) Godot `.tres` Resources with typed scripts — editor-friendly, but harder to validate outside Godot.
-- C) JSON as source of truth, generated `.tres` for editor use (extra build step).
-Recommended: A.
-
-### Q-03 Repo host / CI provider and where routines run (blocks M0 "one command" build)
-Observed: the repo is on GitHub (so GitHub Actions is available); D-029 puts the daily review in a cloud scheduled task. Still unclear: where nightly builds/tests/balance runs execute.
-- A) **GitHub Actions for build + headless tests; nightly balance/perf runs also in Actions or a cloud scheduled task** ★ — no dependence on the owner's PC being on. Windows export from a Linux runner with Godot export templates.
-- B) Owner's PC runs everything nightly (needed anyway for ComfyUI/GPU work), cloud only for docs review.
-- C) Hybrid: tests/build in Actions, perf (needs real GPU) and ComfyUI on the owner's PC when it is on.
-Recommended: A for tests/build/balance, with C for perf and art generation.
-
-### Q-04 Pinned Godot version (blocks M0)
-"Latest stable" (D-018) is not reproducible, and GodotSteam builds target specific Godot versions.
-- A) **Pin to the latest 4.x stable at M0 start, record the exact version in `DECISIONS.md` and in `tools/`; upgrade only through an explicit task** ★
-- B) Track the latest stable continuously (fast, but breakage risk and Steam plugin lag).
-- C) Pin to the newest version that GodotSteam supports (decide after checking compatibility).
-Recommended: A, with a quick compatibility check against GodotSteam (C) before M6.
-
-### Q-05 Confirm the proposed technical decisions (blocks M1)
-D-019 (2.5D with MultiMesh), D-020 (deterministic sim/view split) and D-021/D-022 are still PROPOSED, yet `02_TECH_ARCHITECTURE.md` (sections 3 and 5) and `CLAUDE.md` hard rules 3-4 already treat the sim split and data-driven content as mandatory.
-- A) **Confirm D-020 (sim/view split) now as DECIDED; keep D-019 as "to be validated in M1" with the 2D fallback** ★
-- B) Confirm all of D-019 to D-022 now.
-- C) Keep all PROPOSED until the M1 spike result.
-Recommended: A.
-
-### Q-06 Simulation tick rate and world scale (blocks M1)
-Perf budgets talk about "ms/frame" but the sim is fixed-timestep. See the concrete proposal in `02_TECH_ARCHITECTURE.md` section 3a **[P]**.
-- A) **Fixed 30 Hz sim tick, view interpolates to render rate (60 FPS)** ★ — halves the sim cost for ~3000 enemies; budget then reads "under 8 ms per tick at max load on PC".
-- B) Fixed 60 Hz sim tick — smoother and simpler, doubles the cost.
-- C) Decide from the M1 benchmark (agent measures both).
-Recommended: A, validated by C in M1.
-
-### Q-07 Reference resolution and camera framing (blocks M1)
-Not stated anywhere; affects sprite sizes in `03_ART_PIPELINE.md` section 3, UI sizing and how many enemies fit on screen.
-- A) **1920x1080 base, scaled to 1280x800 on Steam Deck (16:10 handled with letterbox-free extra field of view)** ★
-- B) 1280x720 base (lower cost, Deck-native-like).
-- C) 2560x1440 base.
-Recommended: A.
+## Answered (2026-10-08, owner session)
+| Question | Answer | Decision |
+|---|---|---|
+| Q-01 Test framework | GUT | D-033 |
+| Q-02 Data format | JSON + JSON Schema | D-034 |
+| Q-03 Where builds, tests and nightly runs execute | Everything on the owner's PC | D-035 (scheduling: Q-35) |
+| Q-04 Godot version | Pin at M0 start | D-036 |
+| Q-05 Which proposed decisions to confirm | Sim/view split only | D-037 |
+| Q-06 Sim tick rate | 30 Hz | D-038 |
+| Q-07 Base resolution | 2560x1440 | D-039 |
+| Q-08 Between waves | Short break, building always allowed | D-032 |
+| Q-09 Tower placement | Free grid placement, no cap, sell not move, movable camera | D-040 (follow-ups: Q-33, Q-34) |
+| Q-13 Towers in the very first run | 2 starter waifus | D-031 |
+| Q-24 Chibi vs adult look | No chibi, adult proportions everywhere | D-030 |
 
 ---
 
-## B. Blocks M2 (core loop vertical slice)
-
-### Q-08 Build phases vs continuous spawning (blocks M2)
-`01_GAME_DESIGN.md` section 3 says "continuous spawn curve with waves" while section 4 says "short build phases between waves" (D-010). It is unclear what happens to enemies, the clock and the Guardian during a build phase.
-- A) **Short break (15-20 s) between waves: no new spawns, remaining enemies keep attacking, clock keeps running; placement is also allowed any time during waves** ★
-- B) Build phase pauses everything (turn-based feel), including remaining enemies.
-- C) No explicit break: "build phase" is just a calmer stretch in the spawn curve.
-Recommended: A.
-
-### Q-09 Tower placement rules (blocks M2)
-- A) **Free placement on the ground plane inside a radius around the Guardian, snapped to a fine grid (e.g. 1 cell = 1 tower footprint); gamepad uses a cursor with snapping** ★
-- B) Fixed slots/rings around the Guardian (easiest for gamepad, less freedom, fewer perf concerns).
-- C) Free continuous placement with collision circles (most freedom, hardest on gamepad and for determinism).
-Also decide: can towers be moved/sold (★ sell for partial gold refund, no moving), and is there a tower cap (★ 50, matching the perf budget).
+## A. Blocks M1/M2 (current priorities)
 
 ### Q-10 Do enemies hurt towers? (blocks M2)
 `01_GAME_DESIGN.md` section 3 says enemies "attack towers in the way". Not specified: tower HP, death, repair.
@@ -97,18 +48,12 @@ Roles available: damage / crowd control / support / tank / economy.
 - C) Ranged damage, area damage, tank.
 Feeds Q-17 (roles of the 8-10 launch waifus).
 
-### Q-13 What towers does the player have in run 1? (blocks M2/M3)
-Winning unlocks the Guardian as a tower (D-023), but at first launch nothing is unlocked, so the first run has no towers to build or draft. The docs do not say what the starting roster is, and D-025's 8-10 does not say whether starting waifus count.
-- A) **2 starter waifus are unlocked from the start (tower-only), counted in the 8-10 total; Guardians are chosen among the remaining locked ones** ★
-- B) No starter waifus: run 1 only offers generic "recruit" cards that give non-unique placeholder towers.
-- C) The first run's Guardian is a fixed tutorial waifu and the run is guided; starter towers come from generic cards.
-Recommended: A.
-
 ### Q-14 Gamepad building UX (blocks M2: "gamepad and mouse both work")
 - A) **Radial/quick menu for tower choice + a free-moving cursor with right stick, A to place, B to cancel; skills on face buttons / triggers** ★
 - B) Cursor snaps between valid slots with d-pad/left stick (pairs with Q-09 option B).
 - C) Pause-and-place mode (time slows to 10-20% while placing).
 Recommended: A, with the "slow time while placing" as an accessibility toggle.
+**Conflict to resolve:** option A uses the right stick for the cursor, but D-040 makes the camera movable and the gamepad needs a way to pan it. Decide together with Q-33 (its recommended option moves the placement cursor to the screen centre and frees the right stick for panning).
 
 ### Q-15 Run end condition and length (blocks M2)
 D-006 says 15-20 min; section 3 says a final boss at the end; M2 says "a full 15-minute run".
@@ -124,9 +69,30 @@ Undefined: what the player keeps after a loss, whether the same locked waifu can
 - C) Loss gives full hearts (low frustration), win gives the waifu plus a bonus.
 Recommended: A.
 
+### Q-33 Camera controls (blocks M1/M2)
+D-040 says the player can move the camera. Not defined: how, how far, zoom, and the gamepad bindings.
+- A) **PC: WASD/arrows, edge scroll and mouse-wheel zoom; gamepad: right stick pans, bumpers zoom, a button recentres on the Guardian, and the placement cursor sits at the screen centre (the world moves under it, snapped to the grid). Camera is limited to the buildable radius plus a margin; 3 zoom levels** ★
+- B) The camera follows the placement cursor automatically; no manual pan.
+- C) Free pan only during the break between waves; the camera is locked on the Guardian during waves.
+Recommended: A (resolves the right-stick conflict noted in Q-14).
+
+### Q-34 Placement radius and performance budget without a tower cap (blocks M1/M2)
+D-040 removes the tower cap, so the old "50 towers" budget is no longer an upper bound.
+- A) **Starting build radius of about 20 world units around the Guardian, growable via meta upgrades or cards; the cost of each additional copy of a tower rises (soft limit through the economy); performance stress target of 300 towers on PC and 150 on Steam Deck, validated in M1** ★ (numbers are placeholders)
+- B) Whole map buildable (no radius), same soft cost limit.
+- C) Fixed radius that never grows.
+Recommended: A.
+
+### Q-35 How are the local routines scheduled? (blocks M0 automation)
+D-035 puts builds, tests, balance and perf runs and ComfyUI jobs on the owner's PC, so the cloud cannot trigger them.
+- A) **Scheduled tasks in the Claude desktop app, running on the PC while it is on and the app is open; the loop procedure lives in the repo docs; the owner can also run them manually** ★
+- B) Manual only: the owner starts a loop in Claude Code on the PC during work sessions.
+- C) Windows Task Scheduler launching Claude Code in headless mode (more setup, independent of the desktop app).
+Recommended: A.
+
 ---
 
-## C. Blocks M3 (roguelite layer)
+## B. Blocks M3 (roguelite layer)
 
 ### Q-17 Guardian pick details (D-026 left these open)
 How many locked waifus are offered before a run and whether they are always the same.
@@ -172,18 +138,11 @@ Needs: role per waifu (damage / crowd control / support / tank / economy), tags 
 - A) **Agent proposes a roster table (name placeholder, role, tags, archetype) in a PR for owner approval; balanced across 5 roles** ★
 - B) Owner provides the roster list.
 - C) Owner gives only archetypes ("tsundere, knight...") and the agent expands.
-Blocks the content in M5 but M3 synergy rules need tags, so decide before M3 closes.
+Blocks the content in M5 but M3 synergy rules need tags, so decide before M3 closes. Also includes choosing the 2 starter waifus (D-031).
 
 ---
 
-## D. Compliance-critical (decide before any art work in M4)
-
-### Q-24 Chibi proportions vs "no character that looks like a minor"
-`05_STEAM_AND_COMPLIANCE.md` section 2 forbids characters who look like minors, while the art direction (D-021, still PROPOSED) is chibi and the pillars include suggestive outfits (lingerie, swimwear). Chibi proportions risk reading as childlike, which is the opposite of the content rule. Content limits themselves are not changed here; this is a question about how the art style will respect them.
-- A) **Chibi only for the in-game small sprites; all portraits, outfit art and any suggestive outfit use adult proportions and clearly adult features; suggestive outfits never appear on chibi sprites** ★
-- B) Drop chibi: adult-proportioned stylized characters everywhere (consistent, cleaner compliance, harder for small sprites).
-- C) Chibi everywhere, but suggestive outfits are restricted to a mild list (swimwear only, no lingerie).
-Recommended: A or B; the owner has the final say per `05_STEAM_AND_COMPLIANCE.md`.
+## C. Art (decide before any art work in M4)
 
 ### Q-25 Style references and models (existing)
 - A) **Owner provides 5-10 reference images; the art spike (M4) evaluates 2-3 models/LoRAs against them** ★
@@ -197,7 +156,7 @@ Recommended: A or B; the owner has the final say per `05_STEAM_AND_COMPLIANCE.md
 
 ---
 
-## E. Long-term / business (not blocking until M5-M6)
+## D. Long-term / business (not blocking until M5-M6)
 
 ### Q-27 Endgame details (modes decided in D-027)
 Also see Q-28 below, which is the gap this creates.
@@ -236,4 +195,5 @@ Not a question for the owner: results will go to `DECISIONS.md`. Kept so that no
 ## Cleanup notes (for the owner)
 - Earlier numbering skipped item 7; this list uses stable `Q-nn` IDs instead.
 - `DECISIONS.md` D-013 note ("Whether unlocked waifus can be Guardians later is OPEN") is partly overtaken by D-027; see Q-28. Not edited here because decision rows are owner-only.
+- D-021 (chibi) is superseded by D-030.
 - D-024 still says "special story bosses"; D-028 already clarifies that this means named rival bosses. `01_GAME_DESIGN.md` wording was aligned.

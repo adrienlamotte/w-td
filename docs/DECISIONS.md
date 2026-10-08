@@ -23,8 +23,8 @@ Format: `ID | date | decision | status | notes`. Status: DECIDED (owner confirme
 | D-017 | 2026-10-07 | Docs are markdown files in the repo, agent-oriented | DECIDED | Format chosen by the assistant at the owner's request |
 | D-018 | 2026-10-07 | Engine: Godot 4.x with GDScript; GDExtension (Rust/C++) only if profiling requires | DECIDED | Confirmed by owner |
 | D-019 | 2026-10-07 | 2.5D rendering: iso camera + billboarded sprites + MultiMesh; fallback to pure 2D | PROPOSED | Validated in M1 |
-| D-020 | 2026-10-07 | Sim/view split with headless deterministic simulation | PROPOSED | Strongly recommended for agent automation |
-| D-021 | 2026-10-07 | Chibi character style | PROPOSED | |
+| D-020 | 2026-10-07 | Sim/view split with headless deterministic simulation | DECIDED | Confirmed 2026-10-08, see D-037 |
+| D-021 | 2026-10-07 | Chibi character style | SUPERSEDED | Replaced by D-030 (no chibi) |
 | D-022 | 2026-10-07 | No live-generated AI content in the game; only pre-generated assets | PROPOSED | Simplifies Steam disclosure |
 | D-023 | 2026-10-07 | Each run's Guardian is the next locked waifu to rescue; victory unlocks her as a tower. Unlocked waifus are towers only | DECIDED | Refines D-013 |
 | D-024 | 2026-10-07 | Only special story bosses are recruitable; regular bosses are just enemies | DECIDED | Which bosses are recruitable is OPEN |
@@ -33,3 +33,14 @@ Format: `ID | date | decision | status | notes`. Status: DECIDED (owner confirme
 | D-027 | 2026-10-07 | Replay value after full unlock: difficulty tiers, endless mode, challenge modifiers | DECIDED | Replaying with an already-unlocked waifu as Guardian is NOT part of the plan |
 | D-028 | 2026-10-07 | No story or campaign: pure gameplay; waifus only have personality lines (barks) | DECIDED | Supersedes the "story" wording in D-024: "story bosses" now means named rival bosses, not a narrative |
 | D-029 | 2026-10-07 | A daily cloud routine reviews the docs, updates OPEN_QUESTIONS.md and opens a pull request; the owner answers in a session | DECIDED | See `04_AGENT_WORKFLOW.md` section 5 |
+| D-030 | 2026-10-08 | No chibi: all characters use adult proportions everywhere (in-game sprites, portraits, outfit art) | DECIDED | Q-24. Supersedes D-021. Readability of adult-proportioned waifus at small size is to be validated in the M4 art spike |
+| D-031 | 2026-10-08 | 2 starter waifus are unlocked from the start as towers and count toward the 8-10 launch roster; Guardians are picked among the remaining locked waifus | DECIDED | Q-13. Which two waifus: Q-23 |
+| D-032 | 2026-10-08 | Between waves there is a short break (15-20 s): no new spawns, leftover enemies keep attacking, the clock keeps running; building is allowed at any time | DECIDED | Q-08. Refines D-010 |
+| D-033 | 2026-10-08 | Test framework: GUT | DECIDED | Q-01 |
+| D-034 | 2026-10-08 | Game content data is JSON files validated with JSON Schema | DECIDED | Q-02 |
+| D-035 | 2026-10-08 | Builds, headless tests, balance runs, perf benchmarks and ComfyUI jobs all run on the owner's PC; cloud sessions are used only for docs and design work (daily docs review, brainstorm sessions). GitHub stays the repo host | DECIDED | Q-03. Consequence: nightly routines need the PC on and the Claude desktop app open. How they are scheduled: Q-35 |
+| D-036 | 2026-10-08 | The Godot 4.x version is pinned at the start of M0, recorded in `DECISIONS.md` and `tools/`; upgrades only through an explicit task | DECIDED | Q-04. Exact version to be added here when pinned |
+| D-037 | 2026-10-08 | The simulation/view split with a headless deterministic sim (D-020) is confirmed. D-019 (2.5D with MultiMesh and 2D fallback) and D-022 stay PROPOSED until the M1 spike | DECIDED | Q-05 |
+| D-038 | 2026-10-08 | Simulation runs at a fixed 30 Hz tick; the view interpolates to the render rate | DECIDED | Q-06. To be re-validated by the M1 benchmark |
+| D-039 | 2026-10-08 | Base resolution is 2560x1440, scaled down on Steam Deck (1280x800) | DECIDED | Q-07. Asset on-screen sizes in `03_ART_PIPELINE.md` are scaled accordingly |
+| D-040 | 2026-10-08 | Tower placement: free placement on a fine grid inside a radius around the Guardian; no tower cap; towers can be sold for a partial gold refund but not moved; the player can move the camera | DECIDED | Q-09 (with the owner's changes: no cap, movable camera). Open follow-ups: camera controls Q-33, radius and performance budget Q-34 |
