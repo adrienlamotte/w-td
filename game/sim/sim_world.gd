@@ -19,6 +19,10 @@ var towers: SimTowers = SimTowers.new()
 ## Wall-clock usec of each phase of the last step(), indexed by Phase.
 ## Diagnostics only: never read by rules, not in state_hash(). A missing phase reads 0.
 var phase_usec: PackedInt64Array = PackedInt64Array([0, 0, 0, 0])
+## Test/benchmark/demo setting: when > 0, every AT_GUARDIAN enemy is moved back to a
+## ring of this radius each tick (MOVING again), so a demo horde never empties.
+## 0 = off. The real spawn curve is M2.
+var recycle_radius: float = 0.0
 var _grid_count: int = -1
 var _t: int = 0
 # One RNG per concern, each seeded from the run seed (3a). Others add theirs the same way.
@@ -50,12 +54,26 @@ func step() -> void:
 	separation.apply(enemies, grid, catalog)
 	_lap(Phase.SEPARATE)
 	enemies.chase_guardian(catalog.speed, catalog.radius, SIM_DT)
+	if recycle_radius > 0.0:
+		_recycle()
 	_lap(Phase.MOVE)
 	_rebuild_grid()
 	_lap(Phase.GRID)
 	towers.retarget(grid, enemies.pos_x, enemies.pos_z)
 	_lap(Phase.TARGETING)
 	tick += 1
+
+
+# In index order, no swap-remove: indices and count stay stable.
+func _recycle() -> void:
+	var st := enemies.state
+	for i in st.size():
+		if st[i] != SimEnemies.State.AT_GUARDIAN:
+			continue
+		var angle := _spawn_rng.randf() * TAU
+		enemies.pos_x[i] = cos(angle) * recycle_radius
+		enemies.pos_z[i] = sin(angle) * recycle_radius
+		enemies.state[i] = SimEnemies.State.MOVING
 
 
 func _rebuild_grid() -> void:

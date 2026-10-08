@@ -13,6 +13,7 @@ var _hash_b: int
 
 func _run(run_seed: int) -> int:
 	var world := SimWorld.new(run_seed)
+	world.recycle_radius = 30.0  # the minute is long enough for arrivals: covers the recycle path
 	world.spawn_ring(0, ENEMIES, 30.0)
 	for t in TOWERS:  # same towers for every run, on a spiral inside the build radius
 		var angle := t * 2.4
