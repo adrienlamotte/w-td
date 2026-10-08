@@ -13,6 +13,7 @@ A fixed, seeded benchmark scenario that outputs FPS and frame-time numbers as JS
 
 ## Acceptance criteria
 - Scenarios: PC typical (3000 enemies + 50 towers), PC stress (3000 + 300 towers), Deck typical (1500 + 50), Deck stress (1500 + 150).
+- Enemies must keep moving for the whole measurement (for example respawn on the ring any enemy that reaches the Guardian, or a larger ring); otherwise they stop after about 280 ticks and the per-tick cost is understated (found in 002).
 - Each runs a fixed number of seconds after warm-up and records average and 1%-low FPS, frame time, and sim step time per tick (ms).
 - Output: `reports/perf_<date>.json` with the machine description (CPU, GPU, OS, Godot version).
 - One command `scripts\bench.ps1` (state whether it runs the exported build or the editor binary), and the Commands section of `CLAUDE.md` updated.
