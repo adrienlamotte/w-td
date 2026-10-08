@@ -43,6 +43,7 @@ Last reviewed: 2026-10-08 (daily docs review; owner answers recorded the same da
 | Q-28 Guardian in late modes | Any waifu the player chooses | D-058 |
 | Q-35 How local routines run | Desktop app scheduled tasks, or manually | D-049 |
 | Q-36 Unique hook | Relationship synergies | D-057 |
+| Q-31 Name, price, Early Access, DLC | Keep WTD until M5; EUR 7.99-9.99 in Early Access; no DLC before launch | D-064 |
 | Q-33 Camera controls | Pan + zoom, cursor at screen centre | D-041 |
 | Q-34 Build radius and performance with no cap | Growable radius, rising costs, 300/150 stress target | D-042 |
 
@@ -60,11 +61,6 @@ Interim rule until decided: the first test character (`waifu_test01`) is committ
 ---
 
 ## B. Long-term / business (not blocking until M5-M6)
-
-### Q-31 Name, price, Early Access, DLC (existing)
-- A) **Keep "WTD" as working title until M5; EUR 7.99-9.99 Early Access; no DLC until after launch** ★
-- B) Decide the final name and price before M4 so the art can include a logo.
-- C) Free to play with cosmetic DLC (conflicts with the plan in `05_STEAM_AND_COMPLIANCE.md`).
 
 ### Q-32 Steam Deck performance (measured in M1)
 Not a question for the owner: results will go to `DECISIONS.md`. Kept so that nothing from the earlier list is dropped.

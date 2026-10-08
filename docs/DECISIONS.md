@@ -67,3 +67,4 @@ Format: `ID | date | decision | status | notes`. Status: DECIDED (owner confirme
 | D-061 | 2026-10-08 | Hand touch-ups: the owner or a hired artist touches up 3 key characters; the other characters stay pipeline-only with human curation | DECIDED | Q-26. Which 3 characters: to decide with the roster (`backlog/001-roster-proposal.md`) |
 | D-062 | 2026-10-08 | Audio: licensed or royalty-free music, no voice acting, text barks with short sound blips, SFX from licensed packs. Any AI-generated audio is disclosed to Steam | DECIDED | Q-29 |
 | D-063 | 2026-10-08 | Launch language is English; all text is stored as localisation keys from day one; French is added after Early Access | DECIDED | Q-30 |
+| D-064 | 2026-10-08 | Business: keep "WTD" as the working title until M5; target price EUR 7.99-9.99 in Early Access; no DLC until after the full launch | DECIDED | Q-31. Final name and price are confirmed at M5 (Steam page) |
