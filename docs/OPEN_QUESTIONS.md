@@ -52,6 +52,21 @@ Last reviewed: 2026-10-08 (daily docs review; owner answers recorded the same da
 
 ---
 
+## M1 (current milestone)
+
+### Q-41 Enemy crowding: do enemies push each other apart? (blocks task 004)
+Nothing in the docs says whether enemies can stack on top of each other. It changes how the horde reads on screen and how much work the sim does per tick.
+- A) **Soft separation: enemies push each other apart a little, so the horde spreads into a crowd (Vampire Survivors feel)** ★
+- B) No separation: enemies may overlap freely (cheapest, but a horde can collapse into one blob).
+- C) Hard collision: enemies never overlap (most expensive, can cause jams).
+
+### Q-42 Can the owner run the M1 benchmark on a Steam Deck? (shapes task 009)
+The M1 "done when" needs a Steam Deck result, or an estimate with a note.
+- A) **Yes: the owner copies the Windows build to the Deck and runs the benchmark through Proton (D-075)** ★
+- B) No Deck available: estimate from PC numbers and record the method.
+
+---
+
 ## A. Deferred until the first real asset arrives
 
 ### Q-37 Where are large art files stored? (DEFERRED by the owner: decide when the first real asset arrives)
