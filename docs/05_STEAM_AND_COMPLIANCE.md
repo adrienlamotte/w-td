@@ -40,6 +40,6 @@ Reason: stay clearly out of adult-only territory to keep store access and paymen
 - [ ] Age rating questionnaires as required.
 
 ## 6. Open items **[O]**
-- Final price and Early Access decision.
-- Languages at launch (English; French?).
-- Music/SFX sourcing and its own AI/licensing disclosure.
+- Final name and price: working title "WTD" until M5, target EUR 7.99-9.99 in Early Access, no DLC before the full launch (D-064); confirmed at M5.
+- Languages: English at launch, French after Early Access (D-063).
+- Music/SFX: licensed or royalty-free sources (D-062); keep the licences on file, and disclose any AI-generated audio.

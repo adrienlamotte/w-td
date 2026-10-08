@@ -2,7 +2,7 @@
 
 Status legend: **DECIDED** = confirmed by the owner. **PROPOSED** = our recommendation, awaiting confirmation. **OPEN** = not yet discussed.
 
-Last updated: 2026-10-07 (first brainstorm session).
+Last updated: 2026-10-08 (daily docs review; open questions restructured with stable `Q-nn` IDs).
 
 ## Files
 - `CLAUDE.md` — agent entry point, hard rules, doc map. Place at repo root.
@@ -12,6 +12,7 @@ Last updated: 2026-10-07 (first brainstorm session).
 - `04_AGENT_WORKFLOW.md` — automation loops/routines and human checkpoints.
 - `05_STEAM_AND_COMPLIANCE.md` — Steam release, content limits, AI disclosure.
 - `06_ROADMAP.md` — milestones and acceptance criteria.
+- `08_FIRST_CHARACTER_BRIEF.md` — exact deliverables for the first (test) character the owner generates externally.
 - `DECISIONS.md` — decision log (append-only).
 - `OPEN_QUESTIONS.md` — unresolved questions.
 

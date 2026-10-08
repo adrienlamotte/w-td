@@ -35,6 +35,8 @@ Status key: **[D]** decided, **[P]** proposed, **[O]** open.
 | Backlog grooming | weekly | split big tasks, close stale ones, propose next tasks | updated `/backlog` |
 | Milestone report | at each milestone | summary of done/blocked, what needs the human | `/reports/milestone_<n>.md` |
 
+All routines except the daily docs review and the weekly doc drift check run on the owner's PC (D-035); they need the PC on and the Claude desktop app open. They are triggered by scheduled tasks in the Claude desktop app, or manually (D-049).
+
 ## 6. Human checkpoints **[D]**
 The owner chose all four:
 1. **Playtest each milestone:** the owner plays the build and gives "feel" feedback. Agents cannot judge fun.
@@ -54,6 +56,6 @@ Agents prepare a short **review pack** for each checkpoint (build instructions, 
 Every finished task ends with a 3-6 line report (what changed, tests, human action needed, new open questions). Nightly reports are short and list only failures and decisions needed.
 
 ## 9. Open questions **[O]**
-- Where the automation runs (owner's machine vs a cloud environment) and how the local ComfyUI is reachable from it.
-- Repo host and CI.
+- Where the automation runs: decided, the owner's PC for builds/tests/balance/perf/ComfyUI and the cloud only for docs and design work (D-035). Cloud routines such as the daily docs review (D-029) cannot reach the owner's PC or local ComfyUI. Local routines are scheduled with desktop-app scheduled tasks, or run manually (D-049).
+- Repo host and CI: the repo is on GitHub; builds and tests run locally (D-035).
 - Who covers asset generation time (agents can run ComfyUI jobs on the owner's machine, but only when it is on).

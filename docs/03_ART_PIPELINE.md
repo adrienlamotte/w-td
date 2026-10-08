@@ -6,7 +6,7 @@ Status key: **[D]** decided, **[P]** proposed, **[O]** open.
 - Art is **AI-generated**, **local** (ComfyUI on the owner's machine, NVIDIA 16 GB+ VRAM) **[D]**.
 - The owner can also generate assets with **external tools** and import them manually; this doc defines the import spec (section 7) **[D]**.
 - Animation: **hybrid** — **skeletal/layered waifus** (parts animated in-engine), **sprite-frame animation for the horde** **[D]**.
-- Style: chibi, cute comedic fantasy, 2.5D billboards **[P]**.
+- Style: cute and comedic fantasy, **adult proportions, no chibi** (D-030) **[D]**; 2.5D billboards **[P]**.
 - Human approval is required for every waifu (character design, outfits) before integration **[D]**.
 
 ## 2. Why this approach
@@ -25,7 +25,25 @@ Status key: **[D]** decided, **[P]** proposed, **[O]** open.
 | Ground tiles/props | Static textures | 512 px | varies | Must keep horde readable |
 | UI | Vector/PNG | per UI spec | | Gamepad-friendly sizing |
 
-All sprites: **transparent background (PNG, RGBA)**, consistent light direction, consistent outline style, feet on a defined pivot.
+Note: the "In-game size" column is given at a 1080p reference. The base resolution is 2560x1440 (D-039), so multiply on-screen sizes by about 1.33 (waifus ~215-265 px tall, horde ~85-130 px). Source sizes are unchanged. Because there is no chibi style (D-030), readability of adult-proportioned waifus at tower scale must be validated in the M4 art spike.
+
+All sprites: **transparent background (PNG, RGBA)**, consistent light direction, consistent outline style, feet on a defined pivot. **Pivot [P]:** bottom-centre of the frame for enemies, props and bosses; for waifu layers each part carries its own pivot in `parts.json` and the root pivot is the feet on the ground.
+
+### Canonical names **[P]**
+- *Waifu part names:* `body_torso`, `body_arm_l`, `body_arm_r`, `body_leg_l`, `body_leg_r`, `head`, `hair_back`, `hair_front`, `face_neutral`, `face_happy`, `face_hurt`, `face_angry`, `outfit_top`, `outfit_bottom`, `outfit_extra_<n>`, `accessory_<n>`. A missing optional part is allowed; the validator lists required ones.
+- *Enemy animation names:* `walk` (6-8 frames), `attack` (4), `death` (4-6); `idle` optional. Frame cells are 256x256 and the sheet is one horizontal strip.
+- *`parts.json` example:*
+```json
+{"schema_version": 1, "canvas": [1024, 2048],
+ "parts": [{"name": "body_torso", "pivot": [512, 1100], "z": 10, "parent": null},
+           {"name": "head", "pivot": [512, 700], "z": 20, "parent": "body_torso"}]}
+```
+- *Enemy `<asset_id>.json` example:*
+```json
+{"schema_version": 1, "frame_size": 256, "faces": "right",
+ "anims": [{"name": "walk", "frames": 8, "fps": 12, "loop": true}]}
+```
+These are proposals for the validator to enforce; the canvas width of the waifu layers is not yet defined (only 2048 px height is) and will be fixed in the M4 art spike.
 
 ## 4. Local generation pipeline (ComfyUI) **[P]**
 Stages (each stage's output is stored; every stage can be rerun):
@@ -67,7 +85,7 @@ Reasons: Steam AI disclosure (see `05_STEAM_AND_COMPLIANCE.md`), reproducibility
 ## 7. External-tool import spec (for manual generation by the owner) **[D]**
 You can generate art with any outside tool and drop it in. Follow this so agents can ingest it without guessing.
 
-**Drop folder:** `assets_src/incoming/<asset_id>/`
+**Drop folder:** `assets_src/incoming/<asset_id>/` (the first character has its own brief: `08_FIRST_CHARACTER_BRIEF.md`)
 
 **Required files per asset type**
 - *Waifu layers:* one PNG per part, transparent background, same canvas size (2048 px tall), named `<asset_id>__<part>.png`, plus a `parts.json` (part name, pivot x/y in px, draw order, parent part). Part list: see section 3.
@@ -83,14 +101,14 @@ You can generate art with any outside tool and drop it in. Follow this so agents
 
 ### Prompt template (starting point, adapt per tool)
 ```
-Chibi anime girl, <hair/eyes/personality>, wearing <outfit>, full body, front view,
+Adult anime woman with adult proportions, <hair/eyes/personality>, wearing <outfit>, full body, front view,
 flat even lighting, clean line art, soft cel shading, transparent or plain white background,
 adult character, <style reference>.
-Negative: nudity, explicit, extra limbs, text, watermark, cropped, dark background.
+Negative: nudity, explicit, child, childlike, chibi, extra limbs, text, watermark, cropped, dark background.
 ```
 For parts: generate the full character first, then separate parts or re-generate "<part> only, isolated, transparent background" using the full character as image reference.
 
 ## 8. Open questions **[O]**
-- Final art style reference (a few reference images from the owner would help).
+- Style: the owner generates the first character with an external tool (D-060); the exact deliverables are in `08_FIRST_CHARACTER_BRIEF.md`. Style references and local models/LoRAs will be chosen after seeing it.
 - Specific models/LoRAs for the style (choose in the art spike).
-- Whether to hand-touch key characters (recommended for IP protection; see compliance doc).
+- Hand touch-ups: decided, the owner or a hired artist touches up 3 key characters (D-061); which 3 is decided with the roster.
