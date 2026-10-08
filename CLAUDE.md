@@ -27,8 +27,11 @@ You are an AI agent working on this repo, mostly unattended. Read this file firs
 8. **Keep docs in sync.** If you change behavior that a doc describes, update the doc in the same change. Record decisions in `DECISIONS.md`.
 
 ## Commands (fill in as the project gets created; keep this section accurate)
-- Run tests (headless): _TBD in M0_
-- Run game: _TBD in M0_
+Setup (once per machine): Godot **4.7.2-stable** (pinned, D-065; scripts refuse other versions). Download `Godot_v4.7.2-stable_win64.exe.zip` from https://github.com/godotengine/godot/releases/tag/4.7.2-stable and unzip it outside the repo (owner's PC: `C:\DevTools\Godot\4.7.2`). Point `GODOT` at the **console** exe, for example `$env:GODOT = 'C:\DevTools\Godot\4.7.2\Godot_v4.7.2-stable_win64_console.exe'` (or put `godot` on PATH). For exports, also install the export templates (Editor > Manage Export Templates, or unzip `templates/` from `Godot_v4.7.2-stable_export_templates.tpz` into `%APPDATA%\Godot\export_templates\4.7.2.stable`). Python 3.10+ on PATH; the scripts create `tools/.venv` with pinned deps on first use. If script execution is blocked, run them as `powershell -ExecutionPolicy Bypass -File scripts\<name>.ps1`.
+- Run tests (headless, GUT + Python tools tests): `scripts\test.ps1`
+- Validate game data (JSON Schema): `scripts\validate.ps1`
+- Run game: `scripts\run.ps1`
+- Export Windows build (to `build\windows\WTD.exe`): `scripts\export.ps1`
 - Perf benchmark scene: _TBD in M1_
 - Balance simulation: _TBD in M3_
 - Asset forge CLI: _TBD in M4_

@@ -22,6 +22,7 @@ Last updated: 2026-10-08 (daily docs review; open questions restructured with st
 /docs/            <- all numbered docs + DECISIONS.md + OPEN_QUESTIONS.md
 /game/            <- Godot project
 /tools/           <- asset forge CLI, balance sim runner, validators
+/scripts/         <- one-command entry points: test, validate, run, export (D-068)
 /assets_src/      <- source art, ComfyUI workflows, manifests
 /backlog/         <- one markdown file per task
 /reports/         <- generated nightly/milestone reports

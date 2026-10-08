@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Enemy",
+  "description": "Example schema from 02_TECH_ARCHITECTURE.md 3b. Values are placeholders, not balance decisions.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "archetype", "hp", "speed", "contact_damage", "radius", "xp", "drops", "sprite", "tags"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "id": {"type": "string", "pattern": "^enemy_[a-z0-9_]+$"},
+    "archetype": {"type": "string"},
+    "hp": {"type": "number", "exclusiveMinimum": 0},
+    "speed": {"type": "number", "minimum": 0},
+    "contact_damage": {"type": "number", "minimum": 0},
+    "radius": {"type": "number", "exclusiveMinimum": 0},
+    "xp": {"type": "integer", "minimum": 0},
+    "drops": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["type", "amount", "chance"],
+        "properties": {
+          "type": {"type": "string"},
+          "amount": {"type": "integer", "minimum": 1},
+          "chance": {"type": "number", "minimum": 0, "maximum": 1}
+        }
+      }
+    },
+    "sprite": {"type": "string"},
+    "tags": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+  }
+}

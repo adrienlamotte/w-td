@@ -1,0 +1,4 @@
+[gd_scene format=3]
+
+[node name="Main" type="Label"]
+text = "WTD - M0 foundation placeholder"
