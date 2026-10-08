@@ -1,5 +1,5 @@
 # 010 — Test runner: a broken test file must fail the run
-- Status: planned
+- Status: blocked
 - Milestone: M1
 - Depends on: -
 - PR: -
@@ -39,5 +39,16 @@ Order: hook + gutconfig, unit test, end-to-end checks (a) and (b), doc sentence,
 Size: about 20 lines of code and 40 of tests; one PR.
 
 ## Questions
+**Q1 (game-dev, 2026-10-08): the plan's detection does not see a test file with a syntax error.**
+Observed with GUT 9.7.1 (WIP hook pushed on `task/010-test-runner-fails-on-broken-files`, suite green with it, 23/23):
+- `test_zz_broken.gd` and `test_aa_broken.gd` with a parse error: Godot prints `ERROR: Failed to load script ... "Parse error"`, then GUT logs `[GUT WARNING] Ignoring script res://tests/sim/test_aa_broken.gd because it does not extend GutTest` and removes it from `test_collector.scripts` (`add_script`, line ~131). So it never has `is_loaded == false` and the hook sees nothing. Run: `Scripts 6, Tests 23, All tests passed`, `ALL TESTS PASSED`, exit 0.
+- The plan's "later scripts are skipped" finding does not hold either: with `test_aa_broken.gd` all later scripts still ran.
+- Runtime error (`null.free()` inside a test): already fails without any config change: `SCRIPT ERROR: Invalid call... [Failed]: Unexpected Errors`, `Failing Tests 1`, `TESTS FAILED (gut=1, python=0)`, exit 1. Criterion 2 is met by GUT's defaults.
+
+Options:
+- A ★ Keep the post-run hook, but also fail on GUT's logged warnings: in `run()`, scan `gut.logger.get_warnings()` for entries starting with `Ignoring script ` and report each path as `TEST SCRIPT FAILED TO LOAD`, `set_exit_code(1)`. Small (about 5 more lines), names the file, no GUT edit. Couples to GUT's warning text (GUT is pinned, the unit test would catch a change only via a fake; the manual e2e check covers it). Side effect: a `test_*.gd` file that really does not extend GutTest also fails the run, which is arguably correct.
+- B Hook lists `test_*.gd` files under the configured dirs itself and fails for each one missing from `collector.scripts`. Independent of GUT's message text; about 15 more lines (directory walk duplicates GUT's config: dirs, subdirs, prefix/suffix).
+- C Grep the GUT output in `scripts/test.ps1` for `Failed to load script` / `Ignoring script` and fail. No hook needed, but parses console text in PowerShell, which the plan wanted to avoid.
+- D Run `godot --headless --check-only -s <file>` per test file before the suite. Exact parse check, but one Godot launch per file (slow as the suite grows).
 
 ## Review log
