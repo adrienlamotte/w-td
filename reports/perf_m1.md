@@ -18,7 +18,7 @@ The numbers that matter (median of 3 runs):
 
 What it means:
 - GDScript is fast enough for M1 on PC. The only miss is the "everyone piled at the Guardian" case, which is partly made by M1 placeholders (no Guardian contact radius, nobody dies). M2 changes that case anyway.
-- About 90% of a tick frame is the sim step, and 65-79% of the step is enemy separation. A pure 2D view would save less than 1 ms per frame, so the 2D fallback buys nothing.
+- About 90% of a tick frame is the sim step, and 60-79% of the step is enemy separation. A pure 2D view would save less than 1 ms per frame, so the 2D fallback buys nothing.
 - No optimisation and no GDExtension are needed now. The cheap GDScript wins below are listed for an M2 task.
 - The Deck numbers are an estimate from public benchmarks. A real Deck run is still required (by M6, D-080).
 

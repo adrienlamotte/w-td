@@ -9,7 +9,7 @@ This is the global roadmap. Each milestone gets a detailed plan in `docs/plans/M
 - Fill the **Commands** section of `CLAUDE.md`.
 - Done when: an agent can clone, run the tests headless, and export a Windows build with one command each.
 
-## M1 — Horde and performance spike
+## M1 — Horde and performance spike (built; checkpoint CP-M1 pending)
 - Isometric camera, ground plane, billboarded sprite rendering via MultiMesh, spatial hash, placeholder enemies chasing a center point.
 - Benchmark scene and perf report.
 - Done when: budgets in `02_TECH_ARCHITECTURE.md` measured on PC; Steam Deck result recorded (or estimated with a note); a go/no-go on the 3D billboard approach vs pure 2D fallback is written in `DECISIONS.md`.
