@@ -1,8 +1,8 @@
 # 008 — Benchmark scene and perf report command
-- Status: planned
+- Status: review
 - Milestone: M1
 - Depends on: 004, 005, 007
-- PR: -
+- PR: #12
 
 ## Goal
 A fixed, seeded benchmark scenario that outputs FPS and frame-time numbers as JSON, runnable with one command.
