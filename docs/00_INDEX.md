@@ -20,6 +20,8 @@ Last updated: 2026-10-08 (daily docs review; open questions restructured with st
 ```
 /CLAUDE.md
 /docs/            <- all numbered docs + DECISIONS.md + OPEN_QUESTIONS.md
+/docs/plans/      <- one plan per milestone (M<n>.md)
+/.claude/         <- development loop: agents (lead-dev, game-dev) and the /dev-loop skill
 /game/            <- Godot project
 /tools/           <- asset forge CLI, balance sim runner, validators
 /scripts/         <- one-command entry points: test, validate, run, export (D-068)

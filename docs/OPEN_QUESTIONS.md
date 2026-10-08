@@ -62,6 +62,17 @@ Interim rule until decided: the first test character (`waifu_test01`) is committ
 
 ## B. Long-term / business (not blocking until M5-M6)
 
+### Q-39 How do finished tasks get merged? (blocks M1 start; on the Owner Desk)
+- A) **One branch per milestone (`m<n>/dev`); the lead dev merges each reviewed task PR into it; the owner merges the milestone PR into `main` at the checkpoint** ★ (safe to assume: the loop uses it until answered)
+- B) Every task PR targets `main` and the owner merges each one; the loop waits between tasks.
+- C) The lead dev merges task PRs straight into `main` after review.
+
+### Q-40 How long does one run of the development loop go before checking in? (blocks M1 start; on the Owner Desk)
+A run always stops at checkpoints, art/balance/Steam approvals and when everything is blocked on the owner.
+- A) **Keep going until one of those stops** ★ (safe to assume)
+- B) Stop after every finished task.
+- C) Stop after 3 finished tasks.
+
 ### Q-38 Steam Deck build: native Linux export or the Windows build through Proton? (blocks the M1 Deck measurement and M6)
 M0 only exports Windows (D-068). The Deck can run the Windows build through Proton, or Godot can export a native Linux build. This affects where the M1 Deck numbers are measured and how GodotSteam is packaged.
 - A) **Windows build through Proton first; add a native Linux export only if M1 shows a problem** ★ (safe to assume: this is what M0 does)

@@ -5,3 +5,5 @@ build/
 # Python
 tools/.venv/
 __pycache__/
+# Machine-specific Claude Code settings (GODOT path)
+.claude/settings.local.json

@@ -2,6 +2,8 @@
 
 Status key: **[P]** proposed unless marked. Each milestone ends with a **human playtest/review checkpoint** (see `04_AGENT_WORKFLOW.md`). Current milestone: **M0**.
 
+This is the global roadmap. Each milestone gets a detailed plan in `docs/plans/M<n>.md` and task files in `backlog/` when it starts; the development loop (`04_AGENT_WORKFLOW.md` 2a) keeps them in sync.
+
 ## M0 — Foundation
 - Create repo layout (`00_INDEX.md`), Godot project, GUT wired (D-033), headless test command, JSON Schema data validator skeleton (D-034), local build script (D-035), Godot version pinned and recorded (D-036).
 - Fill the **Commands** section of `CLAUDE.md`.

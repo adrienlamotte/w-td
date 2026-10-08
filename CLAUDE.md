@@ -13,6 +13,7 @@ You are an AI agent working on this repo, mostly unattended. Read this file firs
 | How you work: loops, routines, branches, human checkpoints | `04_AGENT_WORKFLOW.md` |
 | Steam rules, content limits, AI disclosure | `05_STEAM_AND_COMPLIANCE.md` |
 | Milestones and current scope | `06_ROADMAP.md` |
+| Plan of the current milestone | `plans/M<n>.md` |
 | Why things were decided | `DECISIONS.md` |
 | What is still undecided | `OPEN_QUESTIONS.md` |
 
@@ -32,6 +33,8 @@ Setup (once per machine): Godot **4.7.2-stable** (pinned, D-065; scripts refuse 
 - Validate game data (JSON Schema): `scripts\validate.ps1`
 - Run game: `scripts\run.ps1`
 - Export Windows build (to `build\windows\WTD.exe`): `scripts\export.ps1`
+- Development loop (product owner): `/dev-loop` (one run, until a stop), or `/loop /dev-loop` to keep picking up the owner's answers. Roles: `04_AGENT_WORKFLOW.md` 2a.
+- Owner Desk (owner's questions form): https://claude.ai/artifact/Cosi7LM4xG1sbJLqryt1CW
 - Perf benchmark scene: _TBD in M1_
 - Balance simulation: _TBD in M3_
 - Asset forge CLI: _TBD in M4_
