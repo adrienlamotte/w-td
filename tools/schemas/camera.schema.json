@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Camera",
+  "description": "View camera tunables (D-086). Values are placeholders judged at CP-M1.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "yaw_deg", "pitch_deg", "distance", "zoom_sizes", "default_zoom", "pan_speed", "edge_scroll_px", "bounds_radius", "bounds_margin"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "id": {"type": "string", "pattern": "^camera_[a-z0-9_]+$"},
+    "yaw_deg": {"type": "number", "minimum": -360, "maximum": 360},
+    "pitch_deg": {"type": "number", "exclusiveMinimum": 0, "maximum": 90},
+    "distance": {"type": "number", "exclusiveMinimum": 0},
+    "zoom_sizes": {"type": "array", "minItems": 3, "maxItems": 3, "items": {"type": "number", "exclusiveMinimum": 0}},
+    "default_zoom": {"type": "integer", "minimum": 0, "maximum": 2},
+    "pan_speed": {"type": "number", "exclusiveMinimum": 0},
+    "edge_scroll_px": {"type": "number", "minimum": 0},
+    "bounds_radius": {"type": "number", "exclusiveMinimum": 0},
+    "bounds_margin": {"type": "number", "minimum": 0}
+  }
+}

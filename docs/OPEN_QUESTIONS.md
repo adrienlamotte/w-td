@@ -15,6 +15,8 @@ Last reviewed: 2026-10-08 (daily docs review; owner answers recorded the same da
 | Q-02 Data format | JSON + JSON Schema | D-034 |
 | Q-03 Where builds, tests and nightly runs execute | Everything on the owner's PC | D-035 (scheduling: Q-35) |
 | Q-04 Godot version | Pin at M0 start | D-036 |
+| Q-41 Enemy crowding | Soft separation | D-079 |
+| Q-42 Steam Deck for the M1 benchmark | No Deck: estimate from PC | D-080 |
 | Q-38 Steam Deck build | Windows build through Proton first | D-075 |
 | Q-39 How task PRs are merged | Milestone branch, owner merges into `main` | D-073 |
 | Q-40 Length of a loop run | Until a real stop | D-074 |
@@ -67,6 +69,7 @@ Interim rule until decided: the first test character (`waifu_test01`) is committ
 
 ### Q-32 Steam Deck performance (measured in M1)
 Not a question for the owner: results will go to `DECISIONS.md`. Kept so that nothing from the earlier list is dropped.
+Estimated in `reports/perf_m1.md` (D-080); real Deck run pending, by M6.
 
 ---
 

@@ -1,6 +1,6 @@
 # 06 — Roadmap
 
-Status key: **[P]** proposed unless marked. Each milestone ends with a **human playtest/review checkpoint** (see `04_AGENT_WORKFLOW.md`). Current milestone: **M0**.
+Status key: **[P]** proposed unless marked. Each milestone ends with a **human playtest/review checkpoint** (see `04_AGENT_WORKFLOW.md`). Current milestone: **M1** (plan: `docs/plans/M1.md`).
 
 This is the global roadmap. Each milestone gets a detailed plan in `docs/plans/M<n>.md` and task files in `backlog/` when it starts; the development loop (`04_AGENT_WORKFLOW.md` 2a) keeps them in sync.
 
@@ -9,7 +9,7 @@ This is the global roadmap. Each milestone gets a detailed plan in `docs/plans/M
 - Fill the **Commands** section of `CLAUDE.md`.
 - Done when: an agent can clone, run the tests headless, and export a Windows build with one command each.
 
-## M1 — Horde and performance spike
+## M1 — Horde and performance spike (done; checkpoint accepted 2026-10-08, D-090)
 - Isometric camera, ground plane, billboarded sprite rendering via MultiMesh, spatial hash, placeholder enemies chasing a center point.
 - Benchmark scene and perf report.
 - Done when: budgets in `02_TECH_ARCHITECTURE.md` measured on PC; Steam Deck result recorded (or estimated with a note); a go/no-go on the 3D billboard approach vs pure 2D fallback is written in `DECISIONS.md`.

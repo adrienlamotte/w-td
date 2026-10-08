@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "id": "render_default",
+  "enemy_sprite_height": 1.8,
+  "tower_sprite_height": 4.0,
+  "walk_frames": 8,
+  "walk_fps": 12
+}

@@ -16,7 +16,7 @@ Tone: cute and comedic fantasy. **[D]** All characters are clearly adult with ad
 
 ## 3. Run structure **[D unless noted]**
 - Length: **15-20 minutes** per run.
-- Map: **open field, 360° swarm**, no lanes. Enemies path straight toward the Guardian; they attack whatever tower blocks their straight path, otherwise the Guardian. Towers have HP; a dead tower leaves a husk that can be rebuilt for a fraction of the cost; no repair in M2 (D-043). **[D]**
+- Map: **open field, 360° swarm**, no lanes. Enemies path straight toward the Guardian; they attack whatever tower blocks their straight path, otherwise the Guardian. Enemies softly push each other apart so the horde spreads into a crowd (D-079). Towers have HP; a dead tower leaves a husk that can be rebuilt for a fraction of the cost; no repair in M2 (D-043). **[D]**
 - Escalation: continuous spawn curve with waves; a **mini-boss every ~5 minutes** **[P]** and a **final boss at the end**.
 - **Between waves:** a short break of 15-20 s with no new spawns; leftover enemies keep attacking, the clock keeps running, and building is allowed at any time (D-032). **[D]**
 - Win: kill the final boss, who spawns at a data-defined time (15:00 in M2, tuned toward 15-20 min later; D-047). Lose: Guardian HP = 0. **[D]**

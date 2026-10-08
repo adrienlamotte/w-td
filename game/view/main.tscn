@@ -1,4 +1,42 @@
 [gd_scene format=3]
 
-[node name="Main" type="Label"]
-text = "WTD - M0 foundation placeholder"
+[ext_resource type="Script" path="res://view/game_view.gd" id="1_view"]
+[ext_resource type="Script" path="res://view/iso_camera.gd" id="2_cam"]
+[ext_resource type="Script" path="res://view/horde_renderer.gd" id="3_horde"]
+
+[sub_resource type="StandardMaterial3D" id="mat_ground"]
+shading_mode = 0
+albedo_color = Color(0.36, 0.55, 0.32, 1)
+
+[sub_resource type="PlaneMesh" id="mesh_ground"]
+material = SubResource("mat_ground")
+size = Vector2(80, 80)
+
+[sub_resource type="StandardMaterial3D" id="mat_guardian"]
+shading_mode = 0
+albedo_color = Color(0.95, 0.45, 0.7, 1)
+
+[sub_resource type="CylinderMesh" id="mesh_guardian"]
+material = SubResource("mat_guardian")
+top_radius = 1.0
+bottom_radius = 1.0
+height = 2.0
+
+[node name="Main" type="Node3D"]
+script = ExtResource("1_view")
+
+[node name="CameraRig" type="Node3D" parent="."]
+script = ExtResource("2_cam")
+
+[node name="Camera3D" type="Camera3D" parent="CameraRig"]
+projection = 1
+
+[node name="Ground" type="MeshInstance3D" parent="."]
+mesh = SubResource("mesh_ground")
+
+[node name="Guardian" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+mesh = SubResource("mesh_guardian")
+
+[node name="HordeRenderer" type="Node3D" parent="."]
+script = ExtResource("3_horde")
