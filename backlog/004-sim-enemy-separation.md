@@ -1,5 +1,5 @@
 # 004 — Sim: enemy crowd behaviour
-- Status: review
+- Status: done
 - Milestone: M1
 - Depends on: 003
 - PR: #8
@@ -72,3 +72,4 @@ Size: about 80 lines of code, about 90 of tests. One PR.
 ## Questions
 
 ## Review log
+- 2026-10-08 lead-dev: approved and merged PR #8 (squash into m1/dev). Re-ran: `scripts	est.ps1` 32/32 + Python OK (suite ~30 s, determinism ~6.3-7.5 s per run, separation 34 ms/tick at 3000 piled in headless debug), validator 0 errors. Correct and deterministic (Jacobi, j > i in fixed grid order, contiguous row ranges over `cell_start` are valid). Lowered crowd bound (0.2 * 2r, measured 0.164) still fails without separation (200 enemies would sit ~0.01 apart on the 0.35 circle), so it tests something; deviation reported openly. Non-blocking notes for 008/009: (a) the piled case is partly a placeholder artifact (no Guardian contact radius, `AT_GUARDIAN` enemies never move inward-out, push cap + strength 0.5 vs chase pressure gives ~8x overlap density, ~166 candidates/enemy); (b) cheap wins to measure: cell size `2 * max_radius` (~40% fewer candidates, D-082 change), hoist `catalog.max_radius` and `cell_coord` out of the inner work; (c) if the suite grows past ~60 s, shrink `test_determinism` to e.g. 600 ticks x 1000 enemies, perf belongs to 008. `separation_strength` 0.5 vs 1.0 is an owner balance call at the M1 checkpoint.
