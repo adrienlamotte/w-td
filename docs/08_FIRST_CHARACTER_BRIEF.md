@@ -77,7 +77,7 @@ Missing metadata keeps the asset in `needs_review`. The record is also the sourc
 1. Put the files in `assets_src/incoming/waifu_test01/` of the repo (or attach them in a design session and I will place them).
 2. Until the Asset Forge tool exists (M4), an agent validates by hand against this brief and reports: sizes, alpha, edges, missing parts, consistency.
 3. On success it creates a `needs_review` entry in `assets_src/manifest.yaml`; the owner approves.
-4. Large PNG files: storage in git is an open question (Q-37).
+4. Large PNG files: the storage choice (Git LFS or not) is deferred (Q-37). Until then, commit this small test character as plain files on a branch.
 
 ## 8. Prompt starter (adapt to your tool)
 ```

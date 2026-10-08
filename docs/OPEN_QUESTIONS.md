@@ -48,15 +48,15 @@ Last reviewed: 2026-10-08 (daily docs review; owner answers recorded the same da
 
 ---
 
-## A. Blocks the first asset import and M3
+## A. Deferred until the first real asset arrives
 
-### Q-37 Where are large art files stored? (blocks the first asset import)
-PNG parts at 2048 px and later sprite sheets will make the git repo heavy (tens of MB per character).
-- A) **Git LFS for `assets_src/` and `game/` binary assets (PNG, PSD, audio)** ★ — history stays small; needs LFS enabled on the GitHub repo and installed on the owner's PC (cloud sessions can read and write pointers).
-- B) Plain git — simplest, but the repo grows quickly and cannot be slimmed afterwards without rewriting history.
-- C) Keep sources outside git (the Dropbox folder), commit only the exported in-game assets and the manifest.
-Recommended: A.
-
+### Q-37 Where are large art files stored? (DEFERRED by the owner: decide when the first real asset arrives)
+Rough size estimates (not measurements): about 40-60 MB per waifu (14+ PNG layers at 1024x2048, outfits, portraits), roughly 0.5-1 GB for the launch project, and git keeps every re-export forever.
+Facts checked 2026-10-08: GitHub Free includes 10 GiB of Git LFS storage and 10 GiB of LFS bandwidth per month; beyond that usage is metered, or blocked if the budget is $0. Without LFS, GitHub warns at 50 MiB per file, blocks at 100 MiB, and recommends repos under 1 GB (strongly under 5 GB).
+- A) **Hybrid: exported in-game assets via Git LFS, raw sources and ComfyUI intermediates in Dropbox, referenced by the manifest** ★
+- B) Git LFS for everything.
+- C) Plain git (small test assets only) and decide properly with real file sizes.
+Interim rule until decided: the first test character (`waifu_test01`) is committed as plain files on a branch; cloud sessions should not fetch large files.
 ---
 
 ## B. Long-term / business (not blocking until M5-M6)
