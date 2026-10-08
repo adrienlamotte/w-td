@@ -1,6 +1,7 @@
 extends GutTest
 ## Tower arrays and per-tick nearest targeting (D-085).
 
+const SWARMER := "enemy_swarmer_01"  # catalog sorted by id: type 0 is not the swarmer
 const BUILD_RADIUS: float = 20.0
 const RANGE: float = 8.0
 
@@ -35,7 +36,7 @@ func _brute_nearest(world: SimWorld, t: int) -> int:
 
 func test_target_is_nearest_enemy_in_range() -> void:
 	var world := SimWorld.new(42)
-	world.spawn_ring(0, 200, 24.0)
+	world.spawn_ring(world.catalog.type_of(SWARMER), 200, 24.0)
 	_add_spread_towers(world, 20)
 	var with_target := 0
 	for s in 40:
@@ -49,7 +50,7 @@ func test_target_is_nearest_enemy_in_range() -> void:
 
 func test_out_of_range_then_picked_up() -> void:
 	var world := SimWorld.new(1)
-	world.enemies.add(0, 12.0, 0.0, 1.0)
+	world.enemies.add(world.catalog.type_of(SWARMER), 12.0, 0.0, 1.0)
 	world.towers.add(10.0, 0.0, 1.0)
 	world.step()
 	assert_eq(world.towers.target[0], -1)
@@ -64,7 +65,7 @@ func test_out_of_range_then_picked_up() -> void:
 
 func _targeting_usec(ring: float) -> int:
 	var world := SimWorld.new(9)
-	world.spawn_ring(0, 3000, ring)
+	world.spawn_ring(world.catalog.type_of(SWARMER), 3000, ring)
 	_add_spread_towers(world, 300)
 	world.step()
 	world.step()

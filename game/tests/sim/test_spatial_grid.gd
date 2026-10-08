@@ -1,5 +1,6 @@
 extends GutTest
 
+const SWARMER := "enemy_swarmer_01"  # catalog sorted by id: type 0 is not the swarmer
 const CELL: float = 1.4
 
 var rng: RandomNumberGenerator
@@ -131,8 +132,8 @@ func test_empty_grid() -> void:
 
 func test_sim_world_grid_matches_enemies() -> void:
 	var world := SimWorld.new(7)
-	assert_almost_eq(world.grid.cell_size, 4.0 * world.catalog.radius[0], 1e-6)
-	world.spawn_ring(0, 500, 30.0)
+	assert_almost_eq(world.grid.cell_size, 4.0 * world.catalog.max_radius, 1e-6)
+	world.spawn_ring(world.catalog.type_of(SWARMER), 500, 30.0)
 	for t in 60:
 		world.step()
 	xs = world.enemies.pos_x

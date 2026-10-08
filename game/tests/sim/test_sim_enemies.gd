@@ -1,25 +1,29 @@
 extends GutTest
 
+const SWARMER := "enemy_swarmer_01"  # catalog sorted by id: type 0 is not the swarmer
+
 var world: SimWorld
 var speed: float
 var radius: float
+var sw: int
 
 
 func before_each() -> void:
 	world = SimWorld.new(1)
-	speed = world.catalog.speed[0]
-	radius = world.catalog.radius[0]
+	sw = world.catalog.type_of(SWARMER)
+	speed = world.catalog.speed[sw]
+	radius = world.catalog.radius[sw]
 
 
 func test_moves_speed_times_dt_toward_origin() -> void:
-	world.enemies.add(0, 10.0, 0.0, 1.0)
+	world.enemies.add(sw, 10.0, 0.0, 1.0)
 	world.step()
 	assert_almost_eq(world.enemies.pos_x[0], 10.0 - speed * SimWorld.SIM_DT, 1e-4)
 	assert_almost_eq(world.enemies.pos_z[0], 0.0, 1e-6)
 
 
 func test_moves_along_diagonal() -> void:
-	world.enemies.add(0, 6.0, -8.0, 1.0)  # distance 10
+	world.enemies.add(sw, 6.0, -8.0, 1.0)  # distance 10
 	world.step()
 	var f := (10.0 - speed * SimWorld.SIM_DT) / 10.0
 	assert_almost_eq(world.enemies.pos_x[0], 6.0 * f, 1e-4)
@@ -27,7 +31,7 @@ func test_moves_along_diagonal() -> void:
 
 
 func test_stops_at_guardian() -> void:
-	world.enemies.add(0, radius + speed * SimWorld.SIM_DT * 0.5, 0.0, 1.0)
+	world.enemies.add(sw, radius + speed * SimWorld.SIM_DT * 0.5, 0.0, 1.0)
 	world.step()
 	assert_almost_eq(world.enemies.pos_x[0], radius, 1e-5)
 	assert_eq(world.enemies.state[0], SimEnemies.State.AT_GUARDIAN)
@@ -38,7 +42,7 @@ func test_stops_at_guardian() -> void:
 
 
 func test_spawn_ring_count_and_distance() -> void:
-	world.spawn_ring(0, 1000, 30.0)
+	world.spawn_ring(sw, 1000, 30.0)
 	assert_eq(world.enemies.count(), 1000)
 	for i in 1000:
 		var x := world.enemies.pos_x[i]

@@ -1,5 +1,7 @@
 extends GutTest
 
+const SWARMER := "enemy_swarmer_01"  # catalog sorted by id: type 0 is not the swarmer
+
 
 func test_tick_rate_is_30hz() -> void:
 	assert_almost_eq(SimWorld.SIM_DT, 1.0 / 30.0, 1e-9)
@@ -20,14 +22,14 @@ func test_thirty_steps_is_one_second() -> void:
 
 func test_step_records_phase_times() -> void:
 	var world := SimWorld.new(1)
-	world.spawn_ring(0, 10, 5.0)
+	world.spawn_ring(world.catalog.type_of(SWARMER), 10, 5.0)
 	world.step()
 	assert_eq(world.phase_usec.size(), 4)
 
 
 func test_phase_usec_sum_accumulates() -> void:
 	var world := SimWorld.new(1)
-	world.spawn_ring(0, 10, 5.0)
+	world.spawn_ring(world.catalog.type_of(SWARMER), 10, 5.0)
 	for i in 3:
 		world.step()
 	assert_eq(world.phase_usec_sum.size(), 4)
@@ -38,7 +40,7 @@ func test_phase_usec_sum_accumulates() -> void:
 func test_recycle_moves_arrived_enemy_back_to_ring() -> void:
 	var world := SimWorld.new(1)
 	world.recycle_radius = 10.0
-	world.enemies.add(0, 0.4, 0.0, 1.0)  # within one tick of contact (radius 0.35)
+	world.enemies.add(world.catalog.type_of(SWARMER), 0.4, 0.0, 1.0)  # within one tick of contact (radius 0.35)
 	world.step()
 	assert_eq(world.enemies.count(), 1)
 	assert_eq(world.enemies.state[0], SimEnemies.State.MOVING)
@@ -47,6 +49,6 @@ func test_recycle_moves_arrived_enemy_back_to_ring() -> void:
 
 func test_recycle_off_by_default() -> void:
 	var world := SimWorld.new(1)
-	world.enemies.add(0, 0.4, 0.0, 1.0)  # within one tick of contact (radius 0.35)
+	world.enemies.add(world.catalog.type_of(SWARMER), 0.4, 0.0, 1.0)  # within one tick of contact (radius 0.35)
 	world.step()
 	assert_eq(world.enemies.state[0], SimEnemies.State.AT_GUARDIAN)
