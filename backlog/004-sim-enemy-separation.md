@@ -1,8 +1,8 @@
 # 004 — Sim: enemy crowd behaviour
-- Status: planned
+- Status: review
 - Milestone: M1
 - Depends on: 003
-- PR: -
+- PR: #8
 
 ## Goal
 Apply soft separation (D-079) so the horde reads well and the benchmark has a realistic per-tick cost.
