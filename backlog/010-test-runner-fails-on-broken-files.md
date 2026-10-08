@@ -1,5 +1,5 @@
 # 010 — Test runner: a broken test file must fail the run
-- Status: blocked
+- Status: planned
 - Milestone: M1
 - Depends on: -
 - PR: -
@@ -18,25 +18,28 @@
 - Headless tests green twice; docs updated if the command's behaviour description changes.
 
 ## Plan
-Findings (GUT 9.7.1, read from `addons/gut`, not edited):
-- A test script that fails to load (parse error in it, or in a sim script it uses) is only printed as `!!! <path> could not be loaded` by `test_collector.gd`, and `gut.gd` then `break`s out of the script loop, so every later script is silently skipped too. The exit code only counts failed asserts, so the run exits 0.
-- GUT already supports a post-run hook (`post_run_script` in `.gutconfig.json`, a script extending `GutHookScript`). `GutRunner.gd` uses the hook's `set_exit_code()` value as the process exit code when it is set. That is the fix point: no GUT file changes, no output parsing in PowerShell.
-- Script errors raised during a test: GUT's default `failure_error_types` is `["engine", "gut", "push_error"]`, so an engine error inside a test should already fail that test. Verify it (step 4); only if it does not, add `"failure_error_types": ["engine", "gut", "push_error"]` explicitly to `.gutconfig.json` and re-check.
+Re-planned 2026-10-08 after Q1 (decision: option A, plus a contract test that pins GUT's warning text; see Q1 answer).
 
-Files:
-1. `game/tests/gut_post_run.gd` (tools/test infra, new, about 20 lines, `extends GutHookScript`; the name does not start with `test_`, so GUT does not collect it). `run()`: loop over `gut.get_test_collector().scripts`; for each with `is_loaded == false`, print `TEST SCRIPT FAILED TO LOAD: <path>` through `gut.logger.error(...)`; if there is at least one, `set_exit_code(1)`. Leave the exit code unset otherwise (setting it would override GUT's own failure code).
-2. `game/.gutconfig.json` (change): add `"post_run_script": "res://tests/gut_post_run.gd"`.
-3. `scripts/test.ps1`: no change expected (it already fails on a non-zero GUT exit). Only touch it if the end-to-end check below shows otherwise.
-4. Docs: `02_TECH_ARCHITECTURE.md` testing bullet (line "Unit/integration tests with ... GUT"): add one sentence: the run fails if any test script cannot be loaded (post-run hook `tests/gut_post_run.gd`), and engine/push_error errors inside a test fail that test. No DECISIONS entry needed (test infra, no design choice).
+Facts (GUT 9.7.1, verified by game-dev):
+- A test file that fails to parse (or whose dependency fails to parse) is dropped by `test_collector.gd` `add_script()`: it logs the warning `Ignoring script <path> because it does not extend GutTest` and removes the script from `collector.scripts`. Later files still run. Exit code 0.
+- Runtime script errors inside a test already fail the run with GUT defaults (`Unexpected Errors`, exit 1). Criterion 2 is met; no config change.
+- GUT's post-run hook (`post_run_script`, `GutHookScript.set_exit_code()`) sets the process exit code. Fix point stays there.
 
-Tests:
-- `game/tests/tools/test_gut_post_run.gd` (new, GUT): instantiate the hook, give it a stub `gut` object (an inner class with `get_test_collector()` returning an object whose `scripts` array holds stubs with `is_loaded` and `path`; a stub `logger` with `error()`), call `run()`: all loaded -> `get_exit_code() == null`; one not loaded -> `1`. (`GutHookScript.gut` is untyped, so a stub can be assigned.)
-- End-to-end check, manual, recorded in the PR (do not commit the broken file): (a) add `game/tests/sim/test_zz_broken.gd` with a syntax error, run `scripts	est.ps1`: it must exit non-zero, print `TESTS FAILED` and name the file; also add a broken file named `test_aa_broken.gd` to confirm the later scripts being skipped still fails the run. (b) add a test that calls a method on `null` (a runtime script error) and confirm the run fails. Remove both files, then run `scripts	est.ps1` twice green and `scriptsalidate.ps1`.
+Files (all test infra, `game/tests/`, no GUT file changed):
+1. `game/tests/gut_post_run.gd` (change the WIP hook): replace the `is_loaded` loop with a scan of `gut.logger.get_warnings()` (an array of the logged strings): for each entry that starts with `Ignoring script `, log `TEST SCRIPT FAILED TO LOAD: <entry>` via `gut.logger.error(...)` and count it. Keep the prefix as a `const IGNORED_PREFIX: String = "Ignoring script "`. If count > 0, `set_exit_code(1)`; otherwise leave it unset (unchanged WIP behaviour). Drop the `is_loaded` check (it never fires) and fix the header comment (later scripts are not skipped). About 15 lines.
+2. `game/.gutconfig.json`: keep the WIP `post_run_script` line.
+3. `game/tests/fixtures/not_a_gut_test.gd` (new, about 3 lines): `extends RefCounted`, nothing else. Outside the `test_` prefix so GUT never collects it. Used only by the contract test below.
+4. `scripts/test.ps1`: no change (already fails on a non-zero GUT exit).
+5. `docs/02_TECH_ARCHITECTURE.md` testing bullet: one sentence: the run fails if GUT ignores any test script (parse error or not extending GutTest; post-run hook `tests/gut_post_run.gd`), and runtime errors inside a test fail that test (GUT default).
+
+Tests (`game/tests/tools/test_gut_post_run.gd`, adapt the WIP):
+- Stubs: `StubLogger` gets `warnings: Array[String]` and `get_warnings()`; `StubGut` no longer needs a collector. Cases: no warnings -> exit code null, no errors; an unrelated warning only -> null; one `Ignoring script res://tests/sim/test_x.gd because ...` warning -> exit code 1 and the error names the path.
+- Contract test (guards the coupling to GUT's text): create `GutUtils.TestCollector.new()`, give it a fresh logger (`set_logger(GutUtils.Logger.new())` or whatever `GutUtils.get_logger()` builds; check `utils.gd`), call `add_script("res://tests/fixtures/not_a_gut_test.gd")`, assert that one warning starts with `gut_post_run.gd`'s `IGNORED_PREFIX` and contains the path. If a GUT upgrade rewords the message, this test fails. Make sure the fresh logger does not print into or pollute the main run's logger (otherwise the hook would fail the real run); if it cannot be isolated, assert that the hook ignores it, or flag it in the PR.
+- End-to-end check, manual, recorded in the PR (broken files not committed): (a) `game/tests/sim/test_aa_broken.gd` and `test_zz_broken.gd` with a syntax error: `scripts	est.ps1` exits non-zero, prints `TESTS FAILED` and names both files. (b) a test doing `null.free()`: run fails (already true). Remove them; `scripts	est.ps1` twice green; `scriptsalidate.ps1`.
 
 Performance: none (runs once after the suite).
-
-Order: hook + gutconfig, unit test, end-to-end checks (a) and (b), doc sentence, test.ps1 twice, validate.ps1.
-Size: about 20 lines of code and 40 of tests; one PR.
+Order: hook change, fixture, unit + contract tests, e2e checks, doc sentence, test.ps1 twice, validate.ps1.
+Size: about 20 lines of code, about 60 of tests; one PR. Continue on the existing branch `task/010-test-runner-fails-on-broken-files`.
 
 ## Questions
 **Q1 (game-dev, 2026-10-08): the plan's detection does not see a test file with a syntax error.**
@@ -50,5 +53,7 @@ Options:
 - B Hook lists `test_*.gd` files under the configured dirs itself and fails for each one missing from `collector.scripts`. Independent of GUT's message text; about 15 more lines (directory walk duplicates GUT's config: dirs, subdirs, prefix/suffix).
 - C Grep the GUT output in `scripts/test.ps1` for `Failed to load script` / `Ignoring script` and fail. No hook needed, but parses console text in PowerShell, which the plan wanted to avoid.
 - D Run `godot --headless --check-only -s <file>` per test file before the suite. Exact parse check, but one Godot launch per file (slow as the suite grows).
+
+**Answer (lead-dev, 2026-10-08): A**, with a contract test. Reasons: GUT is pinned and vendored; A is about 5 lines and reports the exact path GUT dropped. B duplicates GUT's file discovery (dirs, subdirs, prefix, suffix) and would falsely fail filtered runs (`-gselect`, `-gtest`, `-gunit_test_name`), where files are legitimately not collected. A's weakness, coupling to the warning text, is covered by a unit test that feeds GUT's real collector a fixture not extending GutTest (same code path as a parse error) and asserts the prefix the hook matches; a GUT upgrade that rewords the message breaks that test. C parses console text in PowerShell; D is slow. Technical choice, no DECISIONS entry.
 
 ## Review log
