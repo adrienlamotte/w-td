@@ -43,7 +43,7 @@ func _ready() -> void:
 	_camera.projection = Camera3D.PROJECTION_ORTHOGONAL
 	_camera.position = Vector3(0.0, sin(pitch), cos(pitch)) * float(config.distance)
 	_camera.look_at(global_position)
-	_set_zoom(int(config.default_zoom))
+	set_zoom(int(config.default_zoom))
 
 
 func _process(delta: float) -> void:
@@ -66,11 +66,11 @@ func _process(delta: float) -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("cam_zoom_in"):
-		_set_zoom(step_zoom(zoom_index, -1, config.zoom_sizes.size()))
+		set_zoom(step_zoom(zoom_index, -1, config.zoom_sizes.size()))
 	elif event.is_action_pressed("cam_zoom_out"):
-		_set_zoom(step_zoom(zoom_index, 1, config.zoom_sizes.size()))
+		set_zoom(step_zoom(zoom_index, 1, config.zoom_sizes.size()))
 
 
-func _set_zoom(index: int) -> void:
+func set_zoom(index: int) -> void:
 	zoom_index = index
 	_camera.size = config.zoom_sizes[index]

@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Benchmark",
+  "description": "Perf benchmark scenarios (task 008, D-088). Values are placeholders except the enemy and tower counts (D-042).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "seed", "enemy_type", "measure_sec", "build_radius", "tower_range", "spawn_rings", "spawn_ring_min", "spawn_ring_max", "recycle_radius", "scenarios"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "id": {"type": "string", "pattern": "^bench_[a-z0-9_]+$"},
+    "seed": {"type": "integer"},
+    "enemy_type": {"type": "string", "pattern": "^enemy_[a-z0-9_]+$"},
+    "measure_sec": {"type": "number", "exclusiveMinimum": 0},
+    "build_radius": {"type": "number", "exclusiveMinimum": 0},
+    "tower_range": {"type": "number", "exclusiveMinimum": 0},
+    "spawn_rings": {"type": "integer", "minimum": 2},
+    "spawn_ring_min": {"type": "number", "exclusiveMinimum": 0},
+    "spawn_ring_max": {"type": "number", "exclusiveMinimum": 0},
+    "recycle_radius": {"type": "number", "minimum": 0},
+    "scenarios": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "enemies", "towers", "piled", "warmup_sec", "zoom", "render_scale"],
+        "properties": {
+          "name": {"type": "string", "pattern": "^[a-z0-9_]+$"},
+          "enemies": {"type": "integer", "minimum": 0},
+          "towers": {"type": "integer", "minimum": 0},
+          "piled": {"type": "boolean"},
+          "warmup_sec": {"type": "number", "exclusiveMinimum": 0},
+          "zoom": {"type": "integer", "minimum": 0, "maximum": 2},
+          "render_scale": {"type": "number", "exclusiveMinimum": 0, "maximum": 1}
+        }
+      }
+    }
+  }
+}

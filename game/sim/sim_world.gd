@@ -19,6 +19,9 @@ var towers: SimTowers = SimTowers.new()
 ## Wall-clock usec of each phase of the last step(), indexed by Phase.
 ## Diagnostics only: never read by rules, not in state_hash(). A missing phase reads 0.
 var phase_usec: PackedInt64Array = PackedInt64Array([0, 0, 0, 0])
+## Running sum of phase_usec over every step() (benchmark, task 008). Diagnostics only,
+## not in state_hash(); the caller resets it.
+var phase_usec_sum: PackedInt64Array = PackedInt64Array([0, 0, 0, 0])
 ## Test/benchmark/demo setting: when > 0, every AT_GUARDIAN enemy is moved back to a
 ## ring of this radius each tick (MOVING again), so a demo horde never empties.
 ## 0 = off. The real spawn curve is M2.
@@ -84,6 +87,7 @@ func _rebuild_grid() -> void:
 func _lap(phase: Phase) -> void:
 	var now := Time.get_ticks_usec()
 	phase_usec[phase] = now - _t
+	phase_usec_sum[phase] += now - _t
 	_t = now
 
 
