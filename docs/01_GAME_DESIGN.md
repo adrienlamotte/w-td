@@ -76,8 +76,8 @@ Each waifu has: role (damage / crowd control / support / tank / economy), attack
 - Adult-proportioned stylized waifus (no chibi, D-030), 2.5D: 3D isometric camera, billboarded 2D art. Base resolution 2560x1440 (D-039). Details in `03_ART_PIPELINE.md`.
 - Readability first: the horde must stay readable against the background; effects must not hide the Guardian.
 
-## 11. Audio **[O]**
-Not discussed yet. Placeholder only until decided.
+## 11. Audio **[D]**
+Licensed or royalty-free music, no voice acting, text barks with short sound blips, SFX from licensed packs (D-062). **[D]** Any AI-generated audio is disclosed to Steam.
 
 ## 12. Not in scope (for now)
 Multiplayer, mobile, story campaign with cutscenes, adult-only content, live-generated AI content.

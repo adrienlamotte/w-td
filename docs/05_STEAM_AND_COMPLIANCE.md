@@ -41,5 +41,5 @@ Reason: stay clearly out of adult-only territory to keep store access and paymen
 
 ## 6. Open items **[O]**
 - Final price and Early Access decision.
-- Languages at launch (English; French?).
-- Music/SFX sourcing and its own AI/licensing disclosure.
+- Languages: English at launch, French after Early Access (D-063).
+- Music/SFX: licensed or royalty-free sources (D-062); keep the licences on file, and disclose any AI-generated audio.

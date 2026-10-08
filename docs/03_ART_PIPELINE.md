@@ -111,4 +111,4 @@ For parts: generate the full character first, then separate parts or re-generate
 ## 8. Open questions **[O]**
 - Style: the owner generates the first character with an external tool (D-060); the exact deliverables are in `08_FIRST_CHARACTER_BRIEF.md`. Style references and local models/LoRAs will be chosen after seeing it.
 - Specific models/LoRAs for the style (choose in the art spike).
-- Whether to hand-touch key characters (recommended for IP protection; see compliance doc).
+- Hand touch-ups: decided, the owner or a hired artist touches up 3 key characters (D-061); which 3 is decided with the roster.

@@ -36,7 +36,10 @@ Last reviewed: 2026-10-08 (daily docs review; owner answers recorded the same da
 | Q-23 Who writes the roster | Agent drafts, owner approves | D-056 (task: `backlog/001-roster-proposal.md`) |
 | Q-24 Chibi vs adult look | No chibi, adult proportions everywhere | D-030 |
 | Q-25 Art style and models | Owner generates the first character externally; brief in `08_FIRST_CHARACTER_BRIEF.md` | D-060 |
+| Q-26 Hand touch-ups | Owner or artist on 3 key characters | D-061 |
 | Q-27 Endgame size | 3 tiers, endless, 4-6 modifiers | D-059 |
+| Q-29 Audio | Licensed music, no voices | D-062 |
+| Q-30 Languages | English first, French after EA | D-063 |
 | Q-28 Guardian in late modes | Any waifu the player chooses | D-058 |
 | Q-35 How local routines run | Desktop app scheduled tasks, or manually | D-049 |
 | Q-36 Unique hook | Relationship synergies | D-057 |
@@ -56,27 +59,7 @@ Recommended: A.
 
 ---
 
-## B. Art (decide before any art work in M4)
-
-### Q-26 Hand touch-ups of key characters (existing)
-- A) **Owner or a hired artist touches up the 3 key characters (Guardian candidates on key art); the others stay pipeline-only** ★
-- B) All characters stay AI-generated with human curation only (weaker IP position, see compliance doc).
-- C) Commission or hand-paint every roster waifu (expensive, outside the "no spending" rule for agents).
-
----
-
-## C. Long-term / business (not blocking until M5-M6)
-
-### Q-29 Audio direction (existing)
-- A) **Music: upbeat orchestral/chiptune-flavoured cute fantasy tracks from licensed/royalty-free libraries; no voice acting; short synthesized barks (text-only plus sound blips); SFX from licensed packs** ★
-- B) Japanese voice lines (outsourced, paid, outside agent rules).
-- C) No music at launch beyond 2-3 loops.
-Note: any AI-generated audio must be disclosed (`05_STEAM_AND_COMPLIANCE.md` section 3).
-
-### Q-30 Languages at launch (existing)
-- A) **English only at launch, all text in localisation tables from day one (keys, not literals), French added after Early Access** ★
-- B) English + French at launch.
-- C) English + French + Simplified Chinese/Japanese.
+## B. Long-term / business (not blocking until M5-M6)
 
 ### Q-31 Name, price, Early Access, DLC (existing)
 - A) **Keep "WTD" as working title until M5; EUR 7.99-9.99 Early Access; no DLC until after launch** ★
