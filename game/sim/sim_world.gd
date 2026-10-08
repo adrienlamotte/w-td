@@ -15,6 +15,7 @@ var enemies: SimEnemies = SimEnemies.new()
 ## Derived each tick from enemy positions; not part of state_hash().
 var grid: SpatialGrid
 var separation: EnemySeparation = EnemySeparation.new()
+var towers: SimTowers = SimTowers.new()
 ## Wall-clock usec of each phase of the last step(), indexed by Phase.
 ## Diagnostics only: never read by rules, not in state_hash(). A missing phase reads 0.
 var phase_usec: PackedInt64Array = PackedInt64Array([0, 0, 0, 0])
@@ -52,6 +53,8 @@ func step() -> void:
 	_lap(Phase.MOVE)
 	_rebuild_grid()
 	_lap(Phase.GRID)
+	towers.retarget(grid, enemies.pos_x, enemies.pos_z)
+	_lap(Phase.TARGETING)
 	tick += 1
 
 
@@ -70,4 +73,5 @@ func _lap(phase: Phase) -> void:
 ## Extend it with every entity array as they are added.
 func state_hash() -> int:
 	return hash([tick, _spawn_rng.state, enemies.pos_x, enemies.pos_z, enemies.hp,
-		enemies.type_id, enemies.state, enemies.anim_frame])
+		enemies.type_id, enemies.state, enemies.anim_frame,
+		towers.pos_x, towers.pos_z, towers.attack_range, towers.target])
