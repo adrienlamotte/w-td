@@ -15,6 +15,8 @@ Last reviewed: 2026-10-08 (daily docs review; owner answers recorded the same da
 | Q-02 Data format | JSON + JSON Schema | D-034 |
 | Q-03 Where builds, tests and nightly runs execute | Everything on the owner's PC | D-035 (scheduling: Q-35) |
 | Q-04 Godot version | Pin at M0 start | D-036 |
+| Q-41 Enemy crowding | Soft separation | D-079 |
+| Q-42 Steam Deck for the M1 benchmark | No Deck: estimate from PC | D-080 |
 | Q-38 Steam Deck build | Windows build through Proton first | D-075 |
 | Q-39 How task PRs are merged | Milestone branch, owner merges into `main` | D-073 |
 | Q-40 Length of a loop run | Until a real stop | D-074 |
@@ -49,21 +51,6 @@ Last reviewed: 2026-10-08 (daily docs review; owner answers recorded the same da
 | Q-31 Name, price, Early Access, DLC | Keep WTD until M5; EUR 7.99-9.99 in Early Access; no DLC before launch | D-064 |
 | Q-33 Camera controls | Pan + zoom, cursor at screen centre | D-041 |
 | Q-34 Build radius and performance with no cap | Growable radius, rising costs, 300/150 stress target | D-042 |
-
----
-
-## M1 (current milestone)
-
-### Q-41 Enemy crowding: do enemies push each other apart? (blocks task 004)
-Nothing in the docs says whether enemies can stack on top of each other. It changes how the horde reads on screen and how much work the sim does per tick.
-- A) **Soft separation: enemies push each other apart a little, so the horde spreads into a crowd (Vampire Survivors feel)** ★
-- B) No separation: enemies may overlap freely (cheapest, but a horde can collapse into one blob).
-- C) Hard collision: enemies never overlap (most expensive, can cause jams).
-
-### Q-42 Can the owner run the M1 benchmark on a Steam Deck? (shapes task 009)
-The M1 "done when" needs a Steam Deck result, or an estimate with a note.
-- A) **Yes: the owner copies the Windows build to the Deck and runs the benchmark through Proton (D-075)** ★
-- B) No Deck available: estimate from PC numbers and record the method.
 
 ---
 

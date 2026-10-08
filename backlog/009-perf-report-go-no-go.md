@@ -8,7 +8,7 @@
 Measure the budgets, record the Steam Deck result (or an estimate with a note), and write the go/no-go on the 3D billboard approach versus the pure 2D fallback.
 
 ## Context
-- Roadmap M1 'done when'; `02_TECH_ARCHITECTURE.md` 4; D-019 (2.5D, PROPOSED until M1); Q-32; Q-42 (Steam Deck access); D-075 (the Deck runs the Windows build through Proton)
+- Roadmap M1 'done when'; `02_TECH_ARCHITECTURE.md` 4; D-019 (2.5D, PROPOSED until M1); Q-32; D-080 (no Deck: estimate from PC numbers, method recorded); D-075 (the Deck runs the Windows build through Proton)
 
 ## Acceptance criteria
 - `reports/perf_m1.md`: PC results against the budgets, Steam Deck results (or an estimate with its method), bottlenecks found.
