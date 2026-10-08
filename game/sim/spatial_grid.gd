@@ -51,8 +51,8 @@ func rebuild(xs: PackedFloat32Array, zs: PackedFloat32Array) -> void:
 
 
 ## Writes into out every enemy index with distance <= r from (x, z), ascending.
-## ponytail: clear + append allocates; if 004 calls this per enemy per tick and it
-## shows in the profile, add an index-range iteration API over cell_start/cell_items.
+## ponytail: clear + append + sort per call; hot per-enemy loops iterate
+## cell_start/cell_items directly instead (EnemySeparation, task 004).
 func query_radius(x: float, z: float, r: float, xs: PackedFloat32Array,
 		zs: PackedFloat32Array, out: PackedInt32Array) -> void:
 	out.clear()
