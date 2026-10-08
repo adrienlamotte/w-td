@@ -1,8 +1,8 @@
 # 002 — Sim: enemy arrays, spawning and chasing the Guardian
-- Status: planned
+- Status: review
 - Milestone: M1
 - Depends on: -
-- PR: -
+- PR: #5
 
 ## Goal
 Store enemies in the sim as packed arrays and move them straight toward the Guardian at (0, 0) every 30 Hz tick.
