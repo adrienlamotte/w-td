@@ -1,5 +1,5 @@
 # 009 — Perf report, Steam Deck result and the 3D billboard go/no-go
-- Status: review
+- Status: done
 - Milestone: M1
 - Depends on: 008
 - PR: #13
@@ -60,3 +60,4 @@ Size: ~3 lines of code, 1 line of data, the rest is report and docs. One PR.
 ## Questions
 
 ## Review log
+- 2026-10-08 lead-dev: PR #13 approved and squash-merged into `m1/dev`. Tests green (58/58 GUT, 7 Python), validator 0 errors. All the acceptance criteria are met. Spot-checked against the r1-r3 JSONs: the step, p99, 1%-low, non-tick CPU and GPU medians match. The Deck formulas recompute correctly (for example deck_piled 2.74 x 7.0 = 19.2 ms; k_gpu 27.4 x 1.11 x 2 = 61). The noise handling is transparent: run 2 hit an external 144.9 FPS cap, and runs 3-4 had stalls. The verdicts rest on the sim step, and the clean and noisy deck_piled bounds (11.8 and 28.8 ms) are both stated. The pc_piled miss (+8%) is stated plainly and explained. The committed files use LF and contain no control characters. Nit, not blocking: the summary says separation is "65-79%" of the step, while sections 3 and 7 say "60-79%". needs-human: at CP-M1 the owner reads `reports/perf_m1.md` and confirms D-089, plus the playtest.
