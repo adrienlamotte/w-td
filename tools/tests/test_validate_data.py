@@ -10,6 +10,7 @@ from validate_data import ROOT, validate  # noqa: E402
 EXAMPLE = ROOT / "game" / "data" / "enemies" / "enemy_swarmer_01.json"
 CAMERA = ROOT / "game" / "data" / "camera" / "camera_default.json"
 RENDER = ROOT / "game" / "data" / "render" / "render_default.json"
+BENCH = ROOT / "game" / "data" / "bench" / "bench_m1.json"
 
 
 class ValidateDataTest(unittest.TestCase):
@@ -45,6 +46,12 @@ class ValidateDataTest(unittest.TestCase):
         self.assertEqual(self.check(doc, "render_default", "render"), [])
         doc["surprise"] = 1
         self.assertTrue(any("surprise" in e for e in self.check(doc, "render_default", "render")))
+
+    def test_bench_rejects_extra_scenario_field(self):
+        doc = json.loads(BENCH.read_text(encoding="utf-8"))
+        self.assertEqual(self.check(doc, "bench_m1", "bench"), [])
+        doc["scenarios"][0]["surprise"] = 1
+        self.assertTrue(any("surprise" in e for e in self.check(doc, "bench_m1", "bench")))
 
 
 if __name__ == "__main__":
