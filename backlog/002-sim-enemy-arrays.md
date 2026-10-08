@@ -46,7 +46,7 @@ Performance notes:
 - No allocation per enemy per tick (no Vector2 arrays, no Dictionary). One `sqrt` per moving enemy.
 - Report the determinism test time (1000 x 1800 = 1.8M updates per run) in the PR; it is a first rough per-tick cost signal for 008. If one run takes over ~5 s, say so in the PR (no optimisation in this task).
 
-Order: catalog + its test, SimEnemies + its tests, SimWorld spawn/step/hash, determinism test, export filter, docs, run `scripts	est.ps1` twice and `scriptsalidate.ps1`.
+Order: catalog + its test, SimEnemies + its tests, SimWorld spawn/step/hash, determinism test, export filter, docs, run `scripts\test.ps1` twice and `scriptsalidate.ps1`.
 Size: about 250-300 lines of code and tests; one PR.
 
 ## Questions

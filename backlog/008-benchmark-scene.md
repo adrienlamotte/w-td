@@ -1,5 +1,5 @@
 # 008 — Benchmark scene and perf report command
-- Status: review
+- Status: done
 - Milestone: M1
 - Depends on: 004, 005, 007
 - PR: #12
@@ -77,3 +77,4 @@ Size: about 300-350 lines of code and tests plus data, one PR.
 ## Questions
 
 ## Review log
+- 2026-10-08 lead-dev: approved and merged PR #12 (squash) into m1/dev. All criteria met; both deviations are justified (release template refuses a scene path, so `--bench` user arg; `Performance.TIME_PROCESS` is a per-second max, so `process_ms_avg` = sim + fill per frame). `scripts\test.ps1` green (58 GUT + 7 Python), `scripts\validate.ps1` 0 errors. Re-ran `scripts\bench.ps1` on the same machine: step ms/tick 5.73 / 6.69 / 2.43 / 2.80 / 8.67 (PR: 5.78 / 6.78 / 2.62 / 2.76 / 8.48), 1%-low 131 / 106 / 320 / 263 / 90 FPS, GPU 0.06-0.24 ms; sim 30.0 ticks/s; mean_speed proves the moving crowd (3.0-3.4) vs piled (0.10). Step and phase times reproduce within ~5%; average FPS above 1000 is noisy (deck_typical 1347 vs 2250), so 009 should reason from frame/step ms and 1%-lows, not average FPS. Method OK: vsync off and `max_fps` 0 are set (but not recorded in the JSON: 009 adds them), warm-up 5 s (20 s piled), sim timing over exactly 600 ticks. Fixed on m1/dev: `scripts\bench.ps1` in CLAUDE.md and 02 contained a backspace byte (`\b` interpreted by the writing tool); same class of bug (`\t` as a tab) fixed in the 002/004/007 logs.
