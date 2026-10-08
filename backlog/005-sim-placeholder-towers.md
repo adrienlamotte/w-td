@@ -1,8 +1,8 @@
 # 005 — Sim: placeholder tower arrays with targeting queries
-- Status: planned
+- Status: review
 - Milestone: M1
 - Depends on: 003
-- PR: -
+- PR: #9
 
 ## Goal
 Add the tower arrays and a per-tick nearest-enemy query per tower, so the benchmark carries the tower load (50 typical, 300 stress, D-042). No attacks yet (M2).
