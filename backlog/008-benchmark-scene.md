@@ -10,6 +10,7 @@ A fixed, seeded benchmark scenario that outputs FPS and frame-time numbers as JS
 ## Context
 - `02_TECH_ARCHITECTURE.md` 4 (budgets), 6 (perf benchmark scene)
 - D-042 stress cases; `04_AGENT_WORKFLOW.md` 5 (`/reports/perf_<date>.json`)
+- From 007: `SimWorld.recycle_radius` (respawn arrived enemies on a ring) and `HordeRenderer.last_fill_usec` (view fill cost per frame)
 
 ## Acceptance criteria
 - Scenarios: PC typical (3000 enemies + 50 towers), PC stress (3000 + 300 towers), Deck typical (1500 + 50), Deck stress (1500 + 150).
