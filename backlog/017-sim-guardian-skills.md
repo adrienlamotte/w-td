@@ -1,8 +1,8 @@
 # 017 — Sim: Guardian skills (Area blast, Shield)
-- Status: planned
+- Status: review
 - Milestone: M2
 - Depends on: 014
-- PR: -
+- PR: #23
 
 ## Goal
 The two M2 Guardian skills, triggered by UseSkill.
