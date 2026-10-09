@@ -1,5 +1,5 @@
 # 022 — Headless bot run: a 15-minute run is playable
-- Status: review
+- Status: changes
 - Milestone: M2
 - Depends on: 013, 016, 017, 024, 026
 - PR: #32
@@ -70,3 +70,15 @@ Size: about 265 lines of code (+ data), about 100 of tests. One PR. Out of scope
 ## Questions
 
 ## Review log
+- 2026-10-09 Review round 1 (lead-dev): changes needed, bot code only.
+
+Checked: 247/247 GUT + Python tests green, validator 0 errors. Bots use only `SimCommand`s plus the read-only `check_place` / `price` / `rebuild_price`; `balance/*` is excluded from export; data changes are placeholders (`placeholder: true`), timings D-093 / D-032 / D-097 / D-047 untouched; the report is clear. Those parts are fine.
+
+Required fix: the `ring` bot must be a real maze strategy (the maze is M2's core hook, D-101). Today the ring sits at radius 7, outside the useful range of the towers (5-6), and it does nothing until it is closed (about 40 towers), so it loses at 3:35 with 8 towers. That tests the bot, not the game.
+
+1. `game/balance/balance_bot.gd`, kill zone first: the first `KILL_ZONE_FIRST` towers (bot constant, 6) go on the existing kill-zone sunflower inside the gap (corridor kept open); only then the ring, then any extras back on the kill zone.
+2. `RING_R` = 4.0 (bot constant; the smallest run tower range 5 minus the Guardian contact radius 1), so every ring tower covers the Guardian and the corridor. Gap, spacing and build order unchanged.
+3. Test `test_ring_towers_on_the_ring_and_not_in_the_gap`: every ring tower is on the ring at `RING_R` +- one footprint or a kill-zone tower; none is in the gap or the corridor (`p.x > 0` and `|p.y| < RING_GAP * 0.5`, beyond the ring and inside it); the first 6 towers are kill-zone towers.
+4. No data or rule changes in this round. Re-run `scripts\balance.ps1` (N = 5), commit the new `reports/balance_m2.md`; targets must still hold (best builder >= 60 %, passive 0). Whatever ring scores, report it honestly. If ring now beats spread, or loses only to the boss, say so in the PR.
+5. Docs in the same PR: `02_TECH_ARCHITECTURE.md` 6 and the D-126 row (radius 4, kill zone first), and the PR description results table.
+6. Tests twice, validator.
