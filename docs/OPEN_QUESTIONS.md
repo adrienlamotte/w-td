@@ -15,6 +15,8 @@ Last reviewed: 2026-10-08 (daily docs review; owner answers recorded the same da
 | Q-02 Data format | JSON + JSON Schema | D-034 |
 | Q-03 Where builds, tests and nightly runs execute | Everything on the owner's PC | D-035 (scheduling: Q-35) |
 | Q-04 Godot version | Pin at M0 start | D-036 |
+| Q-60 When higher tiers and rivals open | After all 6 rescues; Vexa Hard, Gilda Nightmare | D-131 |
+| Q-61 Guardian in relationship bonuses | She counts like a placed waifu | D-132 |
 | Q-59 Maze tick budget | Accept within noise for M2, track worst case | D-124 |
 | Q-57 Slow stacking | No stacking, strongest applies, refresh | D-117 |
 | Q-58 Ranged enemies and the maze | Towers block line of sight | D-118 |
@@ -68,22 +70,6 @@ Last reviewed: 2026-10-08 (daily docs review; owner answers recorded the same da
 | Q-31 Name, price, Early Access, DLC | Keep WTD until M5; EUR 7.99-9.99 in Early Access; no DLC before launch | D-064 |
 | Q-33 Camera controls | Pan + zoom, cursor at screen centre | D-041 |
 | Q-34 Build radius and performance with no cap | Growable radius, rising costs, 300/150 stress target | D-042 |
-
----
-
-## M3 (roster, task 001)
-
-### Q-60 When do the higher tiers (and so the rivals) open?
-D-055 puts the 2 rivals on higher difficulty tiers; `01_GAME_DESIGN.md` 3 lists tiers as replay value "after everyone is unlocked", but rivals are part of "everyone". Blocks: the rival unlock timing in `07_ROSTER.md` and the M3/M5 progression data.
-- A) Hard opens once all 6 Guardians are rescued; Vexa (rival) on Hard, Gilda on Nightmare (opens after Hard is won); "everyone unlocked" for D-058 means the 8 non-rival waifus plus any rival already beaten ★
-- B) Hard opens earlier (for example after 3 rescues), so rivals can be recruited in the middle of progression.
-- C) Rivals also appear on Normal once all Guardians are rescued; tiers stay post-unlock.
-
-### Q-61 Do relationship bonuses count the current Guardian?
-The Guardian is not placed as a tower, so "placed near each other" (D-057) does not say whether a tower near her gets a relationship bonus with her. Blocks: synergy rules in task 028.
-- A) Towers only; the Guardian never triggers relationships ★ (safe to assume)
-- B) The Guardian counts like a placed waifu for her own relationships.
-- C) The Guardian gives a separate, smaller "cheer" bonus to her related towers.
 
 ---
 

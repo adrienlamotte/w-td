@@ -1,6 +1,6 @@
 # 001 — Draft the launch roster proposal
 
-- Status: review
+- Status: done
 - PR: #34
 - Milestone: M3
 - Owner: agent (cloud design session), then human approval

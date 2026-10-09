@@ -1,6 +1,6 @@
 # 07 — Launch roster (proposal)
 
-Status: **PROPOSED** (task 001, D-056). Everything here waits for the owner's approval; nothing is recorded in `DECISIONS.md` yet. All names are placeholders (Q-31, D-064).
+Status: **DECIDED** (approved by the owner on 2026-10-09, D-130). All names are placeholders (Q-31, D-064).
 
 Content rules: all waifus are clearly adult women with adult proportions, no chibi (D-030), and every look stays within `05_STEAM_AND_COMPLIANCE.md` section 2. The default looks below are modest; any suggestive outfit is a later Bond outfit (cosmetic only, D-054) and gets its own review.
 
@@ -122,6 +122,6 @@ Barks are short personality lines, no story (D-028).
 - Barks: "That will be a fee." / "Clover, your prices are an insult."
 
 ## 6. Open points
-- **Q-60** When the higher tiers open relative to rescues, which decides when rivals can be recruited.
-- **Q-61** Whether relationship bonuses count the current Guardian (she is not placed as a tower). This roster assumes **towers only** (the conservative option) until answered.
+- **Q-60** answered (D-131): higher tiers open once all 6 Guardians are rescued; Vexa on Hard, Gilda on Nightmare.
+- **Q-61** answered (D-132): the current Guardian counts like a placed waifu for her relationships with nearby towers.
 - Bonus numbers, distance and the new attack kinds: task 028.
