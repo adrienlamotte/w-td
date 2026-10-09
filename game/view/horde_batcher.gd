@@ -50,6 +50,9 @@ func fill(xs: PackedFloat32Array, zs: PackedFloat32Array, prev_x: PackedFloat32A
 	# ponytail: one pass over all enemies per batch, because writing buffers[t][k] in one
 	# pass would copy the packed array on every write. Sort by type if many types appear.
 	for t in counts.size():
+		if not type_id.has(t):  # native scan: skips the GDScript pass for absent types
+			counts[t] = 0
+			continue
 		var buf := buffers[t]
 		buffers[t] = PackedFloat32Array()  # sole owner of buf: writes stay in place
 		var cap := buf.size() / STRIDE
