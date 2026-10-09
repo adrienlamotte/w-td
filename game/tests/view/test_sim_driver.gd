@@ -1,5 +1,7 @@
 extends GutTest
 
+const SWARMER := "enemy_swarmer_01"  # catalog sorted by id: type 0 is not the swarmer
+
 var world: SimWorld
 var driver: SimDriver
 
@@ -26,7 +28,7 @@ func test_hitch_is_capped() -> void:
 
 
 func test_interpolates_between_ticks() -> void:
-	world.enemies.add(0, 10.0, 0.0, 1.0)
+	world.enemies.add(world.catalog.type_of(SWARMER), 10.0, 0.0, 1.0)
 	driver.advance(SimWorld.SIM_DT * 1.0001)
 	var prev := driver.prev_x[0]
 	var cur := world.enemies.pos_x[0]
@@ -39,6 +41,6 @@ func test_interpolates_between_ticks() -> void:
 
 func test_new_enemy_uses_current_position() -> void:
 	driver.advance(0.05)
-	world.enemies.add(0, 7.0, 3.0, 1.0)
+	world.enemies.add(world.catalog.type_of(SWARMER), 7.0, 3.0, 1.0)
 	assert_eq(driver.interp_x(0), 7.0)
 	assert_eq(driver.interp_z(0), 3.0)

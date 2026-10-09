@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "id": "skill_shield",
+  "placeholder": true,
+  "name_key": "skill.shield.name",
+  "kind": "shield",
+  "cooldown_sec": 25,
+  "absorb": 50,
+  "duration_sec": 5
+}

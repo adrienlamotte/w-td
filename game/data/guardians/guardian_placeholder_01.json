@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "id": "guardian_placeholder_01",
+  "placeholder": true,
+  "name_key": "guardian.placeholder_01.name",
+  "hp": 200,
+  "contact_radius": 1.0,
+  "skills": [
+    "skill_area_blast",
+    "skill_shield"
+  ],
+  "sprite": "guardians/placeholder_01"
+}

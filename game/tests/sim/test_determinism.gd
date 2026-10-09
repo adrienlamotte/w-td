@@ -2,6 +2,7 @@ extends GutTest
 ## Same seed + same commands = same state (02_TECH_ARCHITECTURE.md section 6).
 ## No commands exist yet; feed the same command list to both worlds once they do.
 
+const SWARMER := "enemy_swarmer_01"  # catalog sorted by id: type 0 is not the swarmer
 const TICKS: int = 30 * 60  # one simulated minute
 const ENEMIES: int = 1000
 const TOWERS: int = 50
@@ -14,7 +15,7 @@ var _hash_b: int
 func _run(run_seed: int) -> int:
 	var world := SimWorld.new(run_seed)
 	world.recycle_radius = 30.0  # the minute is long enough for arrivals: covers the recycle path
-	world.spawn_ring(0, ENEMIES, 30.0)
+	world.spawn_ring(world.catalog.type_of(SWARMER), ENEMIES, 30.0)
 	for t in TOWERS:  # same towers for every run, on a spiral inside the build radius
 		var angle := t * 2.4
 		var r := 20.0 * sqrt((t + 0.5) / TOWERS)

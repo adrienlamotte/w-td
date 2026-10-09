@@ -39,7 +39,7 @@ Agents must not guess these; each has options and a recommended default in `OPEN
 - **Towers = waifus.** Each tower is a waifu character placed around the Guardian, with her own attack, role and personality.
 - **Guardian active skills:** the Guardian stays at the center and has active skills the player triggers (cooldown-based). The Guardian does not move and has no auto-attack. **[D]** M2 skills: Area blast (~12 s cooldown) and Shield (~25 s cooldown); Heal comes later as an upgrade (D-044). Numbers are placeholders in data.
 - **M2 tower types:** ranged single-target damage, area (splash) damage, crowd control (slow) (D-045). **[D]**
-- **Build radius and costs:** the buildable area starts at about 20 world units around the Guardian and grows via meta upgrades or cards; each extra copy of a tower costs more, which is the soft limit (D-042). **[D]**
+- **Build radius and costs:** the buildable area starts at about 20 world units around the Guardian and grows via meta upgrades or cards; each extra copy of a tower costs more, which is the soft limit (D-042). **[D]** The cost grows linearly per copy (`cost + cost_per_copy * copies`, placeholder, D-099).
 - **Level-ups:** killing enemies grants XP; on level-up the game pauses and offers a choice of **3 cards**. **[P]** Card types: new tower waifu, tower upgrade, Guardian skill upgrade, global perk. **Rules (D-051) [D]:** cards never give a tower for free; a "new tower waifu" card unlocks the right to build that tower this run and gold pays each placement; tower upgrade levels are bought with gold; no reroll, banish or skip in M3.
 
 ## 5. Waifu towers **[P]**

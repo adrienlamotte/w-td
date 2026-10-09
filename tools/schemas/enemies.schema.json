@@ -1,17 +1,21 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Enemy",
-  "description": "Example schema from 02_TECH_ARCHITECTURE.md 3b. Values are placeholders, not balance decisions.",
+  "description": "Enemy type (02_TECH_ARCHITECTURE.md 3b, D-095, D-099). All numbers are placeholders, not balance decisions.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version", "id", "archetype", "hp", "speed", "contact_damage", "radius", "separation_strength", "xp", "drops", "sprite", "tags"],
+  "required": ["schema_version", "id", "placeholder", "name_key", "archetype", "hp", "speed", "damage", "attack_range", "attack_cooldown_sec", "radius", "separation_strength", "xp", "drops", "sprite", "tags"],
   "properties": {
-    "schema_version": {"const": 2},
+    "schema_version": {"const": 3},
     "id": {"type": "string", "pattern": "^enemy_[a-z0-9_]+$"},
-    "archetype": {"type": "string"},
+    "placeholder": {"type": "boolean", "description": "true while the numbers are placeholders"},
+    "name_key": {"type": "string", "pattern": "^[a-z0-9_.]+$"},
+    "archetype": {"enum": ["swarmer", "brute", "ranged", "miniboss", "boss"]},
     "hp": {"type": "number", "exclusiveMinimum": 0},
     "speed": {"type": "number", "minimum": 0},
-    "contact_damage": {"type": "number", "minimum": 0},
+    "damage": {"type": "number", "minimum": 0, "description": "damage per hit, melee or ranged"},
+    "attack_range": {"type": "number", "minimum": 0, "description": "0 = melee, attacks at contact"},
+    "attack_cooldown_sec": {"type": "number", "exclusiveMinimum": 0},
     "radius": {"type": "number", "exclusiveMinimum": 0},
     "separation_strength": {"type": "number", "minimum": 0, "maximum": 1},
     "xp": {"type": "integer", "minimum": 0},
@@ -22,7 +26,7 @@
         "additionalProperties": false,
         "required": ["type", "amount", "chance"],
         "properties": {
-          "type": {"type": "string"},
+          "type": {"enum": ["gold"]},
           "amount": {"type": "integer", "minimum": 1},
           "chance": {"type": "number", "minimum": 0, "maximum": 1}
         }

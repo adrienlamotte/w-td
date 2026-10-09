@@ -4,6 +4,7 @@ Each folder game/data/<kind>/ is checked against tools/schemas/<kind>.schema.jso
 Usage: python tools/validate_data.py [data_dir]
 """
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -11,11 +12,13 @@ from jsonschema import Draft202012Validator
 
 ROOT = Path(__file__).resolve().parent.parent
 SCHEMAS = ROOT / "tools" / "schemas"
+ID_REF = re.compile(r"^(enemy|tower|skill|guardian|run)_[a-z0-9_]+$")
 
 
 def validate(data_dir: Path) -> list[str]:
     errors = []
     ids = {}
+    docs = {}
     for path in sorted(data_dir.rglob("*.json")):
         rel = path.relative_to(data_dir)
         schema_path = SCHEMAS / f"{rel.parts[0]}.schema.json"
@@ -37,7 +40,38 @@ def validate(data_dir: Path) -> list[str]:
             if doc_id in ids:
                 errors.append(f"{rel}: duplicate id '{doc_id}' (also in {ids[doc_id]})")
             ids[doc_id] = rel
-    # ponytail: no cross-file reference or asset-existence checks yet; add them when data files first reference each other / real assets.
+            docs[rel] = doc
+    errors += check_references(docs, ids)
+    # ponytail: no asset-existence check yet; add it when data first references real assets.
+    return errors
+
+
+def _strings(value):
+    if isinstance(value, str):
+        yield value
+    elif isinstance(value, dict):
+        for v in value.values():
+            yield from _strings(v)
+    elif isinstance(value, list):
+        for v in value:
+            yield from _strings(v)
+
+
+def check_references(docs: dict, ids: dict) -> list[str]:
+    """Every id-like string must name a known document; run bosses must be boss enemies."""
+    errors = []
+    for rel, doc in docs.items():
+        own = doc.get("id")
+        for s in _strings(doc):
+            if s != own and ID_REF.match(s) and s not in ids:
+                errors.append(f"{rel}: unknown reference '{s}'")
+        if rel.parts[0] == "runs":
+            for boss in [*doc.get("bosses", []), doc.get("final_boss")]:
+                if not isinstance(boss, dict):
+                    continue  # the schema pass reports it
+                enemy = docs.get(ids.get(boss.get("enemy")), {})
+                if enemy and enemy.get("archetype") not in ("miniboss", "boss"):
+                    errors.append(f"{rel}: boss '{boss['enemy']}' is not a miniboss/boss enemy")
     return errors
 
 

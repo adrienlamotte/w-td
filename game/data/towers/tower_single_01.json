@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "id": "tower_single_01",
+  "placeholder": true,
+  "name_key": "tower.single_01.name",
+  "attack": "single",
+  "cost": 50,
+  "cost_per_copy": 10,
+  "hp": 100,
+  "radius": 0.5,
+  "range": 6,
+  "damage": 4,
+  "cooldown_sec": 0.5,
+  "sell_refund": 0.5,
+  "rebuild_fraction": 0.3,
+  "sprite": "towers/single_01",
+  "tags": []
+}

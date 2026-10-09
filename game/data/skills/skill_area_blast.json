@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "id": "skill_area_blast",
+  "placeholder": true,
+  "name_key": "skill.area_blast.name",
+  "kind": "area_blast",
+  "cooldown_sec": 12,
+  "radius": 4,
+  "damage": 30
+}

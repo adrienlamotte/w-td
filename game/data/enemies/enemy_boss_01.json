@@ -1,0 +1,24 @@
+{
+  "schema_version": 3,
+  "id": "enemy_boss_01",
+  "placeholder": true,
+  "name_key": "enemy.boss_01.name",
+  "archetype": "boss",
+  "hp": 5000,
+  "speed": 1.2,
+  "damage": 25,
+  "attack_range": 0,
+  "attack_cooldown_sec": 2.0,
+  "radius": 1.0,
+  "separation_strength": 0.1,
+  "xp": 200,
+  "drops": [
+    {
+      "type": "gold",
+      "amount": 100,
+      "chance": 1
+    }
+  ],
+  "sprite": "enemies/boss_01",
+  "tags": []
+}

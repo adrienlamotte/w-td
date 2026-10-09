@@ -1,6 +1,7 @@
 extends GutTest
 ## Soft separation (D-079, D-084).
 
+const SWARMER := "enemy_swarmer_01"  # catalog sorted by id: type 0 is not the swarmer
 const CX: float = 10.0
 
 var _catalog: EnemyCatalog
@@ -17,8 +18,8 @@ func _f32(v: float) -> float:
 
 func _pair(x0: float, x1: float) -> SimEnemies:
 	var enemies := SimEnemies.new()
-	enemies.add(0, x0, 0.0, 1.0)
-	enemies.add(0, x1, 0.0, 1.0)
+	enemies.add(_catalog.type_of(SWARMER), x0, 0.0, 1.0)
+	enemies.add(_catalog.type_of(SWARMER), x1, 0.0, 1.0)
 	return enemies
 
 
@@ -37,7 +38,7 @@ func _dist(e: SimEnemies) -> float:
 
 func test_overlapping_pair_drifts_apart_symmetrically() -> void:
 	var e := _pair(CX - 0.1, CX + 0.1)
-	var min_d := 2.0 * _catalog.radius[0]
+	var min_d := 2.0 * _catalog.radius[_catalog.type_of(SWARMER)]
 	var ticks := 0
 	while _dist(e) < min_d - 1e-4 and ticks < 30:
 		_run(e, 1)
@@ -72,7 +73,7 @@ func test_coincident_pair_separates_along_x() -> void:
 
 
 func test_strength_zero_leaves_overlap() -> void:
-	_catalog.separation_strength[0] = 0.0
+	_catalog.separation_strength[_catalog.type_of(SWARMER)] = 0.0
 	var e := _pair(CX - 0.1, CX + 0.1)
 	_run(e, 5)
 	assert_eq(e.pos_x[0], _f32(CX - 0.1))
@@ -81,7 +82,7 @@ func test_strength_zero_leaves_overlap() -> void:
 
 func test_crowd_stays_soft_not_collapsed() -> void:
 	var world := SimWorld.new(7)
-	world.spawn_ring(0, 200, 10.0)
+	world.spawn_ring(world.catalog.type_of(SWARMER), 200, 10.0)
 	for n in 300:
 		world.step()
 	var min_d := INF
@@ -90,15 +91,15 @@ func test_crowd_stays_soft_not_collapsed() -> void:
 	for i in xs.size():
 		for j in range(i + 1, xs.size()):
 			min_d = minf(min_d, Vector2(xs[i] - xs[j], zs[i] - zs[j]).length())
-	gut.p("crowd of 200 after 300 ticks: min pair distance %.4f (2r = %.2f)" % [min_d, 2.0 * world.catalog.radius[0]])
+	gut.p("crowd of 200 after 300 ticks: min pair distance %.4f (2r = %.2f)" % [min_d, 2.0 * world.catalog.radius[world.catalog.type_of(SWARMER)]])
 	# Plan bound was 0.5 * 2r; strength 0.5 measured 0.164 (0.23 * 2r) and strength 1.0
 	# measured 0.32 (task 004 PR). Bound lowered openly to "not collapsed" until balance.
-	assert_true(min_d >= 0.2 * 2.0 * world.catalog.radius[0])
+	assert_true(min_d >= 0.2 * 2.0 * world.catalog.radius[world.catalog.type_of(SWARMER)])
 
 
 func test_separation_cost_3000_piled() -> void:
 	var world := SimWorld.new(3)
-	world.spawn_ring(0, 3000, 10.0)
+	world.spawn_ring(world.catalog.type_of(SWARMER), 3000, 10.0)
 	for n in 150:  # pile up at the Guardian
 		world.step()
 	var total := 0

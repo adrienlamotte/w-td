@@ -1,0 +1,24 @@
+{
+  "schema_version": 3,
+  "id": "enemy_ranged_01",
+  "placeholder": true,
+  "name_key": "enemy.ranged_01.name",
+  "archetype": "ranged",
+  "hp": 12,
+  "speed": 2.4,
+  "damage": 2,
+  "attack_range": 6,
+  "attack_cooldown_sec": 2.0,
+  "radius": 0.35,
+  "separation_strength": 0.5,
+  "xp": 2,
+  "drops": [
+    {
+      "type": "gold",
+      "amount": 2,
+      "chance": 0.7
+    }
+  ],
+  "sprite": "enemies/ranged_01",
+  "tags": []
+}
