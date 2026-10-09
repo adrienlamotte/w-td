@@ -1,5 +1,5 @@
 # 013 — Sim: waves, spawn curve and bosses
-- Status: review
+- Status: done
 - Milestone: M2
 - Depends on: 011, 012
 - PR: #18
@@ -58,3 +58,4 @@ Size: about 120 lines of code, about 150 of tests. One PR.
 ## Questions
 
 ## Review log
+- 2026-10-09 lead-dev: approved, PR #18 squash-merged into m2/dev. Tests green twice (88 GUT + 13 Python), validator OK. Matches plan; one justified deviation: first spawn at offset 44 (even-spread formula with n=40, wave_ticks=1800; the plan wrongly expected one on the first tick), test adjusted. Boss pass correct (horde loop skips boss pairs, boss scan r_boss + max_radius, boss-boss direct). Bench release: pc_typical 6.59 / pc_stress 7.61 / pc_piled 10.32 ms per tick (spawn ~0, bench runs IDLE; 023 re-benches). needs-human:playtest (CP-M2): spawns may pop in at widest zoom near the pan edge (ring 30 vs pan bounds 26).
