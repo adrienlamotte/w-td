@@ -27,7 +27,7 @@ func _pair(x0: float, x1: float) -> SimEnemies:
 
 ## Runs `ticks` separation passes, rebuilding the grid before each like step() does.
 func _run(enemies: SimEnemies, ticks: int) -> void:
-	var grid := SpatialGrid.new(4.0 * _catalog.max_radius)
+	var grid := SpatialGrid.new(2.0 * _catalog.max_radius)  # as SimWorld (D-108)
 	var sep := EnemySeparation.new()
 	for n in ticks:
 		grid.rebuild(enemies.pos_x, enemies.pos_z)

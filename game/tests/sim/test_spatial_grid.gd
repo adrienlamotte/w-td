@@ -132,7 +132,7 @@ func test_empty_grid() -> void:
 
 func test_sim_world_grid_matches_enemies() -> void:
 	var world := SimWorld.new(7)
-	assert_almost_eq(world.grid.cell_size, 4.0 * world.catalog.max_radius, 1e-6)
+	assert_almost_eq(world.grid.cell_size, 2.0 * world.catalog.max_radius, 1e-6)
 	world.spawn_ring(world.catalog.type_of(SWARMER), 500, 30.0)
 	for t in 60:
 		world.step()

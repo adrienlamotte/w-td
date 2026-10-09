@@ -52,8 +52,8 @@ func _init(run_seed: int, p_catalog: EnemyCatalog = null) -> void:
 	phase_usec.resize(Phase.size())
 	phase_usec_sum.resize(Phase.size())
 	_seed_rngs(run_seed)
-	# Cell size = largest enemy collision diameter x 2 (3a).
-	grid = SpatialGrid.new(4.0 * catalog.max_radius)
+	# Cell size = largest horde collision diameter (3a, D-108).
+	grid = SpatialGrid.new(2.0 * catalog.max_radius)
 
 
 func _seed_rngs(run_seed: int) -> void:
