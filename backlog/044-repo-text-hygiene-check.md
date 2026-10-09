@@ -1,5 +1,5 @@
 # 044 — Tools: fail the test run on control characters in tracked text files
-- Status: review
+- Status: done
 - Milestone: M3
 - Depends on: -
 - PR: #37
@@ -35,3 +35,4 @@ Order: scanner + self-check test, then the repo test, then the doc bullet; `scri
 ## Questions
 
 ## Review log
+- 2026-10-09 lead-dev: approved and merged PR #37 (squash). Matches the plan; scripts/test.ps1 green on the branch (248 GUT + 24 Python, hygiene test about 0.06 s), validate 0 errors.
