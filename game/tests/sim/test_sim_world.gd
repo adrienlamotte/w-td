@@ -24,7 +24,7 @@ func test_step_records_phase_times() -> void:
 	var world := SimWorld.new(1)
 	world.spawn_ring(world.catalog.type_of(SWARMER), 10, 5.0)
 	world.step()
-	assert_eq(world.phase_usec.size(), 4)
+	assert_eq(world.phase_usec.size(), 5)
 
 
 func test_phase_usec_sum_accumulates() -> void:
@@ -32,8 +32,8 @@ func test_phase_usec_sum_accumulates() -> void:
 	world.spawn_ring(world.catalog.type_of(SWARMER), 10, 5.0)
 	for i in 3:
 		world.step()
-	assert_eq(world.phase_usec_sum.size(), 4)
-	for p in 4:
+	assert_eq(world.phase_usec_sum.size(), 5)
+	for p in 5:
 		assert_true(world.phase_usec_sum[p] >= world.phase_usec[p])
 
 
