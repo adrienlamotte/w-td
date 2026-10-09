@@ -1,8 +1,8 @@
 # 028 — M3 content proposal: cards, upgrades, synergies, meta tree
-- Status: todo
+- Status: review
 - Milestone: M3
 - Depends on: 001 (approved roster)
-- PR: -
+- PR: #35
 - Owner: agent drafts, owner approves (like the roster, D-056)
 
 ## Goal
