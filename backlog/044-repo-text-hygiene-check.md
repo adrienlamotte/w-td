@@ -1,8 +1,8 @@
 # 044 — Tools: fail the test run on control characters in tracked text files
-- Status: planned
+- Status: review
 - Milestone: M3
 - Depends on: -
-- PR: -
+- PR: #37
 
 ## Goal
 Agents writing Windows paths have repeatedly turned backslash sequences into control characters (`scripts\bench.ps1` became a backspace, `scripts\validate.ps1` a vertical tab, `Godot\4.7.2` a 0x04) in docs, task files and once in `.claude/settings.local.json`. Add one Python test so `scripts\test.ps1` fails when any tracked text file contains such characters.
