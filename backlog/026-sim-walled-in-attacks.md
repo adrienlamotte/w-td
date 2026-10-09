@@ -1,5 +1,5 @@
 # 026 — Sim: walled-in enemies attack the blocking tower
-- Status: review
+- Status: done
 - Milestone: M2
 - Depends on: 024
 - PR: #28
@@ -62,3 +62,4 @@ Size: about 60 lines of code, about 180 of tests. One PR.
 ## Questions
 
 ## Review log
+- 2026-10-09 lead-dev: approved and merged PR #28 (squash). Lead dev ran `scripts\test.ps1` (210/210) and `scripts\validate.ps1` (0 errors). All criteria met, matches the plan; sim/view split and determinism OK; D-116 PROPOSED. Changing 024's walled-in test is correct (it now attacks the ring). Bench pc_maze 8.40 / churn 9.80 ms is the known gate in 023. needs-human:playtest (walled-in horde look and feel) at CP-M2.
