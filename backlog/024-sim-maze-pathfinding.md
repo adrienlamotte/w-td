@@ -11,6 +11,7 @@ Enemies path around towers to the Guardian (maze-style, D-101), cheaply enough f
 - D-101 to D-104; D-043 (the straight-path attack rule, now the walled-in fallback); D-079 (soft separation still applies)
 - `02_TECH_ARCHITECTURE.md` 3a (tick order D-083, spatial grid), 4 (budgets); `reports/perf_m1.md` (separation already 60-79% of a tick)
 - Technical approach is the lead dev's call (a flow field from the Guardian over the build grid, recomputed only when towers or husks change, is the expected direction)
+- From 011 review: the path grid should be the build grid (`RunData.grid_step`, `build_radius`; 0.5 and 20 give about 80x80 cells inside the radius). Enemy radii go up to 0.4 (brute) and bosses up to 1.0, so the plan must state how corridor width relates to enemy radius (for example, can a boss pass through a one-cell gap?). Outside the build radius there are no towers, so enemies head straight for the build area.
 
 ## Acceptance criteria
 - Enemies never walk through tower cells; inside the build area they follow the shortest path around towers; outside it they head for the build area.
