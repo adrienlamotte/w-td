@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "id": "skill_emergency_rebuild",
+  "placeholder": true,
+  "name_key": "skill.emergency_rebuild.name",
+  "kind": "rebuild",
+  "cooldown_sec": 40,
+  "guardian_heal": 40,
+  "power_stats": ["guardian_heal"]
+}

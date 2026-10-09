@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "id": "tower_clover",
+  "placeholder": true,
+  "name_key": "tower.clover.name",
+  "attack": "mark",
+  "cost": 60,
+  "cost_per_copy": 10,
+  "hp": 80,
+  "radius": 0.5,
+  "range": 5,
+  "damage": 1,
+  "cooldown_sec": 1.0,
+  "mark_sec": 4,
+  "mark_gold": 2,
+  "sell_refund": 0.5,
+  "rebuild_fraction": 0.3,
+  "sprite": "towers/clover",
+  "tags": [],
+  "levels": [
+    {"cost": 45, "mark_gold": 3},
+    {"cost": 75, "cooldown_sec": 0.7, "range": 6},
+    {"cost": 120, "needs_card": "card_sig_clover", "mark_gold": 5, "mark_sec": 6}
+  ]
+}

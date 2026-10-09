@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "id": "tower_poppy",
+  "placeholder": true,
+  "name_key": "tower.poppy.name",
+  "attack": "repair",
+  "cost": 70,
+  "cost_per_copy": 10,
+  "hp": 80,
+  "radius": 0.5,
+  "range": 4,
+  "cooldown_sec": 2.0,
+  "heal": 20,
+  "guardian_heal": 10,
+  "sell_refund": 0.5,
+  "rebuild_fraction": 0.3,
+  "sprite": "towers/poppy",
+  "tags": [],
+  "levels": [
+    {"cost": 50, "heal": 30, "guardian_heal": 15},
+    {"cost": 80, "cooldown_sec": 1.5, "range": 5},
+    {"cost": 130, "needs_card": "card_sig_poppy", "heal_targets": 2, "heal": 40, "guardian_heal": 20}
+  ]
+}

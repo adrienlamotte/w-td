@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "id": "card_sig_tansy",
+  "placeholder": true,
+  "type": "signature",
+  "name_key": "card.card_sig_tansy.name",
+  "desc_key": "card.card_sig_tansy.desc",
+  "max_picks": 1,
+  "requires": {"buildable": "waifu_tansy"},
+  "effects": [{"stat": "unlock_level", "op": "add", "value": 4, "target": "tower:tower_tansy"}]
+}

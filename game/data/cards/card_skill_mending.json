@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "id": "card_skill_mending",
+  "placeholder": true,
+  "type": "skill",
+  "name_key": "card.card_skill_mending.name",
+  "desc_key": "card.card_skill_mending.desc",
+  "max_picks": 1,
+  "requires": {},
+  "effects": [{"stat": "shield_heal", "op": "add", "value": 40, "target": "skill:skill_shield"}]
+}

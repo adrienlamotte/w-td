@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "id": "perk_study",
+  "placeholder": true,
+  "type": "perk",
+  "name_key": "card.perk_study.name",
+  "desc_key": "card.perk_study.desc",
+  "max_picks": 2,
+  "requires": {},
+  "effects": [{"stat": "xp", "op": "mult", "value": 0.15, "target": "run"}]
+}

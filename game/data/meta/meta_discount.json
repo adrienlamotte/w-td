@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "id": "meta_discount",
+  "placeholder": true,
+  "name_key": "meta.discount.name",
+  "desc_key": "meta.discount.desc",
+  "branch": "towers",
+  "cost": 150,
+  "requires": ["meta_radius"],
+  "effects": [{"stat": "price", "op": "mult", "value": -0.05, "target": "all_towers"}]
+}

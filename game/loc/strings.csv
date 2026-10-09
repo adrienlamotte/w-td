@@ -44,3 +44,112 @@ flow.slow_time,Slow time while placing
 flow.won,Victory!
 flow.lost,Defeat
 flow.time_survived,Time survived: {time}
+waifu.pip.name,Pip
+waifu.mallow.name,Mallow
+waifu.cinder.name,Cinder
+waifu.bastia.name,Bastia
+waifu.clover.name,Clover
+waifu.hymn.name,Hymn
+waifu.tansy.name,Tansy
+waifu.poppy.name,Poppy
+tower.pip.name,Pip
+tower.mallow.name,Mallow
+tower.cinder.name,Cinder
+tower.bastia.name,Bastia
+tower.clover.name,Clover
+tower.hymn.name,Hymn
+tower.tansy.name,Tansy
+tower.poppy.name,Poppy
+skill.big_finish.name,Big Finish
+skill.stand_firm.name,Stand Firm
+skill.clearance_sale.name,Clearance Sale
+skill.crescendo.name,Crescendo
+skill.tangle.name,Tangle
+skill.emergency_rebuild.name,Emergency Rebuild
+guardian.cinder.name,Cinder
+guardian.bastia.name,Bastia
+guardian.clover.name,Clover
+guardian.hymn.name,Hymn
+guardian.tansy.name,Tansy
+guardian.poppy.name,Poppy
+card.card_tower_cinder.name,Cinder Joins
+card.card_tower_cinder.desc,Cinder can be built this run.
+card.card_tower_bastia.name,Bastia Joins
+card.card_tower_bastia.desc,Bastia can be built this run.
+card.card_tower_clover.name,Clover Joins
+card.card_tower_clover.desc,Clover can be built this run.
+card.card_tower_hymn.name,Hymn Joins
+card.card_tower_hymn.desc,Hymn can be built this run.
+card.card_tower_tansy.name,Tansy Joins
+card.card_tower_tansy.desc,Tansy can be built this run.
+card.card_tower_poppy.name,Poppy Joins
+card.card_tower_poppy.desc,Poppy can be built this run.
+card.card_sig_pip.name,Double Tap
+card.card_sig_pip.desc,Pip towers can buy level 4 this run.
+card.card_sig_mallow.name,Deep Freeze
+card.card_sig_mallow.desc,Mallow towers can buy level 4 this run.
+card.card_sig_cinder.name,Overheat
+card.card_sig_cinder.desc,Cinder towers can buy level 4 this run.
+card.card_sig_bastia.name,Bulwark
+card.card_sig_bastia.desc,Bastia towers can buy level 4 this run.
+card.card_sig_clover.name,Lucky Charm
+card.card_sig_clover.desc,Clover towers can buy level 4 this run.
+card.card_sig_hymn.name,Encore
+card.card_sig_hymn.desc,Hymn towers can buy level 4 this run.
+card.card_sig_tansy.name,Overgrowth
+card.card_sig_tansy.desc,Tansy towers can buy level 4 this run.
+card.card_sig_poppy.name,Field Hospital
+card.card_sig_poppy.desc,Poppy towers can buy level 4 this run.
+card.card_skill_sig_power.name,Big Moment
+card.card_skill_sig_power.desc,Signature skill power +50%.
+card.card_skill_sig_quick.name,Quick Cue
+card.card_skill_sig_quick.desc,Signature skill cooldown -25%.
+card.card_skill_shield_plus.name,Shield Plus
+card.card_skill_shield_plus.desc,Shield absorbs twice as much and lasts 2 s longer.
+card.card_skill_mending.name,Mending
+card.card_skill_mending.desc,Casting Shield also restores 40 HP.
+card.perk_sharp.name,Sharp
+card.perk_sharp.desc,All towers deal +10% damage.
+card.perk_bounty.name,Bounty
+card.perk_bounty.desc,Gold from kills +20%.
+card.perk_study.name,Study
+card.perk_study.desc,XP gained +15%.
+card.perk_masonry.name,Masonry
+card.perk_masonry.desc,All towers max HP +30%. Rebuild price -50%.
+card.perk_expand.name,Expand
+card.perk_expand.desc,Build radius +3.
+card.perk_maze.name,Lost in the Maze
+card.perk_maze.desc,Towers deal +20% damage to enemies taking a detour.
+card.card_purse.name,Purse
+card.card_purse.desc,+40 gold.
+syn.bff_pip_mallow.name,Best Friends: Pip and Mallow
+syn.rivals_mallow_cinder.name,Rivals: Mallow and Cinder
+syn.mentor_bastia_pip.name,Mentor: Bastia and Pip
+syn.bff_bastia_clover.name,Best Friends: Bastia and Clover
+syn.mentor_hymn_poppy.name,Mentor: Hymn and Poppy
+syn.bff_hymn_tansy.name,Best Friends: Hymn and Tansy
+syn.bff_cinder_tansy.name,Best Friends: Cinder and Tansy
+meta.gold_1.name,Nest Egg
+meta.gold_1.desc,Starting gold +50.
+meta.gold_2.name,Savings
+meta.gold_2.desc,Starting gold +50.
+meta.kill_gold.name,Loot
+meta.kill_gold.desc,Gold from kills +10%.
+meta.refund.name,Fair Trade
+meta.refund.desc,Sell refund +0.15.
+meta.hp_1.name,Sturdy
+meta.hp_1.desc,Guardian max HP +10%.
+meta.hp_2.name,Sturdier
+meta.hp_2.desc,Guardian max HP +10%.
+meta.skill_cd.name,Focus
+meta.skill_cd.desc,Skill cooldowns -10%.
+meta.xp.name,Quick Study
+meta.xp.desc,XP gained +10%.
+meta.tower_hp.name,Reinforced
+meta.tower_hp.desc,Tower max HP +15%.
+meta.rebuild.name,Spare Parts
+meta.rebuild.desc,Rebuild fraction -0.1.
+meta.radius.name,Wide Grounds
+meta.radius.desc,Build radius +2.
+meta.discount.name,Discount
+meta.discount.desc,Tower placement price -5%.

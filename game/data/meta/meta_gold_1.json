@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "id": "meta_gold_1",
+  "placeholder": true,
+  "name_key": "meta.gold_1.name",
+  "desc_key": "meta.gold_1.desc",
+  "branch": "economy",
+  "cost": 60,
+  "requires": [],
+  "effects": [{"stat": "gold", "op": "add", "value": 50, "target": "run"}]
+}

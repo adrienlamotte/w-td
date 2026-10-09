@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "id": "guardian_tansy",
+  "placeholder": true,
+  "name_key": "guardian.tansy.name",
+  "hp": 400,
+  "contact_radius": 1.0,
+  "skills": ["skill_tangle", "skill_shield"],
+  "sprite": "guardians/tansy"
+}

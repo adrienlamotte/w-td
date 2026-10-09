@@ -6,5 +6,8 @@
   "kind": "area_blast",
   "cooldown_sec": 12,
   "radius": 4,
-  "damage": 30
+  "damage": 30,
+  "power_stats": [
+    "damage"
+  ]
 }

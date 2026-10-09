@@ -232,5 +232,16 @@
   "final_boss": {
     "at_sec": 900,
     "enemy": "enemy_boss_01"
+  },
+  "xp_base": 30,
+  "xp_step": 30,
+  "hearts_win": 100,
+  "hearts_loss_min": 30,
+  "hearts_loss_max": 50,
+  "card_type_weights": {
+    "new_tower": 3,
+    "signature": 2,
+    "skill": 2,
+    "perk": 2
   }
 }

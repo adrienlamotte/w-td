@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "id": "card_skill_sig_power",
+  "placeholder": true,
+  "type": "skill",
+  "name_key": "card.card_skill_sig_power.name",
+  "desc_key": "card.card_skill_sig_power.desc",
+  "max_picks": 1,
+  "requires": {},
+  "effects": [{"stat": "skill_power", "op": "mult", "value": 0.5, "target": "signature"}]
+}

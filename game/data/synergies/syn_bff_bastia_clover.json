@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "id": "syn_bff_bastia_clover",
+  "placeholder": true,
+  "tag": "bff_bastia_clover",
+  "kind": "bff",
+  "name_key": "syn.bff_bastia_clover.name",
+  "min_distance": 0,
+  "max_distance": 2.5,
+  "bonuses": [{"waifu": "waifu_bastia", "stat": "thorns", "op": "add", "value": 3}, {"waifu": "waifu_clover", "stat": "mark_gold", "op": "add", "value": 1}],
+  "guardian_bonus": {"stat": "shield_absorb", "op": "mult", "value": 0.25}
+}

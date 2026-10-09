@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "id": "perk_masonry",
+  "placeholder": true,
+  "type": "perk",
+  "name_key": "card.perk_masonry.name",
+  "desc_key": "card.perk_masonry.desc",
+  "max_picks": 1,
+  "requires": {},
+  "effects": [{"stat": "hp", "op": "mult", "value": 0.3, "target": "all_towers"}, {"stat": "rebuild_price", "op": "mult", "value": -0.5, "target": "run"}]
+}

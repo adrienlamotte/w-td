@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "id": "meta_rebuild",
+  "placeholder": true,
+  "name_key": "meta.rebuild.name",
+  "desc_key": "meta.rebuild.desc",
+  "branch": "towers",
+  "cost": 60,
+  "requires": ["meta_tower_hp"],
+  "effects": [{"stat": "rebuild_fraction", "op": "add", "value": -0.1, "target": "all_towers"}]
+}

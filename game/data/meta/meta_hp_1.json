@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "id": "meta_hp_1",
+  "placeholder": true,
+  "name_key": "meta.hp_1.name",
+  "desc_key": "meta.hp_1.desc",
+  "branch": "guardian",
+  "cost": 80,
+  "requires": [],
+  "effects": [{"stat": "hp", "op": "mult", "value": 0.1, "target": "guardian"}]
+}

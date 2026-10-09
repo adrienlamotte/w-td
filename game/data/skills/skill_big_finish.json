@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "id": "skill_big_finish",
+  "placeholder": true,
+  "name_key": "skill.big_finish.name",
+  "kind": "area_blast",
+  "cooldown_sec": 14,
+  "radius": 6,
+  "damage": 40,
+  "power_stats": ["damage"]
+}

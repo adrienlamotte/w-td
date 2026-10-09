@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "id": "skill_crescendo",
+  "placeholder": true,
+  "name_key": "skill.crescendo.name",
+  "kind": "haste",
+  "cooldown_sec": 25,
+  "duration_sec": 6,
+  "cooldown_factor": 0.6,
+  "power_stats": ["duration_sec"]
+}

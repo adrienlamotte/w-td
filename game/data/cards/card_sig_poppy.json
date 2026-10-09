@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "id": "card_sig_poppy",
+  "placeholder": true,
+  "type": "signature",
+  "name_key": "card.card_sig_poppy.name",
+  "desc_key": "card.card_sig_poppy.desc",
+  "max_picks": 1,
+  "requires": {"buildable": "waifu_poppy"},
+  "effects": [{"stat": "unlock_level", "op": "add", "value": 4, "target": "tower:tower_poppy"}]
+}

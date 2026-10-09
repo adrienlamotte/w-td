@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "id": "perk_expand",
+  "placeholder": true,
+  "type": "perk",
+  "name_key": "card.perk_expand.name",
+  "desc_key": "card.perk_expand.desc",
+  "max_picks": 2,
+  "requires": {},
+  "effects": [{"stat": "build_radius", "op": "add", "value": 3, "target": "run"}]
+}

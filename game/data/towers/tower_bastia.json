@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "id": "tower_bastia",
+  "placeholder": true,
+  "name_key": "tower.bastia.name",
+  "attack": "wall",
+  "cost": 40,
+  "cost_per_copy": 5,
+  "hp": 400,
+  "radius": 0.5,
+  "thorns": 3,
+  "sell_refund": 0.5,
+  "rebuild_fraction": 0.3,
+  "sprite": "towers/bastia",
+  "tags": [],
+  "levels": [{"cost": 30, "hp": 600}, {"cost": 50, "hp": 800, "thorns": 6}, {"cost": 80, "needs_card": "card_sig_bastia", "hp": 1200, "thorns": 10}]
+}

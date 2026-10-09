@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "id": "meta_radius",
+  "placeholder": true,
+  "name_key": "meta.radius.name",
+  "desc_key": "meta.radius.desc",
+  "branch": "towers",
+  "cost": 100,
+  "requires": [],
+  "effects": [{"stat": "build_radius", "op": "add", "value": 2, "target": "run"}]
+}

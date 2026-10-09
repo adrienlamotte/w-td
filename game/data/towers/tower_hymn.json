@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "id": "tower_hymn",
+  "placeholder": true,
+  "name_key": "tower.hymn.name",
+  "attack": "aura",
+  "cost": 90,
+  "cost_per_copy": 15,
+  "hp": 80,
+  "radius": 0.5,
+  "aura_radius": 3,
+  "aura_damage": 0.2,
+  "aura_cooldown": 0.1,
+  "sell_refund": 0.5,
+  "rebuild_fraction": 0.3,
+  "sprite": "towers/hymn",
+  "tags": [],
+  "levels": [
+    {"cost": 70, "aura_damage": 0.3},
+    {"cost": 110, "aura_radius": 4},
+    {"cost": 170, "needs_card": "card_sig_hymn", "aura_damage": 0.4, "aura_cooldown": 0.2}
+  ]
+}
