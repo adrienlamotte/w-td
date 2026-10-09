@@ -6,8 +6,13 @@ extends RefCounted
 
 ## The bot acts every ACT_TICKS ticks (0.5 s).
 const ACT_TICKS: int = 15
-const RING_R: float = 7.0
+## Ring radius: the smallest run tower range (5) minus the Guardian contact radius (1),
+## so every ring tower covers the Guardian and the corridor.
+const RING_R: float = 4.0
 const RING_GAP: float = 2.0
+## Ring bot: the first towers go on the kill zone inside the gap, then the ring.
+const KILL_ZONE_FIRST: int = 6
+const KILL_ZONE: Vector2 = Vector2(RING_R - RING_GAP, 0.0)
 ## Sunflower spacing (units per sqrt(index)).
 const SPIRAL_STEP: float = 1.0
 const MAX_TRIES: int = 64
@@ -42,9 +47,11 @@ func act(w: SimWorld) -> void:
 	var id := w.tower_catalog.ids[type]
 	var spot: Variant = null
 	if strategy == "ring":
-		spot = _ring_spot(w, id)
-		if spot == null:  # ring closed: extras on a sunflower inside the gap (the kill zone)
-			spot = _spiral_spot(w, id, Vector2(RING_R - RING_GAP, 0.0), true)
+		# Kill zone (a sunflower inside the gap) first, then the ring, then extras on the kill zone.
+		if w.towers.count() >= KILL_ZONE_FIRST:
+			spot = _ring_spot(w, id)
+		if spot == null:
+			spot = _spiral_spot(w, id, KILL_ZONE, true)
 	else:
 		spot = _spiral_spot(w, id, Vector2.ZERO, false)
 	if spot != null:

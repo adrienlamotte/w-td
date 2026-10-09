@@ -46,16 +46,21 @@ func test_spread_builds_in_the_first_minute() -> void:
 	assert_gt(Runner.run_one("spread", 2, SEC).towers_bought, 0)
 
 
+# Ring bot (D-126): the first KILL_ZONE_FIRST towers on the kill zone, the rest on the ring at
+# RING_R (or extra kill-zone towers); none in the gap or the corridor to the Guardian.
 func test_ring_towers_on_the_ring_and_not_in_the_gap() -> void:
 	var st := {"w": null}
-	Runner.run_one("ring", 1, SEC, func(w: SimWorld) -> void: st.w = w)
+	Runner.run_one("ring", 1, 3 * SEC, func(w: SimWorld) -> void: st.w = w)
 	var w: SimWorld = st.w
-	assert_gt(w.towers.count(), 0)
+	assert_gt(w.towers.count(), BalanceBot.KILL_ZONE_FIRST, "ring started after the kill zone")
 	for t in w.towers.count():
 		var p := Vector2(w.towers.pos_x[t], w.towers.pos_z[t])
 		var side := w.towers.footprint[t] * w.build.step
-		assert_almost_eq(p.length(), BalanceBot.RING_R, side, "tower %d on the ring" % t)
-		assert_false(p.x > 0.0 and absf(p.y) < BalanceBot.RING_GAP * 0.5, "tower %d not in the gap" % t)
+		var on_ring := absf(p.length() - BalanceBot.RING_R) <= side
+		var kill_zone := p.distance_to(BalanceBot.KILL_ZONE) < BalanceBot.RING_R
+		assert_true(kill_zone if t < BalanceBot.KILL_ZONE_FIRST else (on_ring or kill_zone),
+			"tower %d at %s on the kill zone or the ring" % [t, p])
+		assert_false(p.x > 0.0 and absf(p.y) < BalanceBot.RING_GAP * 0.5, "tower %d not in the gap or corridor" % t)
 
 
 func test_report_lists_strategies_rates_and_data() -> void:
