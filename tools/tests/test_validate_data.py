@@ -87,6 +87,10 @@ class ValidateDataTest(unittest.TestCase):
         doc = json.loads(EXAMPLE.read_text(encoding="utf-8")) | {"schema_version": 2}
         self.assertTrue(any("schema_version" in e for e in self.check(doc)))
 
+    def test_missing_loc_key_is_reported(self):
+        errors = self.check_repo_with("towers", "tower_slow_01", lambda d: d.update(name_key="tower.nope.name"))
+        self.assertTrue(any("tower.nope.name" in e and "strings.csv" in e for e in errors))
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,0 +1,22 @@
+keys,en
+hud.hp,{hp} / {max}
+hud.gold,Gold {value}
+hud.wave,Wave {n}
+hud.break,Break {time}
+hud.ready,Ready
+hud.seconds,{value}s
+hud.hint.skill_1,Q / LT
+hud.hint.skill_2,E / RT
+hud.paused,Paused
+enemy.boss_01.name,Boss
+enemy.brute_01.name,Brute
+enemy.miniboss_01.name,Mini-boss A
+enemy.miniboss_02.name,Mini-boss B
+enemy.ranged_01.name,Archer
+enemy.swarmer_01.name,Swarmer
+guardian.placeholder_01.name,Guardian
+skill.area_blast.name,Blast
+skill.shield.name,Shield
+tower.single_01.name,Arrow Tower
+tower.slow_01.name,Frost Tower
+tower.splash_01.name,Bomb Tower

@@ -15,6 +15,14 @@ window/size/viewport_height=1440
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 
+[gui]
+
+theme/custom="res://view/ui/ui_theme.tres"
+
+[internationalization]
+
+locale/translations=PackedStringArray("res://loc/strings.en.translation")
+
 [input]
 
 cam_pan_up={

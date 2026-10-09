@@ -3,6 +3,7 @@
 Each folder game/data/<kind>/ is checked against tools/schemas/<kind>.schema.json.
 Usage: python tools/validate_data.py [data_dir]
 """
+import csv
 import json
 import re
 import sys
@@ -12,10 +13,11 @@ from jsonschema import Draft202012Validator
 
 ROOT = Path(__file__).resolve().parent.parent
 SCHEMAS = ROOT / "tools" / "schemas"
+STRINGS = ROOT / "game" / "loc" / "strings.csv"
 ID_REF = re.compile(r"^(enemy|tower|skill|guardian|run)_[a-z0-9_]+$")
 
 
-def validate(data_dir: Path) -> list[str]:
+def validate(data_dir: Path, strings: Path = STRINGS) -> list[str]:
     errors = []
     ids = {}
     docs = {}
@@ -42,6 +44,7 @@ def validate(data_dir: Path) -> list[str]:
             ids[doc_id] = rel
             docs[rel] = doc
     errors += check_references(docs, ids)
+    errors += check_loc_keys(docs, strings)
     # ponytail: no asset-existence check yet; add it when data first references real assets.
     return errors
 
@@ -77,6 +80,26 @@ def check_references(docs: dict, ids: dict) -> list[str]:
                 if enemy and enemy.get("archetype") not in ("miniboss", "boss"):
                     errors.append(f"{rel}: boss '{boss['enemy']}' is not a miniboss/boss enemy")
     return errors
+
+
+def _keyed(value, field=""):
+    """(field, value) for every string value of a field named *_key."""
+    if isinstance(value, dict):
+        for k, v in value.items():
+            yield from _keyed(v, k)
+    elif isinstance(value, list):
+        for v in value:
+            yield from _keyed(v, field)
+    elif isinstance(value, str) and field.endswith("_key"):
+        yield field, value
+
+
+def check_loc_keys(docs: dict, strings: Path) -> list[str]:
+    """Every *_key value must be a key of the localisation CSV (D-063, D-121)."""
+    with strings.open(encoding="utf-8", newline="") as f:
+        keys = {row["keys"] for row in csv.DictReader(f)}
+    return [f"{rel}: {field} '{v}' missing from {strings.name}"
+            for rel, doc in docs.items() for field, v in _keyed(doc) if v not in keys]
 
 
 def main() -> int:

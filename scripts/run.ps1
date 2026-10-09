@@ -1,4 +1,8 @@
 # Runs the game.
 . "$PSScriptRoot/_common.ps1"
-& (Get-Godot) --path $GameDir
+$godot = Get-Godot
+# Import first so a fresh clone has the translations (D-121).
+& $godot --headless --path $GameDir --import
+if ($LASTEXITCODE) { throw 'Godot import failed' }
+& $godot --path $GameDir
 exit $LASTEXITCODE
