@@ -8,7 +8,7 @@
     "tower_splash_01",
     "tower_slow_01"
   ],
-  "starting_gold": 150,
+  "starting_gold": 200,
   "build_radius": 20,
   "grid_step": 0.5,
   "spawn_ring_min": 30,

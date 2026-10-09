@@ -15,8 +15,8 @@
   "drops": [
     {
       "type": "gold",
-      "amount": 3,
-      "chance": 0.8
+      "amount": 6,
+      "chance": 1
     }
   ],
   "sprite": "enemies/brute_01",

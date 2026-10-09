@@ -36,7 +36,7 @@ Setup (once per machine): Godot **4.7.2-stable** (pinned, D-065; scripts refuse 
 - Export Windows build (to `build\windows\WTD.exe`): `scripts\export.ps1`
 - Development loop (product owner): `/dev-loop` (runs until a stop; asks the owner questions in the session). Roles: `04_AGENT_WORKFLOW.md` 2a.
 - Perf benchmark: `scripts\bench.ps1` (exports and runs the release build `build\windows\WTD.exe --bench`, writes `reports/perf_<date>.json`, about 2.5 min; needs a GPU, not headless)
-- Balance simulation: _TBD in M3_
+- M2 balance bot: `scripts\balance.ps1` (`-Runs N`, default 5; headless bot runs of `run_m2`, writes `reports/balance_m2.md`, about 5-11 min). The full balance simulation is M3.
 - Asset forge CLI: _TBD in M4_
 
 ## When you finish a task
