@@ -38,7 +38,8 @@ func rebuild(xs: PackedFloat32Array, zs: PackedFloat32Array) -> void:
 	var cs := cell_size
 	var dmax := dim - 1
 	for i in count:  # cell_coord() inlined: same expression, bit-identical
-		var c := clampi(floori((zs[i] + he) / cs), 0, dmax) * dim 				+ clampi(floori((xs[i] + he) / cs), 0, dmax)
+		var c := clampi(floori((zs[i] + he) / cs), 0, dmax) * dim \
+				+ clampi(floori((xs[i] + he) / cs), 0, dmax)
 		_enemy_cell[i] = c
 		cell_start[c] += 1
 	# Inclusive prefix sum: cell_start[c] = end of cell c.
