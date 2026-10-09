@@ -1,5 +1,5 @@
 # 030 — Sim: tower levels, UPGRADE_TOWER and derived tower stats
-- Status: review
+- Status: done
 - Milestone: M3
 - Depends on: 029
 - PR: #38
@@ -57,3 +57,4 @@ Decision ID: **D-144** (PROPOSED, the rules below). About 300 lines of code plus
 ## Questions
 
 ## Review log
+- 2026-10-09 lead-dev: approved and merged PR #38 (squash). Matches the plan and D-144; scripts/test.ps1 green twice on the branch merged with m3/dev incl. the 044 hygiene test (263 GUT + 24 Python), validate 0 errors; bench in the PR within the M2 range. Accepted choices: cooldown `add` modifiers in seconds converted to ticks before the multiplier; HP clamped only on a max-HP fall. Nit carried to 031: stray tabs inside the UPGRADE_TOWER match pattern in `SimWorld._apply` (put it on a proper continuation line).
