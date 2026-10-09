@@ -1,6 +1,7 @@
 # 001 — Draft the launch roster proposal
 
 - Status: todo
+- Milestone: M3
 - Owner: agent (cloud design session), then human approval
 - Depends on: D-025, D-031, D-050, D-055, D-054, Q-36 (answer helps with synergy tags)
 
