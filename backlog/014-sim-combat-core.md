@@ -1,8 +1,8 @@
 # 014 — Sim: enemy HP and death, Guardian HP, gold, win and lose
-- Status: planned
+- Status: review
 - Milestone: M2
 - Depends on: 011, 012, 013, 025
-- PR: -
+- PR: #20
 
 ## Goal
 Make the run winnable and losable: damage, deaths, Guardian contact, ranged enemies, automatic gold.
