@@ -1,7 +1,7 @@
 # 014 — Sim: enemy HP and death, Guardian HP, gold, win and lose
 - Status: planned
 - Milestone: M2
-- Depends on: 011, 012, 013
+- Depends on: 011, 012, 013, 025
 - PR: -
 
 ## Goal
