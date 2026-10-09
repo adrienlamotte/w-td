@@ -1,8 +1,8 @@
 # 012 — Sim: command queue, events and run state
-- Status: planned
+- Status: review
 - Milestone: M2
 - Depends on: 011
-- PR: -
+- PR: #17
 
 ## Goal
 Give the sim its only input channel (commands that carry the tick they apply to) and its output channel (events), plus the run state machine.
