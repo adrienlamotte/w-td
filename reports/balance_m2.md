@@ -109,3 +109,12 @@ Skill `skill_shield`: cooldown 25 s, radius 0.0, damage 0.0, absorb 50.0, durati
 | enemy_miniboss_02 | 800.0 | 1.4 | 15.0 | 40 (1.0) | mini-boss 600 s |
 | enemy_ranged_01 | 12.0 | 2.4 | 2.0 | 4 (1.0) | waves |
 | enemy_swarmer_01 | 8.0 | 3.2 | 1.0 | 2 (1.0) | waves |
+
+## Questions for the owner (CP-M2, needs-human:balance)
+
+Added by the lead-dev review of task 022; `scripts\balance.ps1` regenerates this file and drops this section.
+
+1. Both builder bots win 5 of 5 seeds. Is that too easy for a first 15-minute run, or right for M2? (The target was only "at least 60 %".)
+2. The maze (`ring`) only ties the naive `spread` bot: same wins, same win times, same tower count. With these placeholder numbers the maze gives no edge. Should M2 tuning make mazing pay off (for example tougher waves, or towers that reward long paths), or is that left to M3 balance?
+
+These are open questions, not conclusions: the numbers are placeholders and the bots are simple.

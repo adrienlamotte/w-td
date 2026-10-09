@@ -1,5 +1,5 @@
 # 022 — Headless bot run: a 15-minute run is playable
-- Status: review
+- Status: done
 - Milestone: M2
 - Depends on: 013, 016, 017, 024, 026
 - PR: #32
@@ -82,3 +82,4 @@ Required fix: the `ring` bot must be a real maze strategy (the maze is M2's core
 4. No data or rule changes in this round. Re-run `scripts\balance.ps1` (N = 5), commit the new `reports/balance_m2.md`; targets must still hold (best builder >= 60 %, passive 0). Whatever ring scores, report it honestly. If ring now beats spread, or loses only to the boss, say so in the PR.
 5. Docs in the same PR: `02_TECH_ARCHITECTURE.md` 6 and the D-126 row (radius 4, kill zone first), and the PR description results table.
 6. Tests twice, validator.
+- 2026-10-09 Review round 2 (lead-dev): approved, PR #32 squash-merged into m2/dev. The fix matches round 1: KILL_ZONE_FIRST 6 on the kill-zone sunflower (corridor kept open), then the ring at RING_R 4.0, then extras on the kill zone; the ring test checks the first 6 are kill-zone towers and none is in the gap or corridor. 247/247 tests green, validator 0 errors; `scripts\balance.ps1` rerun by the reviewer gives the same outcomes and times as the committed report (11177e4): passive 0/5, spread 5/5, ring 5/5. Owner question for CP-M2 added to the report (ring only ties spread; both builders win 5/5).
