@@ -44,7 +44,8 @@ func steer(enemies: SimEnemies) -> void:
 		gap[i] = d - stop_dist[ty[i]]
 
 
-## Moves each live enemy along its steer direction by min(speed * dt, gap).
+## Moves each live enemy along its steer direction by min(speed * dt * slow, gap); slow
+## is slow_factor while slow_ticks > 0, counted down here once per tick (D-114).
 ## State is re-evaluated every tick: ATTACKING once the gap is closed, QUEUED (no move)
 ## when blocked (EnemySeparation.blocked, same tick), else MOVING.
 func advance(enemies: SimEnemies, type_speed: PackedFloat32Array, dt: float,
@@ -54,21 +55,29 @@ func advance(enemies: SimEnemies, type_speed: PackedFloat32Array, dt: float,
 	var st := enemies.state
 	var xs := enemies.pos_x
 	var zs := enemies.pos_z
+	var sf := enemies.slow_factor
+	var sn := enemies.slow_ticks
 	for i in enemies.count():
 		if hp[i] <= 0.0:
 			continue
 		var g := gap[i]
 		if g <= 0.0:
 			st[i] = SimEnemies.State.ATTACKING
-			continue
-		if blocked[i] != 0:
+		elif blocked[i] != 0:
 			st[i] = SimEnemies.State.QUEUED
-			continue
-		var step := type_speed[ty[i]] * dt
-		if g <= step:
-			step = g
-			st[i] = SimEnemies.State.ATTACKING
 		else:
-			st[i] = SimEnemies.State.MOVING
-		xs[i] += dir_x[i] * step
-		zs[i] += dir_z[i] * step
+			var step := type_speed[ty[i]] * dt
+			if sn[i] > 0:
+				step *= sf[i]
+			if g <= step:
+				step = g
+				st[i] = SimEnemies.State.ATTACKING
+			else:
+				st[i] = SimEnemies.State.MOVING
+			xs[i] += dir_x[i] * step
+			zs[i] += dir_z[i] * step
+		# A slow counts down once per MOVE phase, moving or not (D-114).
+		if sn[i] > 0:
+			sn[i] -= 1
+			if sn[i] == 0:
+				sf[i] = 1.0

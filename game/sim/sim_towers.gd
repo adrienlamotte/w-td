@@ -22,6 +22,8 @@ var footprint: PackedInt32Array = PackedInt32Array()
 var hp: PackedFloat32Array = PackedFloat32Array()
 ## 1 = dead tower left as a walkable husk (D-104).
 var husk: PackedByteArray = PackedByteArray()
+## Attack cooldown in ticks, 0 = ready; 0 at placement and rebuild (D-114).
+var cooldown: PackedInt32Array = PackedInt32Array()
 
 
 func count() -> int:
@@ -42,6 +44,7 @@ func add(x: float, z: float, p_range: float) -> int:
 	footprint.append(0)
 	hp.append(1.0)
 	husk.append(0)
+	cooldown.append(0)
 	return pos_x.size() - 1
 
 
@@ -60,6 +63,7 @@ func remove(t: int) -> void:
 	footprint[t] = footprint[last]
 	hp[t] = hp[last]
 	husk[t] = husk[last]
+	cooldown[t] = cooldown[last]
 	pos_x.resize(last)
 	pos_z.resize(last)
 	attack_range.resize(last)
@@ -72,6 +76,7 @@ func remove(t: int) -> void:
 	footprint.resize(last)
 	hp.resize(last)
 	husk.resize(last)
+	cooldown.resize(last)
 
 
 ## Towers of this catalog type on the field, husks included (D-113).
