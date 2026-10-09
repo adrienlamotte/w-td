@@ -28,6 +28,10 @@ var enemies: SimEnemies = SimEnemies.new()
 var grid: SpatialGrid
 var separation: EnemySeparation = EnemySeparation.new()
 var towers: SimTowers = SimTowers.new()
+## Created at StartRun from the run's build radius and grid step; null before (D-109).
+var build: BuildGrid = null
+## Uid of the next placed tower: starts at 0, never reused (D-109).
+var next_tower_uid: int = 0
 var movement: EnemyMovement = EnemyMovement.new()
 ## Set from the run at StartRun (D-107); 0 before.
 var guardian_hp: float = 0.0
@@ -134,14 +138,20 @@ func _apply(cmd: SimCommand) -> void:
 			movement.set_stop(catalog, run.guardian_contact_radius)
 			guardian_hp = run.guardian_hp
 			gold = run.starting_gold
+			build = BuildGrid.new(run.build_radius, run.grid_step)
 			clock = 0
 			run_state = RunState.RUNNING
 		SimCommand.Type.PAUSE:
 			paused = cmd.paused
-		SimCommand.Type.PLACE_TOWER, SimCommand.Type.SELL_TOWER:
-			if paused:  # no building while paused (D-105)
+		SimCommand.Type.PLACE_TOWER, SimCommand.Type.SELL_TOWER, SimCommand.Type.REBUILD_TOWER:
+			if run_state != RunState.RUNNING or paused:  # no building while paused (D-105)
 				return
-			# task 015
+			if cmd.type == SimCommand.Type.PLACE_TOWER:
+				TowerBuilding.place(self, cmd)
+			elif cmd.type == SimCommand.Type.SELL_TOWER:
+				TowerBuilding.sell(self, cmd.tower_uid)
+			else:
+				TowerBuilding.rebuild(self, cmd.tower_uid)
 		SimCommand.Type.USE_SKILL:
 			pass  # task 017
 
@@ -165,6 +175,11 @@ func damage_enemy(i: int, amount: float) -> void:
 		return
 	enemies.hp[i] -= amount
 	events.push(SimEvents.Kind.ENEMY_HIT, enemies.type_id[i], enemies.pos_x[i], enemies.pos_z[i], amount)
+
+
+## Single entry point for damage to towers (task 024 calls it). A lethal hit leaves a husk (D-104, D-109).
+func damage_tower(t: int, amount: float) -> void:
+	TowerBuilding.damage(self, t, amount)
 
 
 # Highest index first, so a swap-remove never moves an unvisited enemy (D-081).
@@ -233,4 +248,5 @@ func state_hash() -> int:
 	return hash([tick, clock, run_state, paused, run.id if run else "", _spawn_rng.state, _loot_rng.state,
 		guardian_hp, gold, enemies.pos_x, enemies.pos_z, enemies.hp,
 		enemies.type_id, enemies.state, enemies.anim_frame, enemies.cooldown,
-		towers.pos_x, towers.pos_z, towers.attack_range, towers.target])
+		towers.pos_x, towers.pos_z, towers.attack_range, towers.target, next_tower_uid,
+		towers.uid, towers.type_id, towers.hp, towers.husk, towers.paid, towers.cell_i, towers.cell_j])
