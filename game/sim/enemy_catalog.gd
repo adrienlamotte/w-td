@@ -5,6 +5,8 @@ extends RefCounted
 
 var ids: PackedStringArray = PackedStringArray()
 var name_key: PackedStringArray = PackedStringArray()
+## Data archetype (swarmer, brute, ranged, miniboss, boss); the view picks looks by it (D-120).
+var archetype: PackedStringArray = PackedStringArray()
 var speed: PackedFloat32Array = PackedFloat32Array()
 var radius: PackedFloat32Array = PackedFloat32Array()
 var hp: PackedFloat32Array = PackedFloat32Array()
@@ -34,6 +36,7 @@ static func load_dir(path: String = "res://data/enemies") -> EnemyCatalog:
 		var drop: Dictionary = data.drops[0] if data.drops.size() > 0 else {"amount": 0, "chance": 0.0}
 		catalog.ids.append(data.id)
 		catalog.name_key.append(data.name_key)
+		catalog.archetype.append(data.archetype)
 		catalog.speed.append(data.speed)
 		catalog.radius.append(data.radius)
 		catalog.hp.append(data.hp)

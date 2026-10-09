@@ -188,3 +188,13 @@ func test_combat_phase_cost_3000_piled() -> void:
 		sums[SimWorld.Phase.MOVE] / 1000.0 / ticks, sums[SimWorld.Phase.DEATHS] / 1000.0 / ticks,
 		sums[SimWorld.Phase.ATTACKS] / 1000.0 / ticks])
 	assert_eq(world.run_state, SimWorld.RunState.RUNNING)
+
+
+func test_damage_sets_hit_tick_but_not_on_a_corpse() -> void:
+	world.enemies.add(sw, 10.0, 0.0, 8.0)
+	world.tick = 5
+	world.damage_enemy(0, 8.0)
+	assert_eq(world.enemies.hit_tick[0], 5)
+	world.tick = 6
+	world.damage_enemy(0, 1.0)
+	assert_eq(world.enemies.hit_tick[0], 5, "corpse hit ignored")

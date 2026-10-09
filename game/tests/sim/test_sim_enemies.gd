@@ -47,3 +47,18 @@ func test_remove_last() -> void:
 	e.remove(1)
 	assert_eq(e.count(), 1)
 	assert_eq(e.pos_x[0], 1.0)
+
+
+func test_presentation_fields_follow_remove() -> void:
+	var e := world.enemies
+	for i in 3:
+		e.add(i, float(i), float(i) + 10.0, 1.0)
+	assert_eq([e.prev_x[2], e.prev_z[2]], [2.0, 12.0], "add: prev = spawn position")
+	assert_eq(e.hit_tick[2], SimEnemies.NEVER_HIT)
+	e.prev_x[2] = 5.0
+	e.prev_z[2] = 6.0
+	e.hit_tick[2] = 42
+	e.remove(1)
+	assert_eq([e.prev_x[1], e.prev_z[1], e.hit_tick[1]], [5.0, 6.0, 42])
+	for arr in [e.prev_x, e.prev_z, e.hit_tick]:
+		assert_eq(arr.size(), 2)
