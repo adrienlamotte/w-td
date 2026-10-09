@@ -34,6 +34,8 @@ var guardian_hp: float = 0.0
 var guardian_contact_radius: float = 0.0
 ## Skills, indexed by skill slot. Fields a kind does not use are 0.
 var skill_ids: PackedStringArray = PackedStringArray()
+## Localisation key of each skill's name (D-063).
+var skill_name_key: PackedStringArray = PackedStringArray()
 var skill_kind: PackedInt32Array = PackedInt32Array()
 var skill_cooldown: PackedInt32Array = PackedInt32Array()
 var skill_radius: PackedFloat32Array = PackedFloat32Array()
@@ -81,6 +83,7 @@ func _load_guardian(guardian_id: String) -> void:
 	for skill_id: String in g.skills:
 		var s := DataFiles.read_id(DIR + "/skills", skill_id)
 		skill_ids.append(skill_id)
+		skill_name_key.append(s.name_key)
 		skill_kind.append(_resolve(_SKILLS.get(s.get("kind"), -1), skill_id))
 		skill_cooldown.append(DataFiles.ticks(s.cooldown_sec))
 		skill_radius.append(s.get("radius", 0.0))

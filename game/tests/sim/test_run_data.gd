@@ -61,6 +61,7 @@ func test_guardian_and_skills() -> void:
 		var s: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(
 			"res://data/skills/%s.json" % _run.skill_ids[i]))
 		assert_eq(_run.skill_cooldown[i], _ticks(s.cooldown_sec))
+		assert_eq(_run.skill_name_key[i], s.name_key)
 		assert_eq(_run.skill_kind[i], RunData.Skill.AREA_BLAST if s.kind == "area_blast" else RunData.Skill.SHIELD)
 		assert_almost_eq(_run.skill_radius[i], float(s.get("radius", 0.0)), 1e-6)
 		assert_almost_eq(_run.skill_damage[i], float(s.get("damage", 0.0)), 1e-6)

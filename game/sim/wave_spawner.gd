@@ -26,6 +26,20 @@ static func step(clock: int, run: RunData, catalog: EnemyCatalog, enemies: SimEn
 		_spawn(run.final_boss_type, run, catalog, enemies, rng)
 
 
+## Where run tick `clock` sits in the timeline, same arithmetic as step() (D-106, D-121):
+## x = wave index (-1 before first_wave_tick), y = 1 in a break or before the first wave,
+## z = ticks until the next wave start or break start.
+static func timeline(clock: int, run: RunData) -> Vector3i:
+	if clock < run.first_wave_tick:
+		return Vector3i(-1, 1, run.first_wave_tick - clock)
+	var rel := clock - run.first_wave_tick
+	var period := run.wave_ticks + run.break_ticks
+	var t := rel % period
+	if t < run.wave_ticks:
+		return Vector3i(rel / period, 0, run.wave_ticks - t)
+	return Vector3i(rel / period, 1, period - t)
+
+
 static func _pick(types: PackedInt32Array, weights: PackedFloat32Array, rng: RandomNumberGenerator) -> int:
 	var total := 0.0
 	for wt in weights:

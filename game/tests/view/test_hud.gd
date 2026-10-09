@@ -1,0 +1,99 @@
+extends GutTest
+## HUD (D-121): shows sim state, translated keys, readable font sizes.
+
+const HUD_SCENE := preload("res://view/ui/hud.tscn")
+const KEYS := ["hud.hp", "hud.gold", "hud.wave", "hud.break", "hud.ready", "hud.seconds",
+	"hud.hint.skill_1", "hud.hint.skill_2", "hud.paused", "guardian.placeholder_01.name"]
+
+var world: SimWorld
+var hud: Hud
+
+
+func before_each() -> void:
+	world = SimWorld.new(1)
+	world.queue(SimCommand.start_run(0, 7, "run_m2"))
+	world.step()
+	hud = HUD_SCENE.instantiate()
+	add_child_autofree(hud)
+	hud.setup(world)
+
+
+func _label(path: String) -> Label:
+	return hud.get_node("Root/" + path)
+
+
+func _steps(n: int) -> void:
+	for i in n:
+		world.step()
+	hud.refresh()
+
+
+func test_shows_state() -> void:
+	assert_true(hud.visible)
+	assert_eq(_label("TopRight/Gold").text, tr("hud.gold").format({"value": world.run.starting_gold}))
+	var max_hp := ceili(world.run.guardian_hp)
+	assert_eq(_label("TopLeft/Hp").text, "%d / %d" % [max_hp, max_hp])
+	assert_eq((hud.get_node("Root/TopLeft/HpBar") as ProgressBar).value, 1.0)
+	assert_eq(_label("TopCentre/Wave").text, "Wave 1")
+	_steps(29)
+	assert_eq(_label("TopCentre/Clock").text, "0:01")
+	world.gold = 12
+	world.guardian_hp = 10.2
+	hud.refresh()
+	assert_eq(_label("TopRight/Gold").text, "Gold 12")
+	assert_eq(_label("TopLeft/Hp").text, "11 / %d" % max_hp)
+	world.clock = world.run.wave_ticks
+	hud.refresh()
+	assert_eq(_label("TopCentre/Wave").text, "Break " + Hud.mmss(world.run.break_ticks / SimWorld.TICK_RATE))
+
+
+func test_skill_cooldown_and_pause() -> void:
+	var slots := hud.get_node("Root/Skills").get_children()
+	assert_eq(slots.size(), world.run.skill_ids.size())
+	world.queue(SimCommand.use_skill(world.tick, world.run.skill_ids[0]))
+	_steps(1)
+	var s0: Label = slots[0].get_child(0).get_child(2)
+	var s1: Label = slots[1].get_child(0).get_child(2)
+	var secs := world.run.skill_cooldown[0] / SimWorld.TICK_RATE
+	assert_eq(s0.text, "%ds" % secs)
+	assert_eq(s1.text, tr("hud.ready"))
+	var paused: Label = _label("Paused")
+	assert_false(paused.visible)
+	world.queue(SimCommand.pause(world.tick, true))
+	_steps(1)
+	assert_true(paused.visible)
+
+
+func test_hidden_without_run() -> void:
+	hud.setup(SimWorld.new(1))
+	assert_false(hud.visible)
+
+
+func test_clock_text_and_seconds_left() -> void:
+	assert_eq(Hud.clock_text(0), "0:00")
+	assert_eq(Hud.clock_text(29), "0:00")
+	assert_eq(Hud.clock_text(30 * 61), "1:01")
+	assert_eq(Hud.clock_text(30 * 600), "10:00")
+	assert_eq(Hud.seconds_left(100, 100), 0)
+	assert_eq(Hud.seconds_left(50, 100), 0)
+	assert_eq(Hud.seconds_left(101, 100), 1)
+	assert_eq(Hud.seconds_left(130, 100), 1)
+	assert_eq(Hud.seconds_left(131, 100), 2)
+
+
+func test_readable_and_click_through() -> void:
+	var controls := hud.find_children("*", "Control", true, false)
+	assert_gt(controls.size(), 10)
+	for c: Control in controls:
+		assert_eq(c.mouse_filter, Control.MOUSE_FILTER_IGNORE, "%s ignores the mouse" % c.name)
+		if c is Label or c is Button:
+			assert_gte(c.get_theme_font_size("font_size"), 32, "%s font size" % c.name)
+
+
+func test_keys_translate() -> void:
+	var keys: Array = KEYS.duplicate()
+	keys.append_array(world.catalog.name_key)
+	keys.append_array(world.tower_catalog.name_key)
+	keys.append_array(world.run.skill_name_key)
+	for k: String in keys:
+		assert_ne(tr(k), k, k)
