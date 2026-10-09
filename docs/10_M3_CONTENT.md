@@ -57,6 +57,10 @@ Every Guardian has her own signature skill plus the shared Shield (D-133, sectio
 
 ### 2.5 Effect vocabulary (data)
 `{"stat": <name>, "op": "add" | "mult", "value": <number>, "target": <scope>}` with targets `all_towers`, `tower:<id>`, `guardian`, `skill:<id>`, `run`. Stats: `damage`, `cooldown`, `range`, `hp`, `kill_gold`, `xp`, `build_radius`, `rebuild_price`, `detour_damage`, `skill_power` (multiplies the signature skill's `power_stats`), `skill_cooldown`, `shield_absorb`, `shield_duration`, `shield_heal`, `gold` (instant), plus `unlock_tower` and `unlock_level` for new-tower and signature cards. Multipliers of the same stat add up (two `perk_sharp` = +20%, not 1.1 x 1.1); final cooldowns are clamped to at least 50% of the level value and at least 1 tick.
+- Data details (D-140, PROPOSED): a `mult` value is the fraction added to the multiplier (-0.25 = -25%).
+- Meta-only stats (D-140): `sell_refund`, `rebuild_fraction` (both `add`) and `price` (placement price, `mult`).
+- Targets (D-140): `guardian` = her max HP and all her skills; `signature` = her signature skill only (the skill cards work for every Guardian, 2.3).
+- Card `requires` (D-140): optional `unlocked` (waifu rescued in the profile) and `buildable` (waifu buildable this run); `{}` = always eligible.
 
 ## 3. Tower waifus
 ### 3.1 Attack kinds
