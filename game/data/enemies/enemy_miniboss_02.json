@@ -4,7 +4,7 @@
   "placeholder": true,
   "name_key": "enemy.miniboss_02.name",
   "archetype": "miniboss",
-  "hp": 1200,
+  "hp": 800,
   "speed": 1.4,
   "damage": 15,
   "attack_range": 0,

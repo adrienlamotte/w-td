@@ -9,7 +9,7 @@
   "hp": 100,
   "radius": 0.5,
   "range": 6,
-  "damage": 4,
+  "damage": 6,
   "cooldown_sec": 0.5,
   "sell_refund": 0.5,
   "rebuild_fraction": 0.3,

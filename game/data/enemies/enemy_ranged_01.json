@@ -15,8 +15,8 @@
   "drops": [
     {
       "type": "gold",
-      "amount": 2,
-      "chance": 0.7
+      "amount": 4,
+      "chance": 1
     }
   ],
   "sprite": "enemies/ranged_01",
