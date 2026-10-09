@@ -32,10 +32,17 @@ Tone: cute and comedic fantasy. **[D]** All characters are clearly adult with ad
 Agents must not guess these; each has options and a recommended default in `OPEN_QUESTIONS.md`.
 | Gap | Question |
 |---|---|
+| How enemies deal damage (timing, caps) | Q-43 |
+| What a wave is, and where the breaks fall | Q-44 |
+| What "blocks their straight path" means for towers | Q-45 |
+| Gold pickup, starting gold, M2 tower availability | Q-46 |
+| Sell refund and husk rebuild cost | Q-47 |
+| Bosses in M2; what appears at 5:00 / 10:00 | Q-48 |
+| M2 run flow, pause, placeholder Guardian, grid cell size | Q-49 |
 
 ## 4. Player actions **[D]**
 - **Build:** both real-time during action (spending resources dropped by kills) **and** during the short breaks between waves (D-032).
-- **Placement (D-040):** free placement on a fine grid inside a radius around the Guardian; **no tower cap**; towers can be sold for a partial gold refund but not moved. The player can move the camera (controls: Q-33). **[D]**
+- **Placement (D-040):** free placement on a fine grid inside a radius around the Guardian; **no tower cap**; towers can be sold for a partial gold refund but not moved. The player can move the camera (controls: D-041). **[D]**
 - **Towers = waifus.** Each tower is a waifu character placed around the Guardian, with her own attack, role and personality.
 - **Guardian active skills:** the Guardian stays at the center and has active skills the player triggers (cooldown-based). The Guardian does not move and has no auto-attack. **[D]** M2 skills: Area blast (~12 s cooldown) and Shield (~25 s cooldown); Heal comes later as an upgrade (D-044). Numbers are placeholders in data.
 - **M2 tower types:** ranged single-target damage, area (splash) damage, crowd control (slow) (D-045). **[D]**
