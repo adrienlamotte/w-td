@@ -65,15 +65,11 @@ func test_blast_gives_ring_shield_and_hit_nothing() -> void:
 	assert_eq(pool.x1[0], world.run.skill_radius[blast])
 
 
-func test_tower_hit_only_when_the_kind_exists() -> void:
-	var k: int = SimEvents.Kind.get("TOWER_HIT", -1)
-	if k < 0:
-		pass_test("TOWER_HIT not in SimEvents yet (task 026)")
-		return
+func test_tower_hit_spark() -> void:
 	world.queue(SimCommand.place_tower(world.tick, "tower_single_01", 4.0, 0.0))
 	world.step()
 	world.events.clear()
-	_push(k, world.towers.uid[0], 5.0, 0.0, 1.0)
+	_push(SimEvents.Kind.TOWER_HIT, world.towers.uid[0], 5.0, 0.0, 1.0)
 	pool.read_events(world)
 	assert_eq(Array(pool.kind), [FxPool.Kind.SPARK])
 

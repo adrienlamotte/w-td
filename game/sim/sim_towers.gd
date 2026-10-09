@@ -24,6 +24,9 @@ var hp: PackedFloat32Array = PackedFloat32Array()
 var husk: PackedByteArray = PackedByteArray()
 ## Attack cooldown in ticks, 0 = ready; 0 at placement and rebuild (D-114).
 var cooldown: PackedInt32Array = PackedInt32Array()
+## Tower index by uid, -1 = none (sold or never placed). Refreshed by SimWorld in the PATH
+## phase; valid until the end of that tick (indices only move on sell, in COMMANDS; D-116).
+var uid_index: PackedInt32Array = PackedInt32Array()
 
 
 func count() -> int:
@@ -88,3 +91,12 @@ func copies(p_type: int) -> int:
 func retarget(grid: SpatialGrid, xs: PackedFloat32Array, zs: PackedFloat32Array) -> void:
 	for t in pos_x.size():
 		target[t] = -1 if husk[t] else grid.nearest(pos_x[t], pos_z[t], attack_range[t], xs, zs)
+
+
+## Rebuilds uid_index for uids 0..next_uid-1.
+func refresh_uid_index(next_uid: int) -> void:
+	uid_index.resize(next_uid)
+	uid_index.fill(-1)
+	for t in uid.size():
+		if uid[t] >= 0:
+			uid_index[uid[t]] = t

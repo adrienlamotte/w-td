@@ -117,7 +117,7 @@ func step() -> void:
 		_t = Time.get_ticks_usec()
 	separation.apply(enemies, grid, catalog, field)
 	_lap(Phase.SEPARATE)
-	movement.steer(enemies, field)
+	movement.steer(enemies, field, build, towers, tower_catalog)
 	movement.advance(enemies, catalog.speed, SIM_DT, separation.blocked)
 	if field:
 		movement.push_out(enemies, build, field)
@@ -151,6 +151,7 @@ func _path() -> void:
 		field = FlowField.new(build, run.guardian_contact_radius if run else 0.0)
 		field.update(FlowField.FULL)
 	field.update(FlowField.CELLS_PER_TICK)
+	towers.refresh_uid_index(next_tower_uid)  # for steer and enemy attacks (D-116)
 
 
 func _apply(cmd: SimCommand) -> void:
@@ -228,7 +229,7 @@ func damage_enemy(i: int, amount: float) -> void:
 	events.push(SimEvents.Kind.ENEMY_HIT, enemies.type_id[i], enemies.pos_x[i], enemies.pos_z[i], amount)
 
 
-## Single entry point for damage to towers (task 026 calls it). A lethal hit leaves a husk (D-104, D-109).
+## Single entry point for damage to towers (walled-in enemies, D-116). A lethal hit leaves a husk (D-104, D-109).
 func damage_tower(t: int, amount: float) -> void:
 	TowerBuilding.damage(self, t, amount)
 
@@ -266,6 +267,15 @@ func _enemy_attacks() -> void:
 			cd[i] -= 1
 		if cd[i] == 0 and st[i] == SimEnemies.State.ATTACKING:
 			var t := enemies.type_id[i]
+			var u := enemies.target_id[i]
+			if u >= 0:  # walled in: the blocking tower (D-116); gone or a husk: no hit, cd stays 0
+				var k := towers.uid_index[u]
+				if k < 0 or towers.husk[k]:
+					continue
+				cd[i] = catalog.attack_cooldown[t]
+				events.push(SimEvents.Kind.TOWER_HIT, u, enemies.pos_x[i], enemies.pos_z[i], catalog.damage[t])
+				damage_tower(k, catalog.damage[t])
+				continue
 			cd[i] = catalog.attack_cooldown[t]
 			_hit_guardian(t, enemies.pos_x[i], enemies.pos_z[i], catalog.damage[t])
 			if run_state == RunState.LOST:
@@ -300,6 +310,7 @@ func state_hash() -> int:
 	return hash([tick, clock, run_state, paused, run.id if run else "", _spawn_rng.state, _loot_rng.state,
 		guardian_hp, gold, enemies.pos_x, enemies.pos_z, enemies.hp,
 		enemies.type_id, enemies.state, enemies.anim_frame, enemies.cooldown, enemies.slow_factor, enemies.slow_ticks,
+		enemies.target_id,
 		towers.pos_x, towers.pos_z, towers.attack_range, towers.target, next_tower_uid,
 		towers.uid, towers.type_id, towers.hp, towers.husk, towers.paid, towers.cell_i, towers.cell_j,
 		towers.cooldown, skills.ready_at, skills.shield_left, skills.shield_until])
