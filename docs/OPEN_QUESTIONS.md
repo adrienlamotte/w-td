@@ -73,6 +73,38 @@ Last reviewed: 2026-10-08 (daily docs review; owner answers recorded the same da
 
 ---
 
+## M3 (content proposal, task 028)
+
+### Q-62 Guardian skills: shared kit or her own?
+D-044 gives the M2 kit (Area blast, Shield, Heal later); it does not say whether each Guardian brings her own skills. Blocks: Guardian data and skill cards in `10_M3_CONTENT.md` 2.3 and 4.
+- A) Every Guardian has the shared kit (Area blast, Shield; Heal as a Shield upgrade card), with her own name and look; her identity comes from her relationships (D-132) ★
+- B) Each Guardian replaces Area blast with her own signature skill; Shield shared (6 new skills to design and balance).
+- C) Shared kit in M3, own signature skills added in M5 with the content pass.
+
+### Q-63 How do tower upgrade cards relate to gold-bought levels?
+D-051: upgrade levels are bought with gold, and "tower upgrade" is a card type; how the two combine is not decided. Blocks: card pool and upgrade UI (`10_M3_CONTENT.md` 2.2, 3.2).
+- A) Levels 2-3 are bought with gold at any time; the level 4 signature also costs gold but needs that waifu's signature card this run ★
+- B) Every level needs a card first (each card unlocks the next level for that waifu), gold pays per tower.
+- C) All levels are gold-only; upgrade cards are run-wide stat buffs for one waifu instead.
+
+### Q-64 What does Poppy (repair) do, given towers only take damage when walled in?
+Enemies attack towers only when no path exists (D-103), so a tower-only repair is idle in most mazes. Blocks: the `repair` kind (`10_M3_CONTENT.md` 3.1).
+- A) Repairs the most damaged tower in range; when no tower needs it and the Guardian is in range, heals the Guardian a smaller amount ★
+- B) Towers only (strong only in walled-in layouts).
+- C) Towers only, and she also slowly rebuilds husks in range for free.
+
+### Q-65 Where do rivals get their bonus?
+Rivals "compete" (`07_ROSTER.md` 2); the distance rule is not decided. Blocks: synergy data (`10_M3_CONTENT.md` 5).
+- A) Only when 2 to 6 units apart, so across a corridor, never side by side (rewards maze corridors, D-128) ★
+- B) Same rule as the other relationships (within 2.5 units).
+
+### Q-66 Are tower upgrades per placed tower or per waifu type?
+Blocks: the upgrade command and UI (`10_M3_CONTENT.md` 3.2).
+- A) Per placed tower: you upgrade the towers on your key corridor; gold paid counts toward sell and rebuild ★
+- B) Per waifu type: one purchase upgrades every copy, current and future.
+
+---
+
 ## A. Deferred until the first real asset arrives
 
 ### Q-37 Where are large art files stored? (DEFERRED by the owner: decide when the first real asset arrives)
