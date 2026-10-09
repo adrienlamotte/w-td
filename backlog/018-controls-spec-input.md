@@ -1,5 +1,5 @@
 # 018 — Controls spec and input layer (mouse and gamepad)
-- Status: review
+- Status: done
 - Milestone: M2
 - Depends on: 012
 - PR: #24
@@ -92,3 +92,4 @@ Size: about 150 lines of code (plus about 80 lines of `project.godot` config and
 ## Questions
 
 ## Review log
+- 2026-10-09 lead-dev: PR #24 approved and squash-merged into m2/dev. test.ps1 160/160 GUT + 13 Python, validate.ps1 OK (rerun by reviewer). project.godot checked: valid InputMap syntax, LF, no control chars, Godot 4 joypad indices correct (A0 B1 X2 Y3 Start6 R3 8 LB9 RB10; axes LS 0/1, RS 2/3, LT4 RT5). Only game/input/ reads devices; bench disables PlayerInput. Open for CP-M2: real key/mouse/gamepad presses untested (needs-human:playtest), deadzones 0.2 placeholder.
