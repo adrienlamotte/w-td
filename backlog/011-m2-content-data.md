@@ -1,8 +1,8 @@
 # 011 — Data: M2 content definitions and schemas
-- Status: planned
+- Status: review
 - Milestone: M2
 - Depends on: -
-- PR: -
+- PR: #16
 
 ## Goal
 Define all M2 content as data with schemas, so later tasks only read it: enemies, towers, Guardian, run timeline and economy.
