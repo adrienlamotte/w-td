@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "id": "tower_pip",
+  "placeholder": true,
+  "name_key": "tower.pip.name",
+  "attack": "single",
+  "cost": 50,
+  "cost_per_copy": 10,
+  "hp": 100,
+  "radius": 0.5,
+  "range": 6,
+  "damage": 6,
+  "cooldown_sec": 0.5,
+  "sell_refund": 0.5,
+  "rebuild_fraction": 0.3,
+  "sprite": "towers/pip",
+  "tags": [],
+  "levels": [{"cost": 40, "damage": 8}, {"cost": 60, "damage": 10, "range": 7}, {"cost": 100, "needs_card": "card_sig_pip", "cooldown_sec": 0.35}]
+}

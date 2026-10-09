@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "id": "syn_mentor_hymn_poppy",
+  "placeholder": true,
+  "tag": "mentor_hymn_poppy",
+  "kind": "mentor",
+  "name_key": "syn.mentor_hymn_poppy.name",
+  "min_distance": 0,
+  "max_distance": 2.5,
+  "bonuses": [{"waifu": "waifu_hymn", "stat": "aura_radius", "op": "add", "value": 1}, {"waifu": "waifu_poppy", "stat": "heal", "op": "mult", "value": 0.5}],
+  "guardian_bonus": {"stat": "skill_cooldown", "op": "mult", "value": -0.1}
+}

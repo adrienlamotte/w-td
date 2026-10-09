@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "id": "card_sig_hymn",
+  "placeholder": true,
+  "type": "signature",
+  "name_key": "card.card_sig_hymn.name",
+  "desc_key": "card.card_sig_hymn.desc",
+  "max_picks": 1,
+  "requires": {"buildable": "waifu_hymn"},
+  "effects": [{"stat": "unlock_level", "op": "add", "value": 4, "target": "tower:tower_hymn"}]
+}

@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "id": "card_skill_sig_quick",
+  "placeholder": true,
+  "type": "skill",
+  "name_key": "card.card_skill_sig_quick.name",
+  "desc_key": "card.card_skill_sig_quick.desc",
+  "max_picks": 1,
+  "requires": {},
+  "effects": [{"stat": "skill_cooldown", "op": "mult", "value": -0.25, "target": "signature"}]
+}

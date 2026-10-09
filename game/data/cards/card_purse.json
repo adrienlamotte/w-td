@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "id": "card_purse",
+  "placeholder": true,
+  "type": "filler",
+  "name_key": "card.card_purse.name",
+  "desc_key": "card.card_purse.desc",
+  "max_picks": 0,
+  "requires": {},
+  "effects": [{"stat": "gold", "op": "add", "value": 40, "target": "run"}]
+}

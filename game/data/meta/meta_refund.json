@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "id": "meta_refund",
+  "placeholder": true,
+  "name_key": "meta.refund.name",
+  "desc_key": "meta.refund.desc",
+  "branch": "economy",
+  "cost": 60,
+  "requires": [],
+  "effects": [{"stat": "sell_refund", "op": "add", "value": 0.15, "target": "all_towers"}]
+}

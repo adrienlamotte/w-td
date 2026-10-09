@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "id": "meta_tower_hp",
+  "placeholder": true,
+  "name_key": "meta.tower_hp.name",
+  "desc_key": "meta.tower_hp.desc",
+  "branch": "towers",
+  "cost": 80,
+  "requires": [],
+  "effects": [{"stat": "hp", "op": "mult", "value": 0.15, "target": "all_towers"}]
+}

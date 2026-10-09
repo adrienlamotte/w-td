@@ -2,10 +2,15 @@ class_name TowerCatalog
 extends RefCounted
 ## Tower types loaded from data/towers (D-099). Index = position sorted by id,
 ## like EnemyCatalog. Seconds are converted to ticks at load.
+## M3 kinds (D-140) are loaded but not simulated yet (030-032): range, damage and
+## cooldown default to 0 for kinds that have none; levels and kind fields are not read.
 
-enum Attack { SINGLE, SPLASH, SLOW }
+## Appended only, so existing values never move; the view looks kinds up by lowercased key.
+enum Attack { SINGLE, SPLASH, SLOW, WALL, AURA, REPAIR, MARK, SLOW_AREA }
 
-const _ATTACKS := {"single": Attack.SINGLE, "splash": Attack.SPLASH, "slow": Attack.SLOW}
+const _ATTACKS := {"single": Attack.SINGLE, "splash": Attack.SPLASH, "slow": Attack.SLOW,
+		"wall": Attack.WALL, "aura": Attack.AURA, "repair": Attack.REPAIR, "mark": Attack.MARK,
+		"slow_area": Attack.SLOW_AREA}
 
 var ids: PackedStringArray = PackedStringArray()
 var name_key: PackedStringArray = PackedStringArray()
@@ -41,9 +46,9 @@ static func load_dir(path: String = "res://data/towers") -> TowerCatalog:
 		catalog.cost_per_copy.append(int(data.cost_per_copy))
 		catalog.hp.append(data.hp)
 		catalog.radius.append(data.radius)
-		catalog.attack_range.append(data.range)
-		catalog.damage.append(data.damage)
-		catalog.cooldown.append(DataFiles.ticks(data.cooldown_sec))
+		catalog.attack_range.append(data.get("range", 0.0))
+		catalog.damage.append(data.get("damage", 0.0))
+		catalog.cooldown.append(DataFiles.ticks(data.get("cooldown_sec", 0.0)))
 		catalog.splash_radius.append(data.get("splash_radius", 0.0))
 		catalog.slow_factor.append(data.get("slow_factor", 1.0))
 		catalog.slow_ticks.append(DataFiles.ticks(data.get("slow_sec", 0.0)))

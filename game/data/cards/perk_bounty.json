@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "id": "perk_bounty",
+  "placeholder": true,
+  "type": "perk",
+  "name_key": "card.perk_bounty.name",
+  "desc_key": "card.perk_bounty.desc",
+  "max_picks": 2,
+  "requires": {},
+  "effects": [{"stat": "kill_gold", "op": "mult", "value": 0.2, "target": "run"}]
+}

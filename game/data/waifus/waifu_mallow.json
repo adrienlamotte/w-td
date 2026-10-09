@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "id": "waifu_mallow",
+  "placeholder": true,
+  "name_key": "waifu.mallow.name",
+  "role": "crowd_control",
+  "status": "starter",
+  "tags": ["arcane", "bff_pip_mallow", "rivals_mallow_cinder"],
+  "tower": "tower_mallow"
+}

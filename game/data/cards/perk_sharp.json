@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "id": "perk_sharp",
+  "placeholder": true,
+  "type": "perk",
+  "name_key": "card.perk_sharp.name",
+  "desc_key": "card.perk_sharp.desc",
+  "max_picks": 3,
+  "requires": {},
+  "effects": [{"stat": "damage", "op": "mult", "value": 0.1, "target": "all_towers"}]
+}

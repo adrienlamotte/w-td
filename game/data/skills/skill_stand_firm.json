@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "id": "skill_stand_firm",
+  "placeholder": true,
+  "name_key": "skill.stand_firm.name",
+  "kind": "guard",
+  "cooldown_sec": 25,
+  "duration_sec": 6,
+  "damage_factor": 0.5,
+  "power_stats": ["duration_sec"]
+}

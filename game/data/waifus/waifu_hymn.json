@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "id": "waifu_hymn",
+  "placeholder": true,
+  "name_key": "waifu.hymn.name",
+  "role": "support",
+  "status": "guardian",
+  "tags": ["holy", "mentor_hymn_poppy", "bff_hymn_tansy"],
+  "tower": "tower_hymn",
+  "guardian": "guardian_hymn",
+  "offer_order": 4
+}

@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "id": "syn_bff_cinder_tansy",
+  "placeholder": true,
+  "tag": "bff_cinder_tansy",
+  "kind": "bff",
+  "name_key": "syn.bff_cinder_tansy.name",
+  "min_distance": 0,
+  "max_distance": 2.5,
+  "bonuses": [{"waifu": "waifu_cinder", "stat": "range", "op": "add", "value": 1}, {"waifu": "waifu_tansy", "stat": "cooldown", "op": "mult", "value": -0.2}],
+  "guardian_bonus": {"stat": "shield_absorb", "op": "mult", "value": 0.25}
+}

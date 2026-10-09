@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "id": "meta_kill_gold",
+  "placeholder": true,
+  "name_key": "meta.kill_gold.name",
+  "desc_key": "meta.kill_gold.desc",
+  "branch": "economy",
+  "cost": 120,
+  "requires": ["meta_gold_1"],
+  "effects": [{"stat": "kill_gold", "op": "mult", "value": 0.1, "target": "run"}]
+}

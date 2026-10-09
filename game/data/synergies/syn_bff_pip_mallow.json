@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "id": "syn_bff_pip_mallow",
+  "placeholder": true,
+  "tag": "bff_pip_mallow",
+  "kind": "bff",
+  "name_key": "syn.bff_pip_mallow.name",
+  "min_distance": 0,
+  "max_distance": 2.5,
+  "bonuses": [{"waifu": "waifu_pip", "stat": "damage", "op": "mult", "value": 0.2}, {"waifu": "waifu_mallow", "stat": "slow_sec", "op": "add", "value": 1}],
+  "guardian_bonus": {"stat": "shield_absorb", "op": "mult", "value": 0.25}
+}

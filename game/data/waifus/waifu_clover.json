@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "id": "waifu_clover",
+  "placeholder": true,
+  "name_key": "waifu.clover.name",
+  "role": "economy",
+  "status": "guardian",
+  "tags": ["nature", "coin", "bff_bastia_clover", "rivals_gilda_clover"],
+  "tower": "tower_clover",
+  "guardian": "guardian_clover",
+  "offer_order": 3
+}

@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "id": "card_sig_pip",
+  "placeholder": true,
+  "type": "signature",
+  "name_key": "card.card_sig_pip.name",
+  "desc_key": "card.card_sig_pip.desc",
+  "max_picks": 1,
+  "requires": {"buildable": "waifu_pip"},
+  "effects": [{"stat": "unlock_level", "op": "add", "value": 4, "target": "tower:tower_pip"}]
+}

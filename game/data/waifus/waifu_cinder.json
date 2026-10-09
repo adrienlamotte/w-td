@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "id": "waifu_cinder",
+  "placeholder": true,
+  "name_key": "waifu.cinder.name",
+  "role": "damage",
+  "status": "guardian",
+  "tags": ["arcane", "rivals_mallow_cinder", "bff_cinder_tansy"],
+  "tower": "tower_cinder",
+  "guardian": "guardian_cinder",
+  "offer_order": 1
+}

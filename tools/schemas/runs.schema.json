@@ -1,20 +1,40 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Run",
-  "description": "Run timeline and economy (D-042, D-047, D-093, D-096, D-097, D-099). All numbers are placeholders, not balance decisions. The last wave entry repeats once the list runs out.",
+  "description": "Run timeline and economy (D-042, D-047, D-093, D-096, D-097, D-099, D-140). All numbers are placeholders, not balance decisions. The last wave entry repeats once the list runs out.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version", "id", "placeholder", "guardian", "towers", "starting_gold", "build_radius", "grid_step", "spawn_ring_min", "spawn_ring_max", "first_wave_sec", "wave_sec", "break_sec", "waves", "bosses", "final_boss"],
+  "required": [
+    "schema_version",
+    "id",
+    "placeholder",
+    "guardian",
+    "towers",
+    "starting_gold",
+    "build_radius",
+    "grid_step",
+    "spawn_ring_min",
+    "spawn_ring_max",
+    "first_wave_sec",
+    "wave_sec",
+    "break_sec",
+    "waves",
+    "bosses",
+    "final_boss",
+    "xp_base",
+    "xp_step",
+    "hearts_win",
+    "hearts_loss_min",
+    "hearts_loss_max",
+    "card_type_weights"
+  ],
   "$defs": {
     "enemy_id": {"type": "string", "pattern": "^enemy_[a-z0-9_]+$"},
     "boss": {
       "type": "object",
       "additionalProperties": false,
       "required": ["at_sec", "enemy"],
-      "properties": {
-        "at_sec": {"type": "number", "minimum": 0},
-        "enemy": {"$ref": "#/$defs/enemy_id"}
-      }
+      "properties": {"at_sec": {"type": "number", "minimum": 0}, "enemy": {"$ref": "#/$defs/enemy_id"}}
     }
   },
   "properties": {
@@ -47,16 +67,30 @@
               "type": "object",
               "additionalProperties": false,
               "required": ["enemy", "weight"],
-              "properties": {
-                "enemy": {"$ref": "#/$defs/enemy_id"},
-                "weight": {"type": "number", "exclusiveMinimum": 0}
-              }
+              "properties": {"enemy": {"$ref": "#/$defs/enemy_id"}, "weight": {"type": "number", "exclusiveMinimum": 0}}
             }
           }
         }
       }
     },
     "bosses": {"type": "array", "items": {"$ref": "#/$defs/boss"}},
-    "final_boss": {"$ref": "#/$defs/boss"}
+    "final_boss": {"$ref": "#/$defs/boss"},
+    "xp_base": {"type": "number", "exclusiveMinimum": 0, "description": "XP from level 1 to 2"},
+    "xp_step": {"type": "number", "minimum": 0, "description": "extra XP per further level"},
+    "hearts_win": {"type": "integer", "minimum": 0},
+    "hearts_loss_min": {"type": "integer", "minimum": 0},
+    "hearts_loss_max": {"type": "integer", "minimum": 0},
+    "card_type_weights": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["new_tower", "signature", "skill", "perk"],
+      "properties": {
+        "new_tower": {"type": "number", "exclusiveMinimum": 0},
+        "signature": {"type": "number", "exclusiveMinimum": 0},
+        "skill": {"type": "number", "exclusiveMinimum": 0},
+        "perk": {"type": "number", "exclusiveMinimum": 0}
+      },
+      "description": "draft: weight of each card type"
+    }
   }
 }

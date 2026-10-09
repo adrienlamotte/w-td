@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "id": "skill_tangle",
+  "placeholder": true,
+  "name_key": "skill.tangle.name",
+  "kind": "snare",
+  "cooldown_sec": 18,
+  "radius": 7,
+  "slow_factor": 0.15,
+  "duration_sec": 3,
+  "power_stats": ["duration_sec"]
+}

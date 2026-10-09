@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "id": "card_tower_poppy",
+  "placeholder": true,
+  "type": "new_tower",
+  "name_key": "card.card_tower_poppy.name",
+  "desc_key": "card.card_tower_poppy.desc",
+  "max_picks": 1,
+  "requires": {"unlocked": "waifu_poppy"},
+  "effects": [{"stat": "unlock_tower", "op": "add", "value": 1, "target": "tower:tower_poppy"}]
+}

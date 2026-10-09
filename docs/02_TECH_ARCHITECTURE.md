@@ -102,6 +102,14 @@ All displayed text (names, barks, card text) is stored as localisation keys, nev
 - `data/towers/`: the 3 M2 types (`attack` `single`, `splash`, `slow`): cost, `cost_per_copy` (linear growth), hp, footprint `radius`, range, damage, cooldown, splash radius, slow factor/duration, sell refund, husk rebuild fraction (husks are walkable, D-104) -> `TowerCatalog` (`sim/tower_catalog.gd`).
 - `data/skills/`: Guardian skills (`kind` `area_blast`, `shield`) and `data/guardians/`: Guardian hp, contact radius, skill ids.
 - `data/runs/`: run timeline and economy (starting gold, build radius, placement grid step, spawn ring, `first_wave_sec`, `wave_sec`, `break_sec`, `waves` with count and enemy mix, the last entry repeating once the list runs out, mini-boss times, final boss, towers offered) -> `RunData` (`sim/run_data.gd`), which also holds the run's Guardian and her skills.
+
+**M3 data files (D-140).** Same rules (`placeholder: true`, text as keys only); nothing in the M2 game reads them yet except `TowerCatalog`.
+- `data/waifus/`: the 8 non-rival waifus of `07_ROSTER.md` (`role`, `status` `starter`/`guardian`/`rival`, trait and relationship `tags`, `tower`; Guardians add `guardian` and a unique `offer_order`).
+- `data/towers/tower_<waifu>.json`: the 8 waifu towers; `attack` also `wall`, `aura`, `repair`, `mark`, `slow_area` (`range`, `damage`, `cooldown_sec` are required per kind); kind fields `thorns`, `aura_radius`, `aura_damage`, `aura_cooldown`, `heal`, `guardian_heal`, `heal_targets`, `mark_sec`, `mark_gold`; `levels` = levels 2-4 as `{cost, <changed stats>}` with absolute values, level 4 has `needs_card`. The M2 `tower_*_01` files stay as test and bench fixtures.
+- `data/skills/`: the 6 signature skills (`kind` also `guard`, `bounty`, `haste`, `snare`, `rebuild`; `power_stats` lists the fields `skill_power` multiplies); `data/guardians/guardian_<waifu>.json`: the 6 Guardians.
+- `data/cards/` (25), `data/meta/` (12): `effects` lists of `{stat, op, value, target}`, `op` `add` or `mult` (a `mult` value is the fraction added to the multiplier), `target` `all_towers`, `guardian`, `signature`, `run`, `tower:<id>` or `skill:<id>`. Cards add `type`, `max_picks` (0 = unlimited, filler only) and `requires` (`unlocked`, `buildable`); meta nodes add `branch`, `cost` (hearts) and `requires` (node ids).
+- `data/synergies/`: one relationship per file (`tag`, `kind`, distance band, two waifu `bonuses`, `guardian_bonus`).
+- `data/runs/`: `run_m2` gains `xp_base`, `xp_step`, `hearts_win`, `hearts_loss_min`, `hearts_loss_max`, `card_type_weights`.
 ## 4. Performance budgets (targets, validated in milestone M1) **[P]**
 | Platform | Target |
 |---|---|
@@ -140,7 +148,7 @@ View cost on PC: GPU <= 0.24 ms, render CPU ~0.03 ms, MultiMesh fill <= 0.6 ms p
 
 ## 5. Content as data **[D]**
 - Waifu, enemy, outfit, card, wave definitions in `game/data/` as JSON files validated by JSON Schema (D-034).
-- A validator in `/tools` checks all data files (missing assets, invalid stats, broken references) and runs in CI. Implemented: schema per folder, unique ids matching file names, references between files (every string shaped like an `enemy_`/`tower_`/`skill_`/`guardian_`/`run_` id must name a known file) and run bosses must be `miniboss`/`boss` enemies (D-099). Asset existence is not checked yet.
+- A validator in `/tools` checks all data files (missing assets, invalid stats, broken references) and runs in CI. Implemented: schema per folder, unique ids matching file names, references between files (every string shaped like an `enemy_`/`tower_`/`skill_`/`guardian_`/`run_` id must name a known file; the `waifu_`/`card_`/`perk_`/`syn_`/`meta_` prefixes too, except `stat` and `power_stats` values, which are field names) and run bosses must be `miniboss`/`boss` enemies (D-099). M3 checks (D-140): `tower:`/`skill:` effect targets exist, a synergy's two bonus waifus are exactly the waifus carrying its tag, `power_stats` name numeric fields of the skill, `offer_order` values are unique. Asset existence is not checked yet.
 
 ## 6. Testing **[P]**
 - Unit/integration tests with a Godot test framework (**GUT**, D-033) run headless: `godot --headless ...`. The run fails if GUT ignores any test script (parse error, or not extending GutTest), via the post-run hook `tests/gut_post_run.gd`; a runtime error inside a test fails that test (GUT default).

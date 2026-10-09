@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "id": "waifu_tansy",
+  "placeholder": true,
+  "name_key": "waifu.tansy.name",
+  "role": "crowd_control",
+  "status": "guardian",
+  "tags": ["nature", "bff_cinder_tansy", "bff_hymn_tansy"],
+  "tower": "tower_tansy",
+  "guardian": "guardian_tansy",
+  "offer_order": 5
+}

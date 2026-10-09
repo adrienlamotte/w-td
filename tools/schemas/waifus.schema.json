@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Waifu",
+  "description": "Roster entry (07_ROSTER.md, D-130, D-140): role, status, tags (traits and relationship tags), tower and, for a Guardian, her Guardian file and offer order (D-050).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "placeholder", "name_key", "role", "status", "tags", "tower"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "id": {"type": "string", "pattern": "^waifu_[a-z0-9_]+$"},
+    "placeholder": {"type": "boolean", "description": "true while the content is a placeholder"},
+    "name_key": {"type": "string", "pattern": "^[a-z0-9_.]+$"},
+    "role": {"enum": ["damage", "crowd_control", "support", "tank", "economy"]},
+    "status": {"enum": ["starter", "guardian", "rival"]},
+    "tags": {"type": "array", "items": {"type": "string", "pattern": "^[a-z0-9_]+$"}, "uniqueItems": true},
+    "tower": {"type": "string", "pattern": "^tower_[a-z0-9_]+$"},
+    "guardian": {"type": "string", "pattern": "^guardian_[a-z0-9_]+$"},
+    "offer_order": {"type": "integer", "minimum": 1, "maximum": 6, "description": "position in the Guardian offer order (D-050)"}
+  },
+  "allOf": [
+    {"if": {"properties": {"status": {"const": "guardian"}}}, "then": {"required": ["guardian", "offer_order"]}}
+  ]
+}

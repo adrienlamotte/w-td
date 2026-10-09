@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Guardian skill",
-  "description": "Guardian skill (D-044, D-099). All numbers are placeholders, not balance decisions.",
+  "description": "Guardian skill (D-044, D-099, D-133, D-140). All numbers are placeholders, not balance decisions.",
   "type": "object",
   "additionalProperties": false,
   "required": ["schema_version", "id", "placeholder", "name_key", "kind", "cooldown_sec"],
@@ -10,15 +10,32 @@
     "id": {"type": "string", "pattern": "^skill_[a-z0-9_]+$"},
     "placeholder": {"type": "boolean", "description": "true while the numbers are placeholders"},
     "name_key": {"type": "string", "pattern": "^[a-z0-9_.]+$"},
-    "kind": {"enum": ["area_blast", "shield"]},
+    "kind": {"enum": ["area_blast", "shield", "guard", "bounty", "haste", "snare", "rebuild"]},
     "cooldown_sec": {"type": "number", "exclusiveMinimum": 0},
     "radius": {"type": "number", "exclusiveMinimum": 0, "description": "area_blast: disk around the Guardian"},
     "damage": {"type": "number", "minimum": 0},
     "absorb": {"type": "number", "exclusiveMinimum": 0, "description": "shield: damage absorbed"},
-    "duration_sec": {"type": "number", "exclusiveMinimum": 0}
+    "duration_sec": {"type": "number", "exclusiveMinimum": 0},
+    "damage_factor": {"type": "number", "minimum": 0, "maximum": 1, "description": "guard: damage taken multiplier"},
+    "gold_per_kill": {"type": "integer", "minimum": 0, "description": "bounty: extra gold per enemy that dies"},
+    "cooldown_factor": {"type": "number", "exclusiveMinimum": 0, "maximum": 1, "description": "haste: tower cooldown multiplier"},
+    "slow_factor": {"type": "number", "exclusiveMinimum": 0, "exclusiveMaximum": 1, "description": "snare: speed multiplier"},
+    "guardian_heal": {"type": "number", "exclusiveMinimum": 0, "description": "rebuild: Guardian HP restored"},
+    "power_stats": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string"},
+      "description": "numeric fields of this file multiplied by skill_power (D-140)"
+    }
   },
   "allOf": [
-    {"if": {"properties": {"kind": {"const": "area_blast"}}}, "then": {"required": ["radius", "damage"]}},
-    {"if": {"properties": {"kind": {"const": "shield"}}}, "then": {"required": ["absorb", "duration_sec"]}}
+    {"if": {"properties": {"kind": {"const": "area_blast"}}}, "then": {"required": ["radius", "damage", "power_stats"]}},
+    {"if": {"properties": {"kind": {"const": "shield"}}}, "then": {"required": ["absorb", "duration_sec"]}},
+    {"if": {"properties": {"kind": {"const": "guard"}}}, "then": {"required": ["duration_sec", "damage_factor", "power_stats"]}},
+    {"if": {"properties": {"kind": {"const": "bounty"}}}, "then": {"required": ["duration_sec", "gold_per_kill", "power_stats"]}},
+    {"if": {"properties": {"kind": {"const": "haste"}}}, "then": {"required": ["duration_sec", "cooldown_factor", "power_stats"]}},
+    {"if": {"properties": {"kind": {"const": "snare"}}}, "then": {"required": ["radius", "slow_factor", "duration_sec", "power_stats"]}},
+    {"if": {"properties": {"kind": {"const": "rebuild"}}}, "then": {"required": ["guardian_heal", "power_stats"]}}
   ]
 }

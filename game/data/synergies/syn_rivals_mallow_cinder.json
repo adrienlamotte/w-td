@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "id": "syn_rivals_mallow_cinder",
+  "placeholder": true,
+  "tag": "rivals_mallow_cinder",
+  "kind": "rivals",
+  "name_key": "syn.rivals_mallow_cinder.name",
+  "min_distance": 2,
+  "max_distance": 6,
+  "bonuses": [
+    {"waifu": "waifu_mallow", "stat": "cooldown", "op": "mult", "value": -0.2},
+    {"waifu": "waifu_cinder", "stat": "damage", "op": "mult", "value": 0.25}
+  ],
+  "guardian_bonus": {"stat": "skill_power", "op": "mult", "value": 0.25}
+}

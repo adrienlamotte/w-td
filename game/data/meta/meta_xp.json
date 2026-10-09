@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "id": "meta_xp",
+  "placeholder": true,
+  "name_key": "meta.xp.name",
+  "desc_key": "meta.xp.desc",
+  "branch": "guardian",
+  "cost": 100,
+  "requires": [],
+  "effects": [{"stat": "xp", "op": "mult", "value": 0.1, "target": "run"}]
+}

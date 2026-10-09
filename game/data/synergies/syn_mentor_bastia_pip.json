@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "id": "syn_mentor_bastia_pip",
+  "placeholder": true,
+  "tag": "mentor_bastia_pip",
+  "kind": "mentor",
+  "name_key": "syn.mentor_bastia_pip.name",
+  "min_distance": 0,
+  "max_distance": 2.5,
+  "bonuses": [{"waifu": "waifu_bastia", "stat": "hp", "op": "mult", "value": 0.3}, {"waifu": "waifu_pip", "stat": "damage", "op": "mult", "value": 0.25}],
+  "guardian_bonus": {"stat": "skill_cooldown", "op": "mult", "value": -0.1}
+}

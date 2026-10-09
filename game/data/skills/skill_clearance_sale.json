@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "id": "skill_clearance_sale",
+  "placeholder": true,
+  "name_key": "skill.clearance_sale.name",
+  "kind": "bounty",
+  "cooldown_sec": 30,
+  "duration_sec": 8,
+  "gold_per_kill": 4,
+  "power_stats": ["gold_per_kill"]
+}

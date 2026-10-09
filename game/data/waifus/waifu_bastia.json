@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "id": "waifu_bastia",
+  "placeholder": true,
+  "name_key": "waifu.bastia.name",
+  "role": "tank",
+  "status": "guardian",
+  "tags": ["steel", "mentor_bastia_pip", "bff_bastia_clover"],
+  "tower": "tower_bastia",
+  "guardian": "guardian_bastia",
+  "offer_order": 2
+}

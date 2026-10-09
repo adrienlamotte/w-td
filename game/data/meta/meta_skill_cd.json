@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "id": "meta_skill_cd",
+  "placeholder": true,
+  "name_key": "meta.skill_cd.name",
+  "desc_key": "meta.skill_cd.desc",
+  "branch": "guardian",
+  "cost": 150,
+  "requires": ["meta_hp_1"],
+  "effects": [{"stat": "skill_cooldown", "op": "mult", "value": -0.1, "target": "guardian"}]
+}

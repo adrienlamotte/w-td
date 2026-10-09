@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "id": "waifu_pip",
+  "placeholder": true,
+  "name_key": "waifu.pip.name",
+  "role": "damage",
+  "status": "starter",
+  "tags": ["steel", "bff_pip_mallow", "mentor_bastia_pip", "rivals_vexa_pip"],
+  "tower": "tower_pip"
+}

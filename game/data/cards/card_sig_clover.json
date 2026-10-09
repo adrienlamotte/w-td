@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "id": "card_sig_clover",
+  "placeholder": true,
+  "type": "signature",
+  "name_key": "card.card_sig_clover.name",
+  "desc_key": "card.card_sig_clover.desc",
+  "max_picks": 1,
+  "requires": {"buildable": "waifu_clover"},
+  "effects": [{"stat": "unlock_level", "op": "add", "value": 4, "target": "tower:tower_clover"}]
+}

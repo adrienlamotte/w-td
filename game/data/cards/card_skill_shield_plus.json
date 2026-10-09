@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "id": "card_skill_shield_plus",
+  "placeholder": true,
+  "type": "skill",
+  "name_key": "card.card_skill_shield_plus.name",
+  "desc_key": "card.card_skill_shield_plus.desc",
+  "max_picks": 1,
+  "requires": {},
+  "effects": [
+    {"stat": "shield_absorb", "op": "mult", "value": 1.0, "target": "skill:skill_shield"},
+    {"stat": "shield_duration", "op": "add", "value": 2, "target": "skill:skill_shield"}
+  ]
+}

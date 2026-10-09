@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "id": "tower_tansy",
+  "placeholder": true,
+  "name_key": "tower.tansy.name",
+  "attack": "slow_area",
+  "cost": 80,
+  "cost_per_copy": 15,
+  "hp": 80,
+  "radius": 0.5,
+  "range": 5,
+  "damage": 0.5,
+  "cooldown_sec": 1.5,
+  "splash_radius": 1.5,
+  "slow_factor": 0.6,
+  "slow_sec": 2,
+  "sell_refund": 0.5,
+  "rebuild_fraction": 0.3,
+  "sprite": "towers/tansy",
+  "tags": [],
+  "levels": [
+    {"cost": 60, "splash_radius": 2.0},
+    {"cost": 100, "slow_factor": 0.5, "slow_sec": 3},
+    {"cost": 160, "needs_card": "card_sig_tansy", "splash_radius": 2.5, "cooldown_sec": 1.0}
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "id": "tower_mallow",
+  "placeholder": true,
+  "name_key": "tower.mallow.name",
+  "attack": "slow",
+  "cost": 60,
+  "cost_per_copy": 10,
+  "hp": 80,
+  "radius": 0.5,
+  "range": 5,
+  "damage": 0.5,
+  "cooldown_sec": 1.0,
+  "slow_factor": 0.5,
+  "slow_sec": 2,
+  "sell_refund": 0.5,
+  "rebuild_fraction": 0.3,
+  "sprite": "towers/mallow",
+  "tags": [],
+  "levels": [
+    {"cost": 45, "slow_sec": 3},
+    {"cost": 75, "slow_factor": 0.4, "range": 6},
+    {"cost": 120, "needs_card": "card_sig_mallow", "slow_factor": 0.3, "damage": 2}
+  ]
+}
