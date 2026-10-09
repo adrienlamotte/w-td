@@ -24,7 +24,8 @@ func _ready() -> void:
 	$HordeRenderer.setup(driver, $CameraRig/Camera3D)
 	$FxLayer.setup(driver, $Guardian)
 	driver.on_step = $FxLayer.on_step
-	$Hud.setup(world)
+	$PlacementGhost.setup(world, $PlayerInput)
+	$Hud.setup(world, $PlayerInput, $PlacementGhost)
 
 
 func _process(delta: float) -> void:
