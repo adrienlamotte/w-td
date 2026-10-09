@@ -1,5 +1,5 @@
 # 028 — M3 content proposal: cards, upgrades, synergies, meta tree
-- Status: review
+- Status: done
 - Milestone: M3
 - Depends on: 001 (approved roster)
 - PR: #35

@@ -142,3 +142,4 @@ Format: `ID | date | decision | status | notes`. Status: DECIDED (owner confirme
 | D-136 | 2026-10-09 | Rival relationship bonuses apply only when the two are 2-6 units apart (across a corridor) | DECIDED | Q-65 |
 | D-137 | 2026-10-09 | Tower upgrades apply per placed tower | DECIDED | Q-66 |
 | D-138 | 2026-10-09 | The rest of `docs/10_M3_CONTENT.md` (card pool, tower attack kinds, upgrade pattern, synergy format and bonuses, XP curve, hearts, meta tree, save scope) is approved as proposed; numbers are placeholders | DECIDED | Task 028 |
+| D-139 | 2026-10-09 | The 6 Guardian signature skills (Cinder Big Finish, Bastia Stand Firm, Clover Clearance Sale, Hymn Crescendo, Tansy Tangle, Poppy Emergency Rebuild) and the 4 reworked skill cards (signature power, signature quick, Shield+, Mending) in `docs/10_M3_CONTENT.md` 4.1 and 2.3 are approved; starter and rival signature skills wait for M5 | DECIDED | Task 028. Numbers are placeholders |

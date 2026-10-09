@@ -1,6 +1,6 @@
 # 10 — M3 content proposal: cards, upgrades, synergies, meta tree
 
-Status: **DECIDED** (approved by the owner on 2026-10-09: D-133 to D-138), **except section 4.1 (the 6 Guardian signature skills) and the skill cards in section 2.3, which are PROPOSED** and await the owner's approval. Every number is a placeholder (data files carry `"placeholder": true`) and is tuned by the M3 balance runner. Names are placeholders (D-064). Owner answers: Q-62 (D-133), Q-63 (D-134), Q-64 (D-135), Q-65 (D-136), Q-66 (D-137); the rest is D-138.
+Status: **DECIDED** (approved by the owner on 2026-10-09: D-133 to D-139). All numbers are placeholders.
 
 Sources: `01_GAME_DESIGN.md` 4, 5, 7, 8; `07_ROSTER.md` (D-130); `02_TECH_ARCHITECTURE.md` 3a; D-023, D-031, D-044, D-048, D-050 to D-058, D-099, D-101 to D-118, D-124, D-128, D-131, D-132.
 
@@ -33,7 +33,7 @@ Interaction with the roster (D-031, D-051): the 2 starters (Pip, Mallow) are bui
 ### 2.2 Tower upgrade: signature (8)
 One per M3 waifu: `card_sig_pip`, `card_sig_mallow`, `card_sig_cinder`, `card_sig_bastia`, `card_sig_clover`, `card_sig_hymn`, `card_sig_tansy`, `card_sig_poppy`. Effect: unlocks level 4 (her signature, section 3.2) for every copy of that waifu this run; each copy still buys the level with gold. Eligible when that waifu is buildable this run. `max_picks` 1. Per D-134 (levels 2-3 with gold only, level 4 needs the card).
 
-### 2.3 Guardian skill upgrade (4) — PROPOSED
+### 2.3 Guardian skill upgrade (4)
 Every Guardian has her own signature skill plus the shared Shield (D-133, section 4). The two signature cards work on whichever signature skill the Guardian has: each skill file lists its `power_stats` (section 4.1), so one card covers all six.
 | Card | Effect (Shield: 50 absorb, 5 s, 25 s cooldown) | Max |
 |---|---|---|
@@ -109,7 +109,7 @@ Data shape (extends the M2 tower file, D-099): the level 1 stats stay where they
 ## 4. Guardian skills
 Decided (D-133): each Guardian has her **own signature skill in place of Area blast**; **Shield is shared**. Her identity also comes from her relationships (D-132, section 5). Cooldowns run on the run clock and both skills are ready at the start (D-110). The 2 starters and the 2 rivals become Guardians only once everything is unlocked (D-058: tier, endless and challenge runs), so **their signature skills are deferred to M5**.
 
-### 4.1 The 6 signature skills — PROPOSED
+### 4.1 The 6 signature skills
 Cost rules: a cast does its work once, in the COMMANDS phase (a linear scan over enemies or towers is allowed only inside the cast, like Area blast, D-110). A timed effect stores an absolute `until` clock tick that an existing code path checks where it already runs (no per-tick loop, zero cost when idle). `power_stats` are what `card_skill_sig_power` and the rivals' Guardian bonus multiply.
 
 | Guardian | Skill (kind) | Effect | Cooldown | `power_stats` | Cost |
