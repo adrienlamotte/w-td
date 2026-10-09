@@ -67,6 +67,12 @@ Last reviewed: 2026-10-08 (daily docs review; owner answers recorded the same da
 - B) Yes: the pause doubles as a planning pause (easier game).
 - C) Only with the slow-time-while-placing accessibility option on (D-046).
 
+### Q-50 What does "a tower blocks the straight path" mean? (blocks task 015; raised by the 2026-10-09 docs review)
+D-043 says enemies attack whatever tower blocks their straight path to the Guardian, otherwise the Guardian.
+- A) **Towers have a body radius; an enemy whose straight line to the Guardian crosses a tower's body stops at it and attacks it until it dies** ★
+- B) Only enemies that bump into a tower attack it; the others slide around it and keep going.
+- C) Towers are solid obstacles and enemies path around them (pathfinding; much more per-tick cost).
+
 ---
 
 ## A. Deferred until the first real asset arrives
