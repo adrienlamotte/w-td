@@ -1,8 +1,8 @@
 # 016 — Sim: the 3 tower attacks
-- Status: planned
+- Status: review
 - Milestone: M2
 - Depends on: 015
-- PR: -
+- PR: #22
 
 ## Goal
 The three M2 tower types fight: ranged single target, splash, slow.
