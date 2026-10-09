@@ -7,5 +7,6 @@
   "range_ring_width": 0.15,
   "radial_radius_px": 260,
   "radial_deadzone": 0.4,
-  "cursor_label_offset_px": [40, 24]
+  "cursor_label_offset_px": [40, 24],
+  "slow_time_scale": 0.5
 }

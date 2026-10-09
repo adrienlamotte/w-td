@@ -34,3 +34,13 @@ input.kbm.build_place,Left click
 input.pad.build_place,A
 input.kbm.tower_sell,X
 input.pad.tower_sell,X
+flow.title,Waifu Tower Defense
+flow.start,Start run
+flow.quit,Quit game
+flow.resume,Resume
+flow.restart,Restart
+flow.main_menu,Main menu
+flow.slow_time,Slow time while placing
+flow.won,Victory!
+flow.lost,Defeat
+flow.time_survived,Time survived: {time}

@@ -3,7 +3,7 @@ extends GutTest
 
 const HUD_SCENE := preload("res://view/ui/hud.tscn")
 const KEYS := ["hud.hp", "hud.gold", "hud.wave", "hud.break", "hud.ready", "hud.seconds",
-	"hud.hint.skill_1", "hud.hint.skill_2", "hud.paused", "guardian.placeholder_01.name",
+	"hud.hint.skill_1", "hud.hint.skill_2", "guardian.placeholder_01.name",
 	"build.slot", "build.gold", "build.cost", "build.reason.occupied", "build.reason.out_of_radius",
 	"build.reason.too_close", "build.reason.no_gold", "build.reason.not_offered", "build.hint.sell",
 	"build.hint.rebuild", "input.kbm.build_place", "input.pad.build_place", "input.kbm.tower_sell",
@@ -66,7 +66,7 @@ func test_shows_state() -> void:
 	assert_eq(_label("TopCentre/Wave").text, "Break " + Hud.mmss(world.run.break_ticks / SimWorld.TICK_RATE))
 
 
-func test_skill_cooldown_and_pause() -> void:
+func test_skill_cooldown() -> void:
 	var slots := hud.get_node("Root/Skills").get_children()
 	assert_eq(slots.size(), world.run.skill_ids.size())
 	world.queue(SimCommand.use_skill(world.tick, world.run.skill_ids[0]))
@@ -76,11 +76,6 @@ func test_skill_cooldown_and_pause() -> void:
 	var secs := world.run.skill_cooldown[0] / SimWorld.TICK_RATE
 	assert_eq(s0.text, "%ds" % secs)
 	assert_eq(s1.text, tr("hud.ready"))
-	var paused: Label = _label("Paused")
-	assert_false(paused.visible)
-	world.queue(SimCommand.pause(world.tick, true))
-	_steps(1)
-	assert_true(paused.visible)
 
 
 func test_hidden_without_run() -> void:

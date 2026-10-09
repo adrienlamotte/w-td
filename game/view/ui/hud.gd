@@ -17,7 +17,6 @@ var _skill_bar: Array[ProgressBar] = []
 @onready var _wave: Label = $Root/TopCentre/Wave
 @onready var _gold: Label = $Root/TopRight/Gold
 @onready var _skills: HBoxContainer = $Root/Skills
-@onready var _paused: Label = $Root/Paused
 @onready var _cursor: Label = $Root/Cursor
 
 
@@ -79,7 +78,6 @@ func refresh() -> void:
 		_skill_bar[i].value = 1.0 - float(maxi(0, ready_at - world.clock)) / maxi(1, run.skill_cooldown[i])
 		if _changed(_skill_state[i], s):
 			_skill_state[i].text = tr("hud.ready") if s == 0 else tr("hud.seconds").format({"value": s})
-	_paused.visible = world.paused
 	_refresh_cursor()
 
 

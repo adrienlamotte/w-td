@@ -62,6 +62,18 @@ func is_placing() -> bool:
 	return selected_tower != "" or menu_open
 
 
+## Queues Pause(on); pausing also drops the selection so nothing is half-placed (D-125).
+func set_paused(on: bool) -> void:
+	world.queue(SimCommand.pause(world.tick, on))
+	if on:
+		_cancel_build()
+
+
+func _cancel_build() -> void:
+	selected_tower = ""
+	menu_open = false
+
+
 func _unhandled_input(event: InputEvent) -> void:
 	handle(event)
 
@@ -78,10 +90,10 @@ func handle(event: InputEvent) -> void:
 	elif _pressed(event, &"cam_recentre"):
 		camera.recentre()
 	elif _pressed(event, &"build_cancel") and is_placing():
-		selected_tower = ""
-		menu_open = false
+		_cancel_build()
 	elif _pressed(event, &"pause"):
-		world.queue(SimCommand.pause(world.tick, not world.paused))
+		if world.run_state == SimWorld.RunState.RUNNING:
+			set_paused(not world.paused)
 	elif _pressed(event, &"skill_1"):
 		_use_skill(0)
 	elif _pressed(event, &"skill_2"):

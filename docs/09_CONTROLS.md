@@ -17,7 +17,7 @@ Gamepad names use the Xbox layout, which matches the Steam Deck A/B/X/Y position
 | `build_cancel` | right click; Esc while something is selected | B | clear selection / close menu (D-046) |
 | `tower_sell` | X (tower under the mouse) | X (tower under the cursor) | SellTower (live or husk) |
 | `skill_1` / `skill_2` | Q / E | LT / RT | UseSkill of the Guardian's skill 1 / 2 (D-046); a trigger fires once per pull |
-| `pause` | Esc (nothing selected), P | Start (Menu) | Pause toggle; 021 adds the pause menu on top |
+| `pause` | Esc (nothing selected), P | Start (Menu) | Pause toggle, only while a run is running (D-125); pausing clears the selection and closes the radial |
 
 All stick and trigger deadzones are 0.2 (placeholder).
 
@@ -37,6 +37,11 @@ All stick and trigger deadzones are 0.2 (placeholder).
 - **Hints** (nothing selected): on a tower, "{sell key}: sell (+refund)"; on a husk, "{place key}: rebuild (price)" and "{sell key}: sell (+0)". The key names follow the device mode (Left click / A, X / X).
 - The cursor label sits next to the mouse in mouse mode and under the screen centre in gamepad mode.
 
+## Menus (D-125, task 021)
+- **Screens:** start screen (Start run, Slow time while placing, Quit game) -> run -> pause menu (Resume, Restart, Slow time while placing, Main menu) -> win or lose screen (time survived, Restart, Main menu). Restart and Main menu reload the scene; Restart starts a new run at once.
+- **Navigation:** Godot GUI focus. Up/down arrows, d-pad or left stick move between buttons; Enter, Space or A press; the mouse clicks. Each menu focuses its first button when it opens. The build bar never takes focus.
+- **Pause:** Start / P toggle the pause as before; while the pause menu is shown, Esc or B (`ui_cancel`) resumes. No pause outside a running run (start and end screens).
+- **Slow time while placing** (accessibility option, D-046): off by default, kept for the session only (saved settings are M3). While on, the game runs at `slow_time_scale` (placeholder 0.5, `data/ui`) whenever a tower is selected or the radial is open and building is possible. Camera, cursor, radial and ghost keep real time.
+
 ## Later (not in this spec's code)
-- Pause menu and the slow-time-while-placing accessibility option (D-046): task 021.
 - Runtime rebinding (edits the InputMap and saves overrides to the user settings) and Steam Input (maps the Deck onto the same actions): later milestones.
