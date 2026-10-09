@@ -102,3 +102,8 @@ Format: `ID | date | decision | status | notes`. Status: DECIDED (owner confirme
 | D-096 | 2026-10-08 | After the final boss spawns at 15:00, the horde keeps coming while she is alive | DECIDED | Q-46 |
 | D-097 | 2026-10-08 | M2 includes mini-bosses at 5:00 and 10:00 in addition to the final boss | DECIDED | Q-47. Refines the "mini-boss every ~5 minutes" proposal in `01_GAME_DESIGN.md` 3; mini-bosses are regular enemies (not recruitable rivals, D-055) |
 | D-098 | 2026-10-08 | Shots hit instantly in the simulation (towers and ranged enemies); the view draws a visible shot effect. No simulated projectiles | DECIDED | Q-48 |
+| D-101 | 2026-10-09 | Maze-style tower defense: towers are solid obstacles on the build grid and enemies path around them to the Guardian (pathfinding) | DECIDED | Q-50. Supersedes the "straight path" movement of D-043 and `01_GAME_DESIGN.md` 3; the open field and 360° swarm (D-009) stay |
+| D-102 | 2026-10-09 | Full walls are allowed: the player may close every path to the Guardian | DECIDED | Q-51 (changed by the owner from the first answer, after a follow-up) |
+| D-103 | 2026-10-09 | Enemies attack towers only when no path to the Guardian exists: walled-in enemies fall back to the straight path and attack the tower that blocks it (the D-043 rule), until a gap opens | DECIDED | Q-52 |
+| D-104 | 2026-10-09 | A husk (dead tower) is walkable: it opens a gap in the maze until it is rebuilt | DECIDED | Q-53. Refines D-043 |
+| D-105 | 2026-10-09 | No building while the game is paused: building happens in real time and during the breaks (D-032) | DECIDED | Q-49 |

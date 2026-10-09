@@ -1,7 +1,7 @@
 # 023 — Performance with combat: optimise and re-bench
 - Status: todo
 - Milestone: M2
-- Depends on: 013, 016
+- Depends on: 013, 016, 024
 - PR: -
 
 ## Goal
