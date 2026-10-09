@@ -1,5 +1,5 @@
 # 012 — Sim: command queue, events and run state
-- Status: review
+- Status: done
 - Milestone: M2
 - Depends on: 011
 - PR: #17
@@ -70,3 +70,4 @@ Size: about 170 lines of code, about 150 of tests. One PR.
 ## Questions
 
 ## Review log
+- 2026-10-09 lead-dev: PR #17 approved and squash-merged into m2/dev. All criteria met; test.ps1 80/80 GUT + Python green, validate.ps1 green. D-105 guard (PlaceTower/SellTower ignored while paused) is a correct in-scope addition. Bench re-run on the PR branch (release export, RTX 5070 Ti): works, report has the new `commands` phase (about 0.001 ms per tick); step 6.4 / 7.9 / 10.5 ms on pc typical / stress / piled, in line with M1. Minor, no change needed: while paused `phase_usec` keeps the last running step's values for the skipped phases (diagnostics only).
