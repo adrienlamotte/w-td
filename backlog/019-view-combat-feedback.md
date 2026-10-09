@@ -11,6 +11,7 @@ Make combat readable: hits, deaths, shots, coins, skills, husks, and distinct pl
 - D-098 (shot effect is visual only), D-094 (coins fly to the Guardian), D-087 (MultiMesh rendering)
 - M1 known gap: a removed enemy's slot can jump for one frame (fix it here)
 - From 012's plan: `world.events` (SimEvents, SoA) is cleared at the start of every `step()`; the driver runs up to 5 steps per frame, so read events after each step.
+- From 016/026 plans: tower shots come as `TOWER_FIRED` (a = tower uid, x, z = target position, value = tower type); enemy hits on towers as `TOWER_HIT` (a = tower uid, x, z = attacker position, value = damage); Guardian hits as `GUARDIAN_HIT` (source position). Tower `hp`/`husk` and enemy `slow_ticks` are readable arrays.
 
 ## Acceptance criteria
 - Placeholder visuals distinct per enemy type; bosses visibly bigger; tower types distinct; husks visible.

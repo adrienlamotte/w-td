@@ -1,7 +1,7 @@
 # 023 — Performance with combat: optimise and re-bench
 - Status: todo
 - Milestone: M2
-- Depends on: 013, 016, 024
+- Depends on: 013, 016, 024, 026
 - PR: -
 
 ## Goal
@@ -11,6 +11,7 @@ Keep the budgets with the M2 load: apply the cheap GDScript optimisations listed
 - `reports/perf_m1.md` (cheap optimisations, GDExtension triggers), D-088 (bench method)
 - `02_TECH_ARCHITECTURE.md` 4 budgets
 - Baseline after 011/012 (lead-dev bench, 2026-10-09, no combat yet): step 6.4 / 7.9 / 10.5 ms on pc typical / stress / piled, up from 5.7 / 6.6 / 8.7 ms at M1, most likely the larger horde cell (1.4 -> 1.6, brute radius 0.4, D-099). `pc_stress` is already near the 8 ms budget before combat.
+- From 024/026 plans: 024 adds the `pc_maze`, `deck_maze` and `pc_maze_churn` bench scenarios (maze of 3 rings, sliced flow-field recompute, `path` phase) and reports them; this task adds combat to them (towers fire only while RUNNING, so the IDLE bench needs a run or a combat switch) and a walled-in worst case (a full ring with 3000 enemies attacking it, 026).
 
 ## Acceptance criteria
 - Bench scenarios include combat (towers attacking, deaths, spawns).
