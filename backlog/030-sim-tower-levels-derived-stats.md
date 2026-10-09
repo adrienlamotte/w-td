@@ -1,8 +1,8 @@
 # 030 — Sim: tower levels, UPGRADE_TOWER and derived tower stats
-- Status: planned
+- Status: review
 - Milestone: M3
 - Depends on: 029
-- PR:
+- PR: #38
 
 ## Goal
 Placed towers have a level (1-4) bought per tower with gold, and every tower's effective stats come from packed derived arrays that are recomputed only when the layout or a modifier changes. This is the base that perks, meta nodes, synergies and auras plug into.
