@@ -1,5 +1,5 @@
 # 020 — UI: HUD, sim queries for the UI, localisation, real run in the main scene
-- Status: review
+- Status: done
 - Milestone: M2
 - Depends on: 015, 017, 018
 - PR: #26
@@ -72,3 +72,4 @@ Size: about 200 lines of code (+ CSV, theme, config), about 200 of tests. One PR
 ## Questions
 
 ## Review log
+- 2026-10-09 lead-dev: PR #26 approved and squash-merged into m2/dev. 184/184 GUT + 14 Python green, validator green (re-run by reviewer). check_place is the only placement rule (place() = check + commit, reason tests assert place() accepted iff OK); HUD reads state only; strings are keys; strings.csv.import committed, *.translation gitignored (tree clean after import), no override.cfg. Building is possible until 027 via 018's 1-3 keys + left click (player_input queues PlaceTower). Nit for a later touch: test_wave_spawner.gd line 106 has a lost line continuation (tabs mid-line), valid but ugly. Owner: needs-human:playtest HUD readability at CP-M2; HP bar fill is default grey (needs-human:art).
