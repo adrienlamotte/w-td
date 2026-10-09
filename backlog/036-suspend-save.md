@@ -1,7 +1,7 @@
 # 036 — Save: suspend save and resume
 - Status: todo
 - Milestone: M3
-- Depends on: 032, 033, 034, 035, 039
+- Depends on: 032, 033, 034, 035, 039, 045
 - PR:
 
 ## Goal
