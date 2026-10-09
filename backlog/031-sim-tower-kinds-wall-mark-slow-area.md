@@ -1,8 +1,8 @@
 # 031 — Sim: tower kinds wall, mark and slow_area
-- Status: planned
+- Status: review
 - Milestone: M3
 - Depends on: 030
-- PR:
+- PR: #39
 
 ## Goal
 Bastia (`wall`, with thorns), Clover (`mark`) and Tansy (`slow_area`) work in the sim.
