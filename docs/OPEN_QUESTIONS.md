@@ -15,6 +15,11 @@ Last reviewed: 2026-10-08 (daily docs review; owner answers recorded the same da
 | Q-02 Data format | JSON + JSON Schema | D-034 |
 | Q-03 Where builds, tests and nightly runs execute | Everything on the owner's PC | D-035 (scheduling: Q-35) |
 | Q-04 Godot version | Pin at M0 start | D-036 |
+| Q-62 Guardian skills | Own signature skill in place of Area blast; Shield shared | D-133 |
+| Q-63 Upgrade cards vs gold levels | Levels 2-3 gold; level 4 also needs the signature card | D-134 |
+| Q-64 Poppy's repair | Towers, else heals the Guardian in range for less | D-135 |
+| Q-65 Rival distance | Only 2-6 units apart (across a corridor) | D-136 |
+| Q-66 Upgrades per tower or per type | Per placed tower | D-137 |
 | Q-60 When higher tiers and rivals open | After all 6 rescues; Vexa Hard, Gilda Nightmare | D-131 |
 | Q-61 Guardian in relationship bonuses | She counts like a placed waifu | D-132 |
 | Q-59 Maze tick budget | Accept within noise for M2, track worst case | D-124 |

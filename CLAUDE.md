@@ -15,6 +15,7 @@ You are an AI agent working on this repo, mostly unattended. Read this file firs
 | Milestones and current scope | `06_ROADMAP.md` |
 | Launch roster: waifus, roles, relationships, offer order | `07_ROSTER.md` |
 | Keyboard/mouse and gamepad mapping | `09_CONTROLS.md` |
+| M3 content: cards, upgrades, synergies, meta tree | `10_M3_CONTENT.md` |
 | Plan of the current milestone | `plans/M<n>.md` |
 | Why things were decided | `DECISIONS.md` |
 | What is still undecided | `OPEN_QUESTIONS.md` |

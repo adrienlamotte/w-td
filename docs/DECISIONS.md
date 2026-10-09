@@ -136,3 +136,9 @@ Format: `ID | date | decision | status | notes`. Status: DECIDED (owner confirme
 | D-130 | 2026-10-09 | Launch roster approved as proposed in `docs/07_ROSTER.md`: 10 waifus (starters Pip and Mallow; Guardians Cinder, Bastia, Clover, Hymn, Tansy, Poppy in that offer order; rivals Vexa and Gilda), with their roles, tags and relationships. Names stay placeholders until M5 (D-064) | DECIDED | Task 001, D-056. Answers Q-23 (which two starters, the offer order) |
 | D-131 | 2026-10-09 | Higher difficulty tiers open once all 6 Guardians are rescued; the rival Vexa appears on Hard and Gilda on Nightmare | DECIDED | Q-60. Refines D-055 and D-059 |
 | D-132 | 2026-10-09 | The current Guardian counts like a placed waifu for relationship bonuses with nearby towers | DECIDED | Q-61 |
+| D-133 | 2026-10-09 | Each Guardian has her own signature skill in place of Area blast; Shield is shared (supersedes D-044's Area blast for M3 Guardians) | DECIDED | Q-62 |
+| D-134 | 2026-10-09 | Tower levels 2-3 are bought with gold; level 4 also needs that waifu's signature card | DECIDED | Q-63 |
+| D-135 | 2026-10-09 | Poppy repairs damaged towers; if none needs it and the Guardian is in range, she heals the Guardian for a smaller amount | DECIDED | Q-64 |
+| D-136 | 2026-10-09 | Rival relationship bonuses apply only when the two are 2-6 units apart (across a corridor) | DECIDED | Q-65 |
+| D-137 | 2026-10-09 | Tower upgrades apply per placed tower | DECIDED | Q-66 |
+| D-138 | 2026-10-09 | The rest of `docs/10_M3_CONTENT.md` (card pool, tower attack kinds, upgrade pattern, synergy format and bonuses, XP curve, hearts, meta tree, save scope) is approved as proposed; numbers are placeholders | DECIDED | Task 028 |
