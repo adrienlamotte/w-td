@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Meta node",
+  "description": "Permanent meta-tree upgrade bought with hearts, applied at StartRun (10_M3_CONTENT.md 6.2, D-052, D-140). All numbers are placeholders, not balance decisions.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "placeholder", "name_key", "desc_key", "branch", "cost", "requires", "effects"],
+  "$defs": {
+    "effect": {
+      "description": "Same effect object as cards.schema.json (10_M3_CONTENT.md 2.5, D-140).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stat", "op", "value", "target"],
+      "properties": {
+        "stat": {"enum": ["damage", "cooldown", "range", "hp", "kill_gold", "xp", "build_radius", "rebuild_price", "detour_damage", "skill_power", "skill_cooldown", "shield_absorb", "shield_duration", "shield_heal", "gold", "unlock_tower", "unlock_level", "sell_refund", "rebuild_fraction", "price"]},
+        "op": {"enum": ["add", "mult"]},
+        "value": {"type": "number"},
+        "target": {"type": "string", "pattern": "^(all_towers|guardian|signature|run|tower:tower_[a-z0-9_]+|skill:skill_[a-z0-9_]+)$"}
+      }
+    }
+  },
+  "properties": {
+    "schema_version": {"const": 1},
+    "id": {"type": "string", "pattern": "^meta_[a-z0-9_]+$"},
+    "placeholder": {"type": "boolean", "description": "true while the numbers are placeholders"},
+    "name_key": {"type": "string", "pattern": "^[a-z0-9_.]+$"},
+    "desc_key": {"type": "string", "pattern": "^[a-z0-9_.]+$"},
+    "branch": {"enum": ["economy", "guardian", "towers"]},
+    "cost": {"type": "integer", "exclusiveMinimum": 0, "description": "in hearts"},
+    "requires": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^meta_[a-z0-9_]+$"}},
+    "effects": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/effect"}}
+  }
+}

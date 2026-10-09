@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Card",
+  "description": "Level-up draft card (10_M3_CONTENT.md 2, D-138, D-140). All numbers are placeholders, not balance decisions.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "placeholder", "type", "name_key", "desc_key", "max_picks", "requires", "effects"],
+  "$defs": {
+    "effect": {
+      "description": "Effect object (10_M3_CONTENT.md 2.5, D-140). A mult value is the fraction added to the multiplier (-0.25 = -25%); multipliers of one stat add up.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stat", "op", "value", "target"],
+      "properties": {
+        "stat": {"enum": ["damage", "cooldown", "range", "hp", "kill_gold", "xp", "build_radius", "rebuild_price", "detour_damage", "skill_power", "skill_cooldown", "shield_absorb", "shield_duration", "shield_heal", "gold", "unlock_tower", "unlock_level", "sell_refund", "rebuild_fraction", "price"]},
+        "op": {"enum": ["add", "mult"]},
+        "value": {"type": "number"},
+        "target": {"type": "string", "pattern": "^(all_towers|guardian|signature|run|tower:tower_[a-z0-9_]+|skill:skill_[a-z0-9_]+)$"}
+      }
+    }
+  },
+  "properties": {
+    "schema_version": {"const": 1},
+    "id": {"type": "string", "pattern": "^(card|perk)_[a-z0-9_]+$"},
+    "placeholder": {"type": "boolean", "description": "true while the numbers are placeholders"},
+    "type": {"enum": ["new_tower", "signature", "skill", "perk", "filler"]},
+    "name_key": {"type": "string", "pattern": "^[a-z0-9_.]+$"},
+    "desc_key": {"type": "string", "pattern": "^[a-z0-9_.]+$"},
+    "max_picks": {"type": "integer", "minimum": 0, "description": "picks per run; 0 = unlimited (filler only)"},
+    "requires": {
+      "description": "Eligibility; {} = always eligible. unlocked: waifu rescued in the profile; buildable: waifu whose tower is buildable this run.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "unlocked": {"type": "string", "pattern": "^waifu_[a-z0-9_]+$"},
+        "buildable": {"type": "string", "pattern": "^waifu_[a-z0-9_]+$"}
+      }
+    },
+    "effects": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/effect"}}
+  },
+  "allOf": [
+    {"if": {"not": {"properties": {"type": {"const": "filler"}}}}, "then": {"properties": {"max_picks": {"minimum": 1}}}}
+  ]
+}

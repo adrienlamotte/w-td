@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Synergy",
+  "description": "Relationship rule between two waifus carrying the same tag (10_M3_CONTENT.md 5, D-136, D-140). Distances are centre to centre (from the Guardian's body edge). All numbers are placeholders, not balance decisions.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "placeholder", "tag", "kind", "name_key", "min_distance", "max_distance", "bonuses", "guardian_bonus"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "id": {"type": "string", "pattern": "^syn_[a-z0-9_]+$"},
+    "placeholder": {"type": "boolean", "description": "true while the numbers are placeholders"},
+    "tag": {"type": "string", "pattern": "^(bff|rivals|mentor)_[a-z0-9_]+$"},
+    "kind": {"enum": ["bff", "rivals", "mentor"]},
+    "name_key": {"type": "string", "pattern": "^[a-z0-9_.]+$"},
+    "min_distance": {"type": "number", "minimum": 0},
+    "max_distance": {"type": "number", "minimum": 0},
+    "bonuses": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["waifu", "stat", "op", "value"],
+        "properties": {
+          "waifu": {"type": "string", "pattern": "^waifu_[a-z0-9_]+$"},
+          "stat": {"enum": ["damage", "cooldown", "range", "hp", "slow_sec", "thorns", "mark_gold", "aura_radius", "heal"]},
+          "op": {"enum": ["add", "mult"]},
+          "value": {"type": "number"}
+        }
+      }
+    },
+    "guardian_bonus": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stat", "op", "value"],
+      "properties": {
+        "stat": {"enum": ["shield_absorb", "skill_cooldown", "skill_power"]},
+        "op": {"enum": ["add", "mult"]},
+        "value": {"type": "number"}
+      }
+    }
+  }
+}

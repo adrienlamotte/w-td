@@ -54,13 +54,18 @@
       "description": "By tower attack kind, plus husk (dead tower) and bare (M1 bench tower).",
       "type": "object",
       "additionalProperties": false,
-      "required": ["single", "splash", "slow", "husk", "bare"],
+      "required": ["single", "splash", "slow", "wall", "aura", "repair", "mark", "slow_area", "husk", "bare"],
       "properties": {
         "single": {"$ref": "#/$defs/tower_look"},
         "splash": {"$ref": "#/$defs/tower_look"},
         "slow": {"$ref": "#/$defs/tower_look"},
         "husk": {"$ref": "#/$defs/tower_look"},
-        "bare": {"$ref": "#/$defs/tower_look"}
+        "bare": {"$ref": "#/$defs/tower_look"},
+        "wall": {"$ref": "#/$defs/tower_look"},
+        "aura": {"$ref": "#/$defs/tower_look"},
+        "repair": {"$ref": "#/$defs/tower_look"},
+        "mark": {"$ref": "#/$defs/tower_look"},
+        "slow_area": {"$ref": "#/$defs/tower_look"}
       }
     },
     "fx": {

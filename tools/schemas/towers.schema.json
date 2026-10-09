@@ -1,16 +1,43 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Tower",
-  "description": "M2 tower type (D-042, D-043, D-045, D-099). All numbers are placeholders, not balance decisions.",
+  "description": "Tower type (D-042, D-043, D-045, D-099, D-140). All numbers are placeholders, not balance decisions.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version", "id", "placeholder", "name_key", "attack", "cost", "cost_per_copy", "hp", "radius", "range", "damage", "cooldown_sec", "sell_refund", "rebuild_fraction", "sprite", "tags"],
+  "required": ["schema_version", "id", "placeholder", "name_key", "attack", "cost", "cost_per_copy", "hp", "radius", "sell_refund", "rebuild_fraction", "sprite", "tags"],
+  "$defs": {
+    "level": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["cost"],
+      "properties": {
+        "cost": {"type": "integer", "minimum": 0},
+        "needs_card": {"type": "string", "pattern": "^card_sig_[a-z0-9_]+$"},
+        "hp": {"$ref": "#/properties/hp"},
+        "range": {"$ref": "#/properties/range"},
+        "damage": {"$ref": "#/properties/damage"},
+        "cooldown_sec": {"$ref": "#/properties/cooldown_sec"},
+        "splash_radius": {"$ref": "#/properties/splash_radius"},
+        "slow_factor": {"$ref": "#/properties/slow_factor"},
+        "slow_sec": {"$ref": "#/properties/slow_sec"},
+        "thorns": {"$ref": "#/properties/thorns"},
+        "aura_radius": {"$ref": "#/properties/aura_radius"},
+        "aura_damage": {"$ref": "#/properties/aura_damage"},
+        "aura_cooldown": {"$ref": "#/properties/aura_cooldown"},
+        "heal": {"$ref": "#/properties/heal"},
+        "guardian_heal": {"$ref": "#/properties/guardian_heal"},
+        "heal_targets": {"$ref": "#/properties/heal_targets"},
+        "mark_sec": {"$ref": "#/properties/mark_sec"},
+        "mark_gold": {"$ref": "#/properties/mark_gold"}
+      }
+    }
+  },
   "properties": {
     "schema_version": {"const": 1},
     "id": {"type": "string", "pattern": "^tower_[a-z0-9_]+$"},
     "placeholder": {"type": "boolean", "description": "true while the numbers are placeholders"},
     "name_key": {"type": "string", "pattern": "^[a-z0-9_.]+$"},
-    "attack": {"enum": ["single", "splash", "slow"]},
+    "attack": {"enum": ["single", "splash", "slow", "wall", "aura", "repair", "mark", "slow_area"]},
     "cost": {"type": "integer", "minimum": 0},
     "cost_per_copy": {"type": "integer", "minimum": 0, "description": "gold added per copy of this type already on the field (linear, D-099)"},
     "hp": {"type": "number", "exclusiveMinimum": 0},
@@ -21,13 +48,38 @@
     "splash_radius": {"type": "number", "exclusiveMinimum": 0},
     "slow_factor": {"type": "number", "exclusiveMinimum": 0, "exclusiveMaximum": 1, "description": "speed multiplier"},
     "slow_sec": {"type": "number", "exclusiveMinimum": 0},
+    "thorns": {"type": "number", "minimum": 0, "description": "wall: damage dealt to an enemy that hits her"},
+    "aura_radius": {"type": "number", "exclusiveMinimum": 0},
+    "aura_damage": {"type": "number", "minimum": -1, "maximum": 1, "description": "aura: damage bonus as a fraction (0.2 = +20%)"},
+    "aura_cooldown": {"type": "number", "minimum": -1, "maximum": 1, "description": "aura: cooldown reduction as a fraction (0.1 = -10%)"},
+    "heal": {"type": "number", "exclusiveMinimum": 0},
+    "guardian_heal": {"type": "number", "exclusiveMinimum": 0},
+    "heal_targets": {"type": "integer", "minimum": 1, "description": "repair: towers healed per cast (default 1)"},
+    "mark_sec": {"type": "number", "exclusiveMinimum": 0},
+    "mark_gold": {"type": "integer", "minimum": 0},
     "sell_refund": {"type": "number", "minimum": 0, "maximum": 1},
     "rebuild_fraction": {"type": "number", "minimum": 0, "maximum": 1},
     "sprite": {"type": "string"},
-    "tags": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+    "tags": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "levels": {
+      "description": "Levels 2, 3, 4 (D-134, D-140): cost and the stats that change, absolute values. Level 4 needs the signature card.",
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "prefixItems": [{"allOf": [{"$ref": "#/$defs/level"}, {"not": {"required": ["needs_card"]}}]}, {"allOf": [{"$ref": "#/$defs/level"}, {"not": {"required": ["needs_card"]}}]}, {"allOf": [{"$ref": "#/$defs/level"}, {"required": ["needs_card"]}]}]
+    }
   },
   "allOf": [
-    {"if": {"properties": {"attack": {"const": "splash"}}}, "then": {"required": ["splash_radius"]}},
-    {"if": {"properties": {"attack": {"const": "slow"}}}, "then": {"required": ["slow_factor", "slow_sec"]}}
+    {"if": {"properties": {"attack": {"const": "single"}}}, "then": {"required": ["range", "damage", "cooldown_sec"]}},
+    {"if": {"properties": {"attack": {"const": "splash"}}}, "then": {"required": ["range", "damage", "cooldown_sec", "splash_radius"]}},
+    {"if": {"properties": {"attack": {"const": "slow"}}}, "then": {"required": ["range", "damage", "cooldown_sec", "slow_factor", "slow_sec"]}},
+    {"if": {"properties": {"attack": {"const": "mark"}}}, "then": {"required": ["range", "damage", "cooldown_sec", "mark_sec", "mark_gold"]}},
+    {
+      "if": {"properties": {"attack": {"const": "slow_area"}}},
+      "then": {"required": ["range", "damage", "cooldown_sec", "splash_radius", "slow_factor", "slow_sec"]}
+    },
+    {"if": {"properties": {"attack": {"const": "repair"}}}, "then": {"required": ["range", "cooldown_sec", "heal", "guardian_heal"]}},
+    {"if": {"properties": {"attack": {"const": "wall"}}}, "then": {"required": ["thorns"]}},
+    {"if": {"properties": {"attack": {"const": "aura"}}}, "then": {"required": ["aura_radius", "aura_damage", "aura_cooldown"]}}
   ]
 }

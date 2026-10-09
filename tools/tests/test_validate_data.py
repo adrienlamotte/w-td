@@ -91,6 +91,39 @@ class ValidateDataTest(unittest.TestCase):
         errors = self.check_repo_with("towers", "tower_slow_01", lambda d: d.update(name_key="tower.nope.name"))
         self.assertTrue(any("tower.nope.name" in e and "strings.csv" in e for e in errors))
 
+    # M3 content (D-140)
+    def test_rejects_unknown_effect_target(self):
+        errors = self.check_repo_with("cards", "card_tower_cinder", lambda d: d["effects"][0].update(target="tower:tower_nope"))
+        self.assertTrue(any("tower:tower_nope" in e for e in errors))
+
+    def test_synergy_bonus_needs_tagged_waifu(self):
+        errors = self.check_repo_with("synergies", "syn_bff_pip_mallow", lambda d: d["bonuses"][1].update(waifu="waifu_hymn"))
+        self.assertTrue(any("bff_pip_mallow" in e for e in errors))
+
+    def test_power_stats_must_name_a_numeric_field(self):
+        errors = self.check_repo_with("skills", "skill_tangle", lambda d: d.update(power_stats=["damage"]))
+        self.assertTrue(any("power_stats 'damage'" in e for e in errors))
+
+    def test_rejects_duplicate_offer_order(self):
+        errors = self.check_repo_with("waifus", "waifu_poppy", lambda d: d.update(offer_order=1))
+        self.assertTrue(any("offer_order 1" in e for e in errors))
+
+    def test_level_4_needs_card(self):
+        errors = self.check_repo_with("towers", "tower_pip", lambda d: d["levels"][2].pop("needs_card"))
+        self.assertTrue(any("levels" in e for e in errors))
+
+    def test_level_2_must_not_need_card(self):
+        errors = self.check_repo_with("towers", "tower_pip", lambda d: d["levels"][0].update(needs_card="card_sig_pip"))
+        self.assertTrue(any("levels" in e for e in errors))
+
+    def test_wall_needs_thorns(self):
+        errors = self.check_repo_with("towers", "tower_bastia", lambda d: d.pop("thorns"))
+        self.assertTrue(any("thorns" in e for e in errors))
+
+    def test_rejects_unknown_signature_card(self):
+        errors = self.check_repo_with("towers", "tower_pip", lambda d: d["levels"][2].update(needs_card="card_sig_nope"))
+        self.assertTrue(any("card_sig_nope" in e for e in errors))
+
 
 if __name__ == "__main__":
     unittest.main()

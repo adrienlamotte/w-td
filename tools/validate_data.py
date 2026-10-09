@@ -14,7 +14,10 @@ from jsonschema import Draft202012Validator
 ROOT = Path(__file__).resolve().parent.parent
 SCHEMAS = ROOT / "tools" / "schemas"
 STRINGS = ROOT / "game" / "loc" / "strings.csv"
-ID_REF = re.compile(r"^(enemy|tower|skill|guardian|run)_[a-z0-9_]+$")
+ID_REF = re.compile(r"^(enemy|tower|skill|guardian|run|waifu|card|perk|syn|meta)_[a-z0-9_]+$")
+# Fields whose values are stat/field names, not ids ("skill_power", "guardian_heal").
+NOT_IDS = {"stat", "power_stats"}
+SCOPED = re.compile(r"^(tower|skill):(.+)$")
 
 
 def validate(data_dir: Path, strings: Path = STRINGS) -> list[str]:
@@ -44,6 +47,7 @@ def validate(data_dir: Path, strings: Path = STRINGS) -> list[str]:
             ids[doc_id] = rel
             docs[rel] = doc
     errors += check_references(docs, ids)
+    errors += check_m3(docs, ids)
     errors += check_loc_keys(docs, strings)
     # ponytail: no asset-existence check yet; add it when data first references real assets.
     return errors
@@ -53,8 +57,9 @@ def _strings(value):
     if isinstance(value, str):
         yield value
     elif isinstance(value, dict):
-        for v in value.values():
-            yield from _strings(v)
+        for k, v in value.items():
+            if k not in NOT_IDS:
+                yield from _strings(v)
     elif isinstance(value, list):
         for v in value:
             yield from _strings(v)
@@ -79,6 +84,33 @@ def check_references(docs: dict, ids: dict) -> list[str]:
                 enemy = docs.get(ids.get(boss.get("enemy")), {})
                 if enemy and enemy.get("archetype") not in ("miniboss", "boss"):
                     errors.append(f"{rel}: boss '{boss['enemy']}' is not a miniboss/boss enemy")
+    return errors
+
+
+def check_m3(docs: dict, ids: dict) -> list[str]:
+    """M3 content (D-140): effect targets, synergy members, power_stats, offer order."""
+    errors = []
+    by_kind = {}
+    for rel, doc in docs.items():
+        by_kind.setdefault(rel.parts[0], []).append((rel, doc))
+    for rel, doc in by_kind.get("cards", []) + by_kind.get("meta", []):
+        for effect in doc.get("effects", []):
+            m = SCOPED.match(str(effect.get("target", ""))) if isinstance(effect, dict) else None
+            if m and m.group(2) not in ids:
+                errors.append(f"{rel}: unknown effect target '{effect['target']}'")
+    waifus = by_kind.get("waifus", [])
+    for rel, doc in by_kind.get("synergies", []):
+        carriers = sorted(w.get("id") for _, w in waifus if doc.get("tag") in w.get("tags", []))
+        members = sorted(b.get("waifu") for b in doc.get("bonuses", []) if isinstance(b, dict))
+        if carriers != members or len(set(members)) != 2:
+            errors.append(f"{rel}: bonuses {members} must be the two waifus tagged '{doc.get('tag')}' {carriers}")
+    for rel, doc in by_kind.get("skills", []):
+        for stat in doc.get("power_stats", []):
+            if isinstance(doc.get(stat), bool) or not isinstance(doc.get(stat), (int, float)):
+                errors.append(f"{rel}: power_stats '{stat}' is not a numeric field of this skill")
+    orders = [d["offer_order"] for _, d in waifus if "offer_order" in d]
+    for o in sorted({o for o in orders if orders.count(o) > 1}):
+        errors.append(f"waifus: offer_order {o} is used more than once")
     return errors
 
 
