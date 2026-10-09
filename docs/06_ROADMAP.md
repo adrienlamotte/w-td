@@ -15,7 +15,7 @@ This is the global roadmap. Each milestone gets a detailed plan in `docs/plans/M
 - Done when: budgets in `02_TECH_ARCHITECTURE.md` measured on PC; Steam Deck result recorded (or estimated with a note); a go/no-go on the 3D billboard approach vs pure 2D fallback is written in `DECISIONS.md`.
 - Checkpoint: human sees the horde running and judges feel and readability.
 
-## M2 — Core loop vertical slice (placeholder art) (built; checkpoint CP-M2 pending)
+## M2 — Core loop vertical slice (placeholder art) (done; checkpoint accepted 2026-10-09, D-127)
 - Guardian at center with HP and 2 active skills, 3 tower waifu types, gold drops, real-time placement, build phase between waves, one boss, win/lose screens.
 - Gamepad and mouse both work.
 - Done when: a full 15-minute run is playable start to finish.

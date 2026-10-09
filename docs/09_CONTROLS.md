@@ -1,6 +1,6 @@
 # Controls spec
 
-Status: **PROPOSED**, for the owner to approve at CP-M2. Implements D-041 (camera) and D-046 (gamepad building); input layer and bindings home: D-119. Rule: no feature may need the mouse only (`01_GAME_DESIGN.md` 9).
+Status: **DECIDED** (approved at CP-M2, D-129). Implements D-041 (camera) and D-046 (gamepad building); input layer and bindings home: D-119. Rule: no feature may need the mouse only (`01_GAME_DESIGN.md` 9).
 
 ## Mapping
 Gamepad names use the Xbox layout, which matches the Steam Deck A/B/X/Y positions (Deck glyphs follow it).
