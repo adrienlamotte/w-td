@@ -1,5 +1,5 @@
 # 015 — Sim: placing, selling, tower HP, husks and blocking
-- Status: review
+- Status: done
 - Milestone: M2
 - Depends on: 014
 - PR: #21
@@ -70,3 +70,4 @@ Size: about 200 lines of code, about 250 of tests. One PR.
 ## Questions
 
 ## Review log
+- 2026-10-09 lead-dev: approved and squash-merged PR #21. Re-ran `scripts	est.ps1` (125/125) and `scriptsalidate.ps1` (0 errors). Matches the plan and D-109; uses D-111/D-112/D-113. Accepted deviation: `SimWorld.next_tower_uid` is public (was `_next_uid`) because the handlers live in `TowerBuilding` static funcs. Release bench step: pc_typical 5.11, pc_stress 5.70, pc_piled 5.46 ms.
