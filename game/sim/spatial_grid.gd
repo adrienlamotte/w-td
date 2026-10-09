@@ -34,8 +34,11 @@ func rebuild(xs: PackedFloat32Array, zs: PackedFloat32Array) -> void:
 	cell_items.resize(count)
 	_enemy_cell.resize(count)
 	cell_start.fill(0)
-	for i in count:
-		var c := cell_coord(zs[i]) * dim + cell_coord(xs[i])
+	var he := half_extent
+	var cs := cell_size
+	var dmax := dim - 1
+	for i in count:  # cell_coord() inlined: same expression, bit-identical
+		var c := clampi(floori((zs[i] + he) / cs), 0, dmax) * dim 				+ clampi(floori((xs[i] + he) / cs), 0, dmax)
 		_enemy_cell[i] = c
 		cell_start[c] += 1
 	# Inclusive prefix sum: cell_start[c] = end of cell c.
@@ -73,33 +76,57 @@ func query_radius(x: float, z: float, r: float, xs: PackedFloat32Array,
 
 ## Index of the nearest enemy within max_range of (x, z), lowest index on ties, -1 if none.
 ## Searches square rings of cells around the point's cell and stops once a ring
-## cannot hold anything closer than the best found.
+## cannot hold anything closer than the best found. A ring's top and bottom rows
+## are one contiguous cell_items range each; the result does not depend on the
+## visit order (smallest d2, then lowest index).
 func nearest(x: float, z: float, max_range: float, xs: PackedFloat32Array,
 		zs: PackedFloat32Array) -> int:
 	var best := -1
 	var best_d2 := max_range * max_range
+	var starts := cell_start
+	var items := cell_items
+	var d := dim
 	var cx := cell_coord(x)
 	var cz := cell_coord(z)
-	var k_max := mini(int(max_range / cell_size) + 1, dim)
+	var k_max := mini(int(max_range / cell_size) + 1, d)
 	for k in k_max + 1:
 		# Any enemy in ring k is at least (k - 1) * cell_size away (clamping keeps this true).
 		var gap := (k - 1) * cell_size
 		if k > 1 and gap * gap > best_d2:
 			break
-		for gz in range(maxi(cz - k, 0), mini(cz + k, dim - 1) + 1):
-			var edge_row := absi(gz - cz) == k
-			var step := 1 if edge_row else 2 * k
-			var gx := cx - k
-			while gx <= cx + k:
-				if gx >= 0 and gx < dim:
-					var c := gz * dim + gx
-					for n in range(cell_start[c], cell_start[c + 1]):
-						var i := cell_items[n]
-						var dx := xs[i] - x
-						var dz := zs[i] - z
-						var d2 := dx * dx + dz * dz
-						if d2 < best_d2 or (d2 == best_d2 and (best == -1 or i < best)):
-							best = i
-							best_d2 = d2
-				gx += step
+		var gx0 := maxi(cx - k, 0)
+		var gx1 := mini(cx + k, d - 1)
+		for gz in range(maxi(cz - k, 0), mini(cz + k, d - 1) + 1):
+			var row := gz * d
+			# Two ranges: the whole row on the ring's edge rows, else its left and right cells.
+			var a0 := 0
+			var a1 := 0
+			var b0 := 0
+			var b1 := 0
+			if absi(gz - cz) == k:
+				a0 = starts[row + gx0]
+				a1 = starts[row + gx1 + 1]
+			else:
+				if cx - k >= 0:
+					a0 = starts[row + cx - k]
+					a1 = starts[row + cx - k + 1]
+				if cx + k < d:
+					b0 = starts[row + cx + k]
+					b1 = starts[row + cx + k + 1]
+			for n in range(a0, a1):
+				var i := items[n]
+				var dx := xs[i] - x
+				var dz := zs[i] - z
+				var d2 := dx * dx + dz * dz
+				if d2 < best_d2 or (d2 == best_d2 and (best == -1 or i < best)):
+					best = i
+					best_d2 = d2
+			for n in range(b0, b1):
+				var i := items[n]
+				var dx := xs[i] - x
+				var dz := zs[i] - z
+				var d2 := dx * dx + dz * dz
+				if d2 < best_d2 or (d2 == best_d2 and (best == -1 or i < best)):
+					best = i
+					best_d2 = d2
 	return best

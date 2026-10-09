@@ -28,6 +28,11 @@ func apply(enemies: SimEnemies, grid: SpatialGrid, catalog: EnemyCatalog) -> voi
 	var cell_start := grid.cell_start
 	var cell_items := grid.cell_items
 	var dim := grid.dim
+	# Hoisted for the inlined grid.cell_coord() below (same expression, bit-identical).
+	var max_r := catalog.max_radius
+	var he := grid.half_extent
+	var cs := grid.cell_size
+	var dmax := dim - 1
 	var n := xs.size()
 	_push_x.resize(n)
 	_push_z.resize(n)
@@ -43,10 +48,12 @@ func apply(enemies: SimEnemies, grid: SpatialGrid, catalog: EnemyCatalog) -> voi
 		var ki := 0.5 * strength[ti]
 		var x := xs[i]
 		var z := zs[i]
-		var reach := ri + catalog.max_radius
-		var x0 := grid.cell_coord(x - reach)
-		var x1 := grid.cell_coord(x + reach)
-		for gz in range(grid.cell_coord(z - reach), grid.cell_coord(z + reach) + 1):
+		var reach := ri + max_r
+		var x0 := clampi(floori((x - reach + he) / cs), 0, dmax)
+		var x1 := clampi(floori((x + reach + he) / cs), 0, dmax)
+		var z0 := clampi(floori((z - reach + he) / cs), 0, dmax)
+		var z1 := clampi(floori((z + reach + he) / cs), 0, dmax)
+		for gz in range(z0, z1 + 1):
 			var row := gz * dim
 			for k in range(cell_start[row + x0], cell_start[row + x1 + 1]):
 				var j := cell_items[k]
