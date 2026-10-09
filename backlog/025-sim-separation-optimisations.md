@@ -36,7 +36,7 @@ Not in scope: GDExtension, threads, retarget-every-N (design), changing the push
 - Headless timings in the PR: `test_separation_cost_3000_piled` and `test_print_timings` before/after (3 runs each).
 
 ### Performance and measurement
-- Release bench (`scriptsench.ps1`, GPU) before any change, after steps 1+2, and after step 3: one table per run in the PR, all 6 scenarios, step + separation + grid + targeting. Goal `pc_stress` step <= about 6.5 ms. If steps 1-3 do not reach it, report the gap: do not add more optimisations in this task (023 picks it up with combat).
+- Release bench (`scripts\bench.ps1`, GPU) before any change, after steps 1+2, and after step 3: one table per run in the PR, all 6 scenarios, step + separation + grid + targeting. Goal `pc_stress` step <= about 6.5 ms. If steps 1-3 do not reach it, report the gap: do not add more optimisations in this task (023 picks it up with combat).
 - No allocation added in the hot loops.
 
 ### Docs (same PR)
@@ -45,7 +45,7 @@ Not in scope: GDExtension, threads, retarget-every-N (design), changing the push
 - `reports/perf_m1.md` section 5: one line per row saying done in 025 (or measured and dropped).
 
 ### Order
-1. `test_matches_reference` + lattice test, green on the current code; bench "before" (or reuse the 013 table if the machine is unchanged and quiet). 2. Step 1, step 2; headless timings; bench. 3. Step 3; bench; apply the gate. 4. Docs; `scripts	est.ps1` twice, `scriptsalidate.ps1`.
+1. `test_matches_reference` + lattice test, green on the current code; bench "before" (or reuse the 013 table if the machine is unchanged and quiet). 2. Step 1, step 2; headless timings; bench. 3. Step 3; bench; apply the gate. 4. Docs; `scripts\test.ps1` twice, `scripts\validate.ps1`.
 
 Size: about 60-100 changed lines of code, about 80 of tests. One PR.
 

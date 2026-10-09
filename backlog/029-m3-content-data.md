@@ -1,5 +1,5 @@
 # 029 — Data: M3 content files and schemas
-- Status: review
+- Status: done
 - Milestone: M3
 - Depends on: -
 - PR: #36
@@ -63,3 +63,4 @@ Every new file: `schema_version` 1, `id` matching the file name, `placeholder: t
 ## Questions
 
 ## Review log
+- 2026-10-09 lead-dev: approved and squash-merged PR #36. Re-ran `scripts\test.ps1` (248 GUT + 22 Python green) and `scripts\validate.ps1` (0 errors). Spot-checked against `10_M3_CONTENT.md` and `07_ROSTER.md`: all 8 tower level tables (3.2), the 6 signature skills (4.1), the 7 synergies (5.2; Guardian bonus per kind D-132, rivals 2-6 D-136), the 25 cards (2.1-2.4, level 4 via `needs_card` D-134) and the 12 meta nodes (6.2, total 1240) match. Accepted deviation: the reference pass skips `stat` and `power_stats` values (stat names like `skill_power` look like ids); both stay checked, `stat` by the schema enums and `power_stats` by `check_m3`.

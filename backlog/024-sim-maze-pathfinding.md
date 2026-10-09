@@ -97,7 +97,7 @@ Decision ID: **D-115** (D-114 is 016's, D-116 is 026's). Uses D-111 (point pathi
 Size: about 310 lines of code (field 190, sim wiring 75, bench 45) plus data, about 300 of tests. One PR.
 
 ## Questions
-**Q (game-dev, 2026-10-09): the maze perf gate fails; how to proceed?** Implementation is done and green on branch `task/024-sim-maze-pathfinding` (pushed, no PR yet): 203 tests pass twice, validator green, docs and D-115 PROPOSED written. Two release bench runs (`scriptsench.ps1`, 2560x1440, same machine) give:
+**Q (game-dev, 2026-10-09): the maze perf gate fails; how to proceed?** Implementation is done and green on branch `task/024-sim-maze-pathfinding` (pushed, no PR yet): 203 tests pass twice, validator green, docs and D-115 PROPOSED written. Two release bench runs (`scripts\bench.ps1`, 2560x1440, same machine) give:
 
 | scenario | step ms (run 1 / run 2) | separation | movement | path | gate |
 |---|---|---|---|---|---|
