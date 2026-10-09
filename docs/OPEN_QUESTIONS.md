@@ -68,6 +68,16 @@ Last reviewed: 2026-10-08 (daily docs review; owner answers recorded the same da
 
 ---
 
+## M2 (open, none blocks a task: the ★ default is safe to assume as a placeholder until answered, revisit at CP-M2)
+
+### Q-57 Slow stacking
+The slow tower (D-045) slows its target by `slow_factor` for `slow_sec` (data). Nothing says what happens when a slowed enemy is hit again. Used by task 016.
+- A) **No stacking: the strongest active slow applies, and a new hit refreshes the duration to the longer of what is left and the new duration.** ★
+- B) Multiplicative stacking (two 0.5 slows give 0.25) down to a floor in data.
+- C) The newest hit replaces the old slow (factor and duration).
+
+---
+
 ## A. Deferred until the first real asset arrives
 
 ### Q-37 Where are large art files stored? (DEFERRED by the owner: decide when the first real asset arrives)
