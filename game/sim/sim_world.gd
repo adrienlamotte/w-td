@@ -34,6 +34,8 @@ var build: BuildGrid = null
 var next_tower_uid: int = 0
 var movement: EnemyMovement = EnemyMovement.new()
 var tower_attacks: TowerAttacks = TowerAttacks.new()
+## Skill cooldowns and the Shield; reset at StartRun (D-110).
+var skills: GuardianSkills = GuardianSkills.new()
 ## Set from the run at StartRun (D-107); 0 before.
 var guardian_hp: float = 0.0
 var gold: int = 0
@@ -141,6 +143,7 @@ func _apply(cmd: SimCommand) -> void:
 			guardian_hp = run.guardian_hp
 			gold = run.starting_gold
 			build = BuildGrid.new(run.build_radius, run.grid_step)
+			skills.reset(run.skill_ids.size())
 			clock = 0
 			run_state = RunState.RUNNING
 		SimCommand.Type.PAUSE:
@@ -155,7 +158,31 @@ func _apply(cmd: SimCommand) -> void:
 			else:
 				TowerBuilding.rebuild(self, cmd.tower_uid)
 		SimCommand.Type.USE_SKILL:
-			pass  # task 017
+			_use_skill(cmd.skill_id)
+
+
+# Only while RUNNING and not paused; unknown id or cooldown: ignored, no event (D-110).
+func _use_skill(skill_id: String) -> void:
+	if run_state != RunState.RUNNING or paused:
+		return
+	var slot := run.skill_ids.find(skill_id)
+	if slot < 0 or not skills.try_use(slot, clock, run):
+		return
+	events.push(SimEvents.Kind.SKILL_USED, slot, 0.0, 0.0, 0.0)
+	if run.skill_kind[slot] == RunData.Skill.AREA_BLAST:
+		_area_blast(slot)
+
+
+# Every enemy whose body touches the disk around the Guardian (D-107 edge rule), index order.
+# ponytail: linear scan, once per cooldown; the grid cannot reach boss radii.
+func _area_blast(slot: int) -> void:
+	var reach := run.skill_radius[slot]
+	var dmg := run.skill_damage[slot]
+	var px := enemies.pos_x
+	var pz := enemies.pos_z
+	for i in enemies.count():
+		if sqrt(px[i] * px[i] + pz[i] * pz[i]) - catalog.radius[enemies.type_id[i]] <= reach:
+			damage_enemy(i, dmg)
 
 
 # In index order, no swap-remove: indices and count stay stable.
@@ -223,8 +250,9 @@ func _enemy_attacks() -> void:
 				return
 
 
-# Task 017 inserts the Shield here.
+# Single path for damage to the Guardian: the Shield absorbs first (D-110).
 func _hit_guardian(type_id: int, x: float, z: float, dmg: float) -> void:
+	dmg = skills.absorb(dmg, clock)
 	guardian_hp -= dmg
 	events.push(SimEvents.Kind.GUARDIAN_HIT, type_id, x, z, dmg)
 	if guardian_hp <= 0.0:
@@ -252,4 +280,4 @@ func state_hash() -> int:
 		enemies.type_id, enemies.state, enemies.anim_frame, enemies.cooldown, enemies.slow_factor, enemies.slow_ticks,
 		towers.pos_x, towers.pos_z, towers.attack_range, towers.target, next_tower_uid,
 		towers.uid, towers.type_id, towers.hp, towers.husk, towers.paid, towers.cell_i, towers.cell_j,
-		towers.cooldown])
+		towers.cooldown, skills.ready_at, skills.shield_left, skills.shield_until])
