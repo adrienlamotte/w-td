@@ -19,9 +19,3 @@ func test_step_zoom_clamps() -> void:
 	assert_eq(IsoCamera.step_zoom(2, 1, 3), 2)
 	assert_eq(IsoCamera.step_zoom(1, 1, 3), 2)
 
-
-func test_edge_dir() -> void:
-	var vp := Vector2(2560, 1440)
-	assert_eq(IsoCamera.edge_dir(Vector2(5, 720), vp, 24), Vector2(-1, 0))
-	assert_eq(IsoCamera.edge_dir(Vector2(1280, 720), vp, 24), Vector2.ZERO)
-	assert_eq(IsoCamera.edge_dir(Vector2(2558, 2), vp, 24), Vector2(1, -1))

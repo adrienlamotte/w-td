@@ -3,6 +3,7 @@
 [ext_resource type="Script" path="res://view/game_view.gd" id="1_view"]
 [ext_resource type="Script" path="res://view/iso_camera.gd" id="2_cam"]
 [ext_resource type="Script" path="res://view/horde_renderer.gd" id="3_horde"]
+[ext_resource type="Script" path="res://input/player_input.gd" id="4_input"]
 
 [sub_resource type="StandardMaterial3D" id="mat_ground"]
 shading_mode = 0
@@ -40,3 +41,6 @@ mesh = SubResource("mesh_guardian")
 
 [node name="HordeRenderer" type="Node3D" parent="."]
 script = ExtResource("3_horde")
+
+[node name="PlayerInput" type="Node" parent="."]
+script = ExtResource("4_input")

@@ -19,6 +19,8 @@ var driver: SimDriver = SimDriver.new(world)
 
 
 func _ready() -> void:
+	$PlayerInput.world = world
+	$PlayerInput.camera = $CameraRig
 	# Release templates refuse a scene path on the command line: the bench starts from here (D-088).
 	if demo and "--bench" in OS.get_cmdline_user_args():
 		get_tree().change_scene_to_file("res://view/bench/bench.tscn")
