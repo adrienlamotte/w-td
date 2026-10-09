@@ -73,6 +73,19 @@ D-043 says enemies attack whatever tower blocks their straight path to the Guard
 - B) Only enemies that bump into a tower attack it; the others slide around it and keep going.
 - C) Towers are solid obstacles and enemies path around them (pathfinding; much more per-tick cost).
 
+### Q-51 Maze: can the player fully wall off the Guardian? (follow-up to Q-50, blocks task 015)
+- A) **No: a placement that would close every path to the Guardian is refused (classic maze rule)** ★
+- B) Yes: full walls are allowed; trapped enemies then attack the wall to break through.
+
+### Q-52 Maze: when do enemies attack towers? (follow-up to Q-50; D-043 gives towers HP and husks)
+- A) **Enemies follow the maze and attack towers within their reach as they pass (melee next to them, ranged in range), so towers slowly lose HP** ★
+- B) Enemies never attack towers, only the Guardian (tower HP and husks dropped from M2).
+- C) Only when the path is fully blocked (needs Q-51 B).
+
+### Q-53 Maze: does a husk (dead tower) still block the path? (follow-up to Q-50)
+- A) **No: a husk is walkable, so a dead tower opens a gap in the maze until it is rebuilt** ★
+- B) Yes: a husk still blocks the path.
+
 ---
 
 ## A. Deferred until the first real asset arrives
