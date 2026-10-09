@@ -1,5 +1,5 @@
 # 016 — Sim: the 3 tower attacks
-- Status: review
+- Status: done
 - Milestone: M2
 - Depends on: 015
 - PR: #22
@@ -66,3 +66,4 @@ Size: about 95 lines of code, about 200 of tests. One PR. Merges with 024 in `si
 ## Questions
 
 ## Review log
+- 2026-10-09 lead-dev: PR #22 approved and squash-merged into m2/dev. Matches the plan and D-114/D-117; sim-only, typed, all damage through damage_enemy, hash extended, determinism test counts ENEMY_DIED per step (> 0). test.ps1 138/138 + tools OK, validate 0 errors (reviewer run). Bench towers are bare, so attack cost is unmeasured until 023. needs-human:balance at CP-M2 (placeholder damage/cooldown/splash/slow, bosses slowed).
