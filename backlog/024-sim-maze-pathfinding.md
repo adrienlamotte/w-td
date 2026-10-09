@@ -12,6 +12,7 @@ Enemies path around towers to the Guardian (maze-style, D-101), cheaply enough f
 - `02_TECH_ARCHITECTURE.md` 3a (tick order D-083, spatial grid), 4 (budgets); `reports/perf_m1.md` (separation already 60-79% of a tick)
 - Technical approach is the lead dev's call (a flow field from the Guardian over the build grid, recomputed only when towers or husks change, is the expected direction)
 - From 011 review: the path grid should be the build grid (`RunData.grid_step`, `build_radius`; 0.5 and 20 give about 80x80 cells inside the radius). Enemy radii go up to 0.4 (brute) and bosses up to 1.0, so the plan must state how corridor width relates to enemy radius (for example, can a boss pass through a one-cell gap?). Outside the build radius there are no towers, so enemies head straight for the build area.
+- From 014's plan (D-107): movement is `EnemyMovement.steer()` (per enemy `dir_x, dir_z` and `gap` = distance left to the attack position) then `advance()`. This task replaces `steer()` only: flow-field direction while a path exists (gap still the straight distance to the Guardian minus the stop distance); walled in, direction and gap toward the blocking tower, plus a per-enemy attack target so the ATTACKS phase hits that tower instead of the Guardian. Ranged enemies then stop at their range from that tower.
 
 ## Acceptance criteria
 - Enemies never walk through tower cells; inside the build area they follow the shortest path around towers; outside it they head for the build area.

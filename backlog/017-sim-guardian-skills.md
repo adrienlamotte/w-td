@@ -9,6 +9,7 @@ The two M2 Guardian skills, triggered by UseSkill.
 
 ## Context
 - D-044 (Area blast ~12 s, Shield ~25 s, no auto-attack; Heal later)
+- From 014's plan (D-107): Area blast damages through `SimWorld.damage_enemy`; the Shield absorbs inside `SimWorld._hit_guardian` (the only path for damage to the Guardian; `GUARDIAN_HIT` value = damage after shield).
 
 ## Acceptance criteria
 - Area blast damages enemies in a ring from data; Shield absorbs damage to the Guardian for a data amount and duration.
