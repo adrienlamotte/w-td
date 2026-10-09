@@ -28,6 +28,8 @@ var enemies: SimEnemies = SimEnemies.new()
 var grid: SpatialGrid
 var separation: EnemySeparation = EnemySeparation.new()
 var towers: SimTowers = SimTowers.new()
+## Card and meta effects on towers (D-144); reset at StartRun. Add through add_modifier().
+var modifiers: SimModifiers = SimModifiers.new()
 ## Created at StartRun from the run's build radius and grid step; null before (D-109).
 var build: BuildGrid = null
 ## Flow field over `build` (D-115); created (full first computation) in the PATH phase when
@@ -111,6 +113,8 @@ func step() -> void:
 		tick += 1
 		return
 	_path()
+	if towers.stats_dirty:  # once, after any layout, level or modifier change (D-144)
+		TowerStats.recompute(self)
 	_lap(Phase.PATH)
 	if _grid_count != enemies.count():  # safety net: enemies added/removed outside step()
 		_rebuild_grid()
@@ -165,18 +169,21 @@ func _apply(cmd: SimCommand) -> void:
 			guardian_hp = run.guardian_hp
 			gold = run.starting_gold
 			build = BuildGrid.new(run.build_radius, run.grid_step)
+			modifiers = SimModifiers.new()
 			skills.reset(run.skill_ids.size())
 			clock = 0
 			run_state = RunState.RUNNING
 		SimCommand.Type.PAUSE:
 			paused = cmd.paused
-		SimCommand.Type.PLACE_TOWER, SimCommand.Type.SELL_TOWER, SimCommand.Type.REBUILD_TOWER:
+		SimCommand.Type.PLACE_TOWER, SimCommand.Type.SELL_TOWER, SimCommand.Type.REBUILD_TOWER, 				SimCommand.Type.UPGRADE_TOWER:
 			if run_state != RunState.RUNNING or paused:  # no building while paused (D-105)
 				return
 			if cmd.type == SimCommand.Type.PLACE_TOWER:
 				TowerBuilding.place(self, cmd)
 			elif cmd.type == SimCommand.Type.SELL_TOWER:
 				TowerBuilding.sell(self, cmd.tower_uid)
+			elif cmd.type == SimCommand.Type.UPGRADE_TOWER:
+				TowerUpgrade.upgrade(self, cmd.tower_uid)
 			else:
 				TowerBuilding.rebuild(self, cmd.tower_uid)
 		SimCommand.Type.USE_SKILL:
@@ -217,6 +224,12 @@ func _recycle() -> void:
 		enemies.pos_x[i] = cos(angle) * recycle_radius
 		enemies.pos_z[i] = sin(angle) * recycle_radius
 		enemies.state[i] = SimEnemies.State.MOVING
+
+
+## Adds a modifier entry (D-144); tower stats are recomputed in the next PATH phase.
+func add_modifier(stat: String, op: SimModifiers.Op, value: float, target: String) -> void:
+	modifiers.add(stat, op, value, target)
+	towers.stats_dirty = true
 
 
 ## Single entry point for every damage source (towers, skills; D-107).
@@ -313,4 +326,5 @@ func state_hash() -> int:
 		enemies.target_id,
 		towers.pos_x, towers.pos_z, towers.attack_range, towers.target, next_tower_uid,
 		towers.uid, towers.type_id, towers.hp, towers.husk, towers.paid, towers.cell_i, towers.cell_j,
-		towers.cooldown, skills.ready_at, skills.shield_left, skills.shield_until])
+		towers.cooldown, towers.level, towers.damage, towers.reload, towers.max_hp, towers.splash_radius,
+		towers.slow_factor, towers.slow_ticks, towers.stats_dirty, modifiers.hash_parts(), skills.ready_at, skills.shield_left, skills.shield_until])

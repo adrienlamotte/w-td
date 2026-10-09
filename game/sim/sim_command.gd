@@ -3,7 +3,7 @@ extends RefCounted
 ## One player input for the sim, applied at the start of tick `tick` (D-100,
 ## 02_TECH_ARCHITECTURE.md 3a). Only the fields of its type are used.
 
-enum Type { START_RUN, PAUSE, PLACE_TOWER, SELL_TOWER, USE_SKILL, REBUILD_TOWER }
+enum Type { START_RUN, PAUSE, PLACE_TOWER, SELL_TOWER, USE_SKILL, REBUILD_TOWER, UPGRADE_TOWER }
 
 var tick: int = 0
 var type: Type = Type.START_RUN
@@ -51,6 +51,13 @@ static func sell_tower(p_tick: int, p_tower_uid: int) -> SimCommand:
 ## Rebuilds a husk (D-104, D-113).
 static func rebuild_tower(p_tick: int, p_tower_uid: int) -> SimCommand:
 	var c := _make(p_tick, Type.REBUILD_TOWER)
+	c.tower_uid = p_tower_uid
+	return c
+
+
+## Buys the next level of a placed tower (D-144).
+static func upgrade_tower(p_tick: int, p_tower_uid: int) -> SimCommand:
+	var c := _make(p_tick, Type.UPGRADE_TOWER)
 	c.tower_uid = p_tower_uid
 	return c
 

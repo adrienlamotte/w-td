@@ -7,11 +7,11 @@ extends RefCounted
 var _hits: PackedInt32Array = PackedInt32Array()
 
 
-## Each built live tower counts its cooldown down, then fires at its target when ready.
+## Stats come from the derived tower arrays (D-144). Each built live tower counts its cooldown down, then fires at its target when ready.
 ## A target killed earlier in this phase is not shot: the tower holds and fires next tick.
 func fire(w: SimWorld) -> void:
 	var towers := w.towers
-	var cat := w.tower_catalog
+	var kind := w.tower_catalog.attack
 	var enemies := w.enemies
 	var cd := towers.cooldown
 	for t in towers.count():
@@ -23,19 +23,19 @@ func fire(w: SimWorld) -> void:
 		var target := towers.target[t]
 		if cd[t] > 0 or target < 0 or enemies.hp[target] <= 0.0:
 			continue
-		cd[t] = cat.cooldown[type]
+		cd[t] = towers.reload[t]
 		var x := enemies.pos_x[target]
 		var z := enemies.pos_z[target]
 		w.events.push(SimEvents.Kind.TOWER_FIRED, towers.uid[t], x, z, type)
-		var dmg := cat.damage[type]
-		match cat.attack[type]:
+		var dmg := towers.damage[t]
+		match kind[type]:
 			TowerCatalog.Attack.SPLASH:
-				w.grid.query_radius(x, z, cat.splash_radius[type], enemies.pos_x, enemies.pos_z, _hits)
+				w.grid.query_radius(x, z, towers.splash_radius[t], enemies.pos_x, enemies.pos_z, _hits)
 				for i in _hits:
 					w.damage_enemy(i, dmg)
 			TowerCatalog.Attack.SLOW:
 				w.damage_enemy(target, dmg)
-				apply_slow(enemies, target, cat.slow_factor[type], cat.slow_ticks[type])
+				apply_slow(enemies, target, towers.slow_factor[t], towers.slow_ticks[t])
 			_:
 				w.damage_enemy(target, dmg)
 
