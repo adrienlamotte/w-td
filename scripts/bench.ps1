@@ -11,7 +11,7 @@ $p = Start-Process -FilePath $exe -Wait -PassThru -ArgumentList @(
     '--resolution', '2560x1440', '--', '--bench', "--out=$out", "--commit=$commit")
 if ($p.ExitCode -or -not (Test-Path $out)) { throw "Benchmark failed (exit $($p.ExitCode), report: $out)" }
 foreach ($s in (Get-Content $out -Raw | ConvertFrom-Json).scenarios) {
-    '{0,-13} avg {1,7:N1} fps  1%-low {2,6:N1}  frame {3,5:N2} ms  step {4,5:N2} ms  gpu {5,5:N2} ms' -f $s.name,
+    '{0,-18} avg {1,7:N1} fps  1%-low {2,6:N1}  frame {3,5:N2} ms  step {4,5:N2} ms  gpu {5,5:N2} ms' -f $s.name,
         $s.frame.avg_fps, $s.frame.low1_fps, $s.frame.frame_ms_avg, $s.sim.step_ms_avg, $s.cpu_gpu.gpu_ms_avg
 }
 Write-Host "Wrote $out" -ForegroundColor Green

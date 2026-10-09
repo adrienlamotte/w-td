@@ -103,7 +103,8 @@ func test_timeline_matches_step() -> void:
 		if tl.x != wave or tl.y != in_break:
 			bad.append("%d: %s, want wave %d break %d" % [clock, tl, wave, in_break])
 		# ticks_left counts down to the switch: it flips exactly ticks_left ticks later.
-		if WaveSpawner.timeline(clock + tl.z, _run).y == tl.y 				or WaveSpawner.timeline(clock + tl.z - 1, _run).y != tl.y:
+		if WaveSpawner.timeline(clock + tl.z, _run).y == tl.y \
+				or WaveSpawner.timeline(clock + tl.z - 1, _run).y != tl.y:
 			bad.append("%d: ticks_left %d" % [clock, tl.z])
 	assert_eq(bad, [] as Array[String], str(bad.slice(0, 5)))
 	assert_eq(WaveSpawner.timeline(_run.wave_ticks, _run), Vector3i(0, 1, _run.break_ticks), "break starts")

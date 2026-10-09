@@ -3,8 +3,8 @@ extends RefCounted
 ## Soft separation (D-079, D-084): each overlapping pair pushes both enemies apart,
 ## each by 0.5 * overlap * separation_strength of its own type. Jacobi style:
 ## pushes are computed from the positions at the start of the phase, then applied
-## in one pass. Every pair is visited once (j > i) in fixed grid order, so the
-## result is deterministic. The horde loop skips bosses: their radius is outside
+## in one pass. Every pair is visited once, in grid cell order with a half box (D-123),
+## so the result is deterministic. The horde loop skips bosses: their radius is outside
 ## the horde scan reach (D-099), so a boss pass handles every pair with a boss (D-106).
 
 const COINCIDENT_EPS: float = 1e-6
@@ -20,6 +20,10 @@ var blocked: PackedByteArray = PackedByteArray()
 ## Queue key per enemy, filled at the start of apply() (D-115): without a field the squared
 ## distance to the Guardian (014); with one, the path cost (see _fill_keys).
 var _key: PackedFloat64Array = PackedFloat64Array()
+## Positions and radii in grid cell order (cell_items order), refilled by apply() (D-123).
+var _sx: PackedFloat32Array = PackedFloat32Array()
+var _sz: PackedFloat32Array = PackedFloat32Array()
+var _sr: PackedFloat32Array = PackedFloat32Array()
 
 
 ## grid must match the enemy positions (02_TECH_ARCHITECTURE.md 3a, tick order).
@@ -52,41 +56,59 @@ func apply(enemies: SimEnemies, grid: SpatialGrid, catalog: EnemyCatalog,
 	blocked.resize(n)
 	blocked.fill(0)
 	_bosses.clear()
-	for i in n:
+	# Cell-ordered copies (D-123): the inner loop reads only these three arrays.
+	var sx := _sx
+	var sz := _sz
+	var sr := _sr
+	sx.resize(n)
+	sz.resize(n)
+	sr.resize(n)
+	for p in n:
+		var i := cell_items[p]
+		sx[p] = xs[i]
+		sz[p] = zs[i]
+		sr[p] = radius[types[i]]
+	# Visit in cell order with a half box (D-123): rows below the visitor's row are skipped
+	# and its own row starts after it, so each overlapping pair is seen exactly once.
+	for p in n:
+		var i := cell_items[p]
 		var ti := types[i]
 		if is_boss[ti]:
 			_bosses.append(i)
 			continue
-		var ri := radius[ti]
+		var ri := sr[p]
 		var ki := 0.5 * strength[ti]
-		var x := xs[i]
-		var z := zs[i]
+		var x := sx[p]
+		var z := sz[p]
 		var di := key[i]
 		var reach := ri + max_r
 		var x0 := clampi(floori((x - reach + he) / cs), 0, dmax)
 		var x1 := clampi(floori((x + reach + he) / cs), 0, dmax)
-		var z0 := clampi(floori((z - reach + he) / cs), 0, dmax)
 		var z1 := clampi(floori((z + reach + he) / cs), 0, dmax)
-		for gz in range(z0, z1 + 1):
+		var gz0 := clampi(floori((z + he) / cs), 0, dmax)  # own row, as SpatialGrid.rebuild
+		for gz in range(gz0, z1 + 1):
 			var row := gz * dim
-			for k in range(cell_start[row + x0], cell_start[row + x1 + 1]):
-				var j := cell_items[k]
-				if j <= i:
-					continue
-				var dx := x - xs[j]
-				var dz := z - zs[j]
-				var tj := types[j]
-				var rr := ri + radius[tj]
+			var q0 := p + 1 if gz == gz0 else cell_start[row + x0]
+			for q in range(q0, cell_start[row + x1 + 1]):
+				var dx := x - sx[q]
+				var dz := z - sz[q]
+				var rr := ri + sr[q]
 				var d2 := dx * dx + dz * dz
-				if d2 >= rr * rr or is_boss[tj]:  # boss pairs: _apply_bosses
+				if d2 >= rr * rr:
 					continue
-				if key[j] > di:
+				var j := cell_items[q]
+				var tj := types[j]
+				if is_boss[tj]:  # boss pairs: _apply_bosses
+					continue
+				# Same rule as with i < j: on a key tie the lower index is the one behind.
+				var kj := key[j]
+				if kj > di or (kj == di and j < i):
 					if st[i] != SimEnemies.State.MOVING:
 						blocked[j] = 1
 				elif st[j] != SimEnemies.State.MOVING:
 					blocked[i] = 1
 				var d := sqrt(d2)
-				var ux := -1.0  # coincident: i (lower index) goes -x, j goes +x
+				var ux := -1.0 if i < j else 1.0  # coincident: the lower index goes -x
 				var uz := 0.0
 				if d >= COINCIDENT_EPS:
 					ux = dx / d
@@ -98,6 +120,7 @@ func apply(enemies: SimEnemies, grid: SpatialGrid, catalog: EnemyCatalog,
 				_push_z[i] += pi * uz
 				_push_x[j] -= pj * ux
 				_push_z[j] -= pj * uz
+	_bosses.sort()
 	_apply_bosses(xs, zs, types, st, grid, catalog)
 	for i in n:
 		var px := _push_x[i]
