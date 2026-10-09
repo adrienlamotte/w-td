@@ -13,6 +13,7 @@ Last updated: 2026-10-08 (daily docs review; open questions restructured with st
 - `05_STEAM_AND_COMPLIANCE.md` — Steam release, content limits, AI disclosure.
 - `06_ROADMAP.md` — milestones and acceptance criteria.
 - `08_FIRST_CHARACTER_BRIEF.md` — exact deliverables for the first (test) character the owner generates externally.
+- `09_CONTROLS.md` — keyboard/mouse and gamepad mapping, cursor and device-mode rules.
 - `DECISIONS.md` — decision log (append-only).
 - `OPEN_QUESTIONS.md` — unresolved questions.
 

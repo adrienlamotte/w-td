@@ -76,8 +76,7 @@ func _next_scenario(now: int) -> void:
 	BenchScenario.apply(_view.world, _cfg, sc)
 	add_child(_view)
 	var rig: IsoCamera = _view.get_node("CameraRig")
-	rig.set_process(false)  # no pan from the mouse or keys during a run
-	rig.set_process_unhandled_input(false)
+	_view.get_node("PlayerInput").process_mode = Node.PROCESS_MODE_DISABLED  # no player input during a run
 	rig.set_zoom(int(sc.zoom))
 	get_viewport().scaling_3d_scale = float(sc.render_scale)
 	_measuring = false
