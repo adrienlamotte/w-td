@@ -1,8 +1,8 @@
 # 022 — Headless bot run: a 15-minute run is playable
-- Status: planned
+- Status: review
 - Milestone: M2
 - Depends on: 013, 016, 017, 024, 026
-- PR: -
+- PR: #32
 - Labels: needs-human:balance
 
 ## Goal
