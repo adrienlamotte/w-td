@@ -1,5 +1,5 @@
 # 019 — View: combat feedback and enemy/tower visuals
-- Status: review
+- Status: done
 - Milestone: M2
 - Depends on: 016, 017
 - PR: #25
@@ -76,3 +76,4 @@ Size: about 330 lines of code (+ about 60 lines of data/schema), about 200 of te
 ## Questions
 
 ## Review log
+- 2026-10-09 lead-dev: PR #25 approved and squash-merged into m2/dev. Tests 174/174 green, validator 0 errors (run by reviewer). All criteria met; sim presentation fields (`prev_*`, `hit_tick`) read by no rule and not in `state_hash()`; no Node per enemy/effect; `TOWER_HIT` via `Kind.get`; render schema v2 validated; ~387 code lines. Bench: fill +~0.1 ms/frame on PC vs same-day baseline (accepted, within budget). Left for CP-M2 (needs-human:art/playtest): placeholder looks and fx values; the Guardian stays near-white under constant melee because each `GUARDIAN_HIT` restarts the flash (fix if playtest finds it unreadable: only restart when the flash has ended); the scripted splash tower at 30 s is unaffordable and silently rejected (020 deletes the scripted list).
