@@ -130,3 +130,69 @@ func test_separation_cost_3000_piled() -> void:
 		total += world.phase_usec[SimWorld.Phase.SEPARATE]
 	gut.p("separation, 3000 enemies piled: %.2f ms/tick" % (total / 1000.0 / ticks))
 	assert_eq(world.enemies.count(), 3000)
+
+
+## O(n^2) reference of the D-084 rule: every pair i < j once, pushes from the start
+## positions (Jacobi), coincident pair i -x / j +x, total push capped at the own radius.
+func _reference_apply(e: SimEnemies) -> void:
+	var n := e.count()
+	var px := PackedFloat64Array()
+	var pz := PackedFloat64Array()
+	px.resize(n)
+	pz.resize(n)
+	for i in n:
+		for j in range(i + 1, n):
+			var ti := e.type_id[i]
+			var tj := e.type_id[j]
+			var dx := e.pos_x[i] - e.pos_x[j]
+			var dz := e.pos_z[i] - e.pos_z[j]
+			var rr := _catalog.radius[ti] + _catalog.radius[tj]
+			var d2 := dx * dx + dz * dz
+			if d2 >= rr * rr:
+				continue
+			var d := sqrt(d2)
+			var ux := -1.0
+			var uz := 0.0
+			if d >= EnemySeparation.COINCIDENT_EPS:
+				ux = dx / d
+				uz = dz / d
+			var overlap := rr - d
+			px[i] += 0.5 * _catalog.separation_strength[ti] * overlap * ux
+			pz[i] += 0.5 * _catalog.separation_strength[ti] * overlap * uz
+			px[j] -= 0.5 * _catalog.separation_strength[tj] * overlap * ux
+			pz[j] -= 0.5 * _catalog.separation_strength[tj] * overlap * uz
+	for i in n:
+		var r := _catalog.radius[e.type_id[i]]
+		var len := sqrt(px[i] * px[i] + pz[i] * pz[i])
+		var s := r / len if len > r else 1.0
+		e.pos_x[i] += px[i] * s
+		e.pos_z[i] += pz[i] * s
+
+
+func _reference_layout() -> SimEnemies:
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 2025
+	var kinds := [_catalog.type_of(SWARMER), _catalog.type_of("enemy_brute_01"),
+		_catalog.type_of("enemy_ranged_01")]
+	var e := SimEnemies.new()
+	e.add(_catalog.type_of(BOSS), CX + 5.0, 5.0, 1.0)
+	e.add(kinds[0], CX + 2.0, 2.0, 1.0)  # coincident pair
+	e.add(kinds[0], CX + 2.0, 2.0, 1.0)
+	for i in 397:
+		e.add(kinds[i % 3], CX + rng.randf_range(0.0, 10.0), rng.randf_range(0.0, 10.0), 1.0)
+	return e
+
+
+func test_matches_reference() -> void:
+	for cell: float in [4.0 * _catalog.max_radius, 2.0 * _catalog.max_radius]:
+		var a := _reference_layout()
+		var b := _reference_layout()
+		var grid := SpatialGrid.new(cell)
+		grid.rebuild(a.pos_x, a.pos_z)
+		EnemySeparation.new().apply(a, grid, _catalog)
+		_reference_apply(b)
+		var bad := 0
+		for i in a.count():
+			if absf(a.pos_x[i] - b.pos_x[i]) > 1e-4 or absf(a.pos_z[i] - b.pos_z[i]) > 1e-4:
+				bad += 1
+		assert_eq(bad, 0, "cell %.2f: positions off the O(n^2) reference" % cell)
