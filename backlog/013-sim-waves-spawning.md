@@ -1,8 +1,8 @@
 # 013 — Sim: waves, spawn curve and bosses
-- Status: planned
+- Status: review
 - Milestone: M2
 - Depends on: 011, 012
-- PR: -
+- PR: #18
 
 ## Goal
 Drive spawns from the run data: 60 s waves with breaks, the spawn curve, mini-bosses at 5:00 and 10:00, the final boss at 15:00, and the horde continuing while she is alive.
