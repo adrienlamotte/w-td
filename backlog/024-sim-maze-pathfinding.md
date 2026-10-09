@@ -1,5 +1,5 @@
 # 024 — Sim: maze pathfinding (flow field)
-- Status: planned
+- Status: blocked
 - Milestone: M2
 - Depends on: 015
 - PR: -
@@ -97,5 +97,24 @@ Decision ID: **D-115** (D-114 is 016's, D-116 is 026's). Uses D-111 (point pathi
 Size: about 310 lines of code (field 190, sim wiring 75, bench 45) plus data, about 300 of tests. One PR.
 
 ## Questions
+**Q (game-dev, 2026-10-09): the maze perf gate fails; how to proceed?** Implementation is done and green on branch `task/024-sim-maze-pathfinding` (pushed, no PR yet): 203 tests pass twice, validator green, docs and D-115 PROPOSED written. Two release bench runs (`scriptsench.ps1`, 2560x1440, same machine) give:
+
+| scenario | step ms (run 1 / run 2) | separation | movement | path | gate |
+|---|---|---|---|---|---|
+| pc_typical | 5.43 / 5.19 | 3.70 | 0.56 | 0.00 | unchanged, PASS |
+| pc_stress | 5.81 / 5.77 | 3.64 | 0.55 | 0.00 | unchanged, PASS |
+| pc_piled | 5.45 / 5.43 | 3.75 | 0.36 | 0.00 | unchanged, PASS |
+| deck_typical / deck_stress / deck_piled | 2.38-2.56 / 2.71-2.85 / 3.22-3.23 | | | | unchanged, PASS |
+| pc_maze (3000, 219 towers) | 8.39 / 8.41 | 5.71 | 1.28 | 0.00 | **FAIL** (< 8) |
+| deck_maze (1500) | 4.46 / 4.42 | 2.34 | 0.65 | 0.00 | PASS |
+| pc_maze_churn | 10.11 / 9.67 | 6.01 | 1.35 | 0.79 | PATH PASS (<= 1.5), step **FAIL** |
+
+(phase columns from run 2). `CELLS_PER_TICK` = 4000: PATH averages 0.79-0.83 ms per tick under constant churn, a full field is about 25k units = 7 ticks (0.23 s) latency; 5.7 ms for a full field in headless debug.
+Where the time goes: the pathing itself costs about 1 ms per tick release (queue-key fill ~0.35, steer cell lookups + push-out ~0.7) plus PATH when a recompute is in flight. The rest of the overshoot is separation density: the maze funnels the crowd into corridors and gaps, about 7.4 overlapping neighbours per enemy vs 2.0 in pc_typical (headless diagnostic), so separation rises from 3.7 to 5.7-6.0 ms. That is the existing M1 separation loop, not the field. I did not shrink the maze or the enemy count.
+Options:
+1. ★ Accept 024 as is (pathing within its own budget: PATH <= 1.5 ms, M1 scenarios unchanged) and record the maze scenarios as the new worst case; move the dense-crowd separation cost to task 023 (perf with combat), which already re-benches and optimises (e.g. skip pairs of two stopped enemies, half-rate separation for QUEUED, or a GDExtension separation loop).
+2. Block 024 until a separation optimisation lands in this task (scope grows; risky to mix with pathing).
+3. Lower the bench maze density (wider gaps, fewer rings) and keep the 8 ms gate - not allowed without the owner (the plan forbids it).
+4. Relax the per-tick gate for maze scenarios only (e.g. <= 10.5 ms) until 023.
 
 ## Review log
