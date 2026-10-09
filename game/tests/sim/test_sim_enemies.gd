@@ -27,6 +27,8 @@ func test_remove_middle_swaps_last_in() -> void:
 	e.state[2] = SimEnemies.State.ATTACKING
 	e.anim_frame[2] = 7
 	e.cooldown[2] = 9
+	e.mark_gold[2] = 3
+	e.mark_until[2] = 77
 	e.remove(1)
 	assert_eq(e.count(), 2)
 	assert_eq(e.pos_x[1], 2.0)
@@ -36,7 +38,8 @@ func test_remove_middle_swaps_last_in() -> void:
 	assert_eq(e.state[1], SimEnemies.State.ATTACKING)
 	assert_eq(e.anim_frame[1], 7)
 	assert_eq(e.cooldown[1], 9)
-	for arr in [e.pos_x, e.pos_z, e.hp, e.type_id, e.state, e.anim_frame, e.cooldown]:
+	assert_eq([e.mark_gold[1], e.mark_until[1]], [3, 77])
+	for arr in [e.pos_x, e.pos_z, e.hp, e.type_id, e.state, e.anim_frame, e.cooldown, e.mark_gold, e.mark_until]:
 		assert_eq(arr.size(), 2)
 
 

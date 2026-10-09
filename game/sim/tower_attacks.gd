@@ -1,7 +1,8 @@
 class_name TowerAttacks
 extends RefCounted
 ## Tower attacks in the ATTACKS phase, before the enemy attacks (D-114). Instant hits (D-098);
-## every damage goes through SimWorld.damage_enemy (D-107). Slow rule: D-117.
+## every damage goes through SimWorld.damage_enemy (D-107). Slow rule: D-117. Mark,
+## slow_area: D-145; wall, aura and repair have no target, so they never reach the match.
 
 ## Splash buffer, reused: no allocation once the peak is reached.
 var _hits: PackedInt32Array = PackedInt32Array()
@@ -36,8 +37,23 @@ func fire(w: SimWorld) -> void:
 			TowerCatalog.Attack.SLOW:
 				w.damage_enemy(target, dmg)
 				apply_slow(enemies, target, towers.slow_factor[t], towers.slow_ticks[t])
+			TowerCatalog.Attack.SLOW_AREA:
+				w.grid.query_radius(x, z, towers.splash_radius[t], enemies.pos_x, enemies.pos_z, _hits)
+				for i in _hits:
+					w.damage_enemy(i, dmg)
+					apply_slow(enemies, i, towers.slow_factor[t], towers.slow_ticks[t])
+			TowerCatalog.Attack.MARK:
+				w.damage_enemy(target, dmg)
+				mark(enemies, target, w.clock, towers.mark_gold[t], towers.mark_ticks[t])
 			_:
 				w.damage_enemy(target, dmg)
+
+
+## D-145: an expired mark counts as none; higher gold wins, longer expiry wins, no stacking.
+static func mark(enemies: SimEnemies, i: int, clock: int, gold: int, ticks: int) -> void:
+	var active := clock < enemies.mark_until[i]
+	enemies.mark_gold[i] = maxi(enemies.mark_gold[i], gold) if active else gold
+	enemies.mark_until[i] = maxi(enemies.mark_until[i], clock + ticks)
 
 
 ## D-117: no stacking. The strongest factor applies; a hit refreshes the duration to the longer.

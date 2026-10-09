@@ -175,7 +175,8 @@ func _apply(cmd: SimCommand) -> void:
 			run_state = RunState.RUNNING
 		SimCommand.Type.PAUSE:
 			paused = cmd.paused
-		SimCommand.Type.PLACE_TOWER, SimCommand.Type.SELL_TOWER, SimCommand.Type.REBUILD_TOWER, 				SimCommand.Type.UPGRADE_TOWER:
+		SimCommand.Type.PLACE_TOWER, SimCommand.Type.SELL_TOWER, SimCommand.Type.REBUILD_TOWER, \
+				SimCommand.Type.UPGRADE_TOWER:
 			if run_state != RunState.RUNNING or paused:  # no building while paused (D-105)
 				return
 			if cmd.type == SimCommand.Type.PLACE_TOWER:
@@ -260,6 +261,8 @@ func _deaths() -> void:
 		var gained := 0
 		if chance >= 1.0 or _loot_rng.randf() < chance:
 			gained = catalog.gold[t]
+		if clock < enemies.mark_until[i]:  # D-145: after the base gold, not rolled
+			gained += enemies.mark_gold[i]
 		gold += gained
 		enemies.remove(i)
 		events.push(SimEvents.Kind.ENEMY_DIED, t, x, z, gained)
@@ -288,6 +291,8 @@ func _enemy_attacks() -> void:
 				cd[i] = catalog.attack_cooldown[t]
 				events.push(SimEvents.Kind.TOWER_HIT, u, enemies.pos_x[i], enemies.pos_z[i], catalog.damage[t])
 				damage_tower(k, catalog.damage[t])
+				if towers.thorns[k] > 0.0:  # D-145: every landed hit, the lethal one too
+					damage_enemy(i, towers.thorns[k])
 				continue
 			cd[i] = catalog.attack_cooldown[t]
 			_hit_guardian(t, enemies.pos_x[i], enemies.pos_z[i], catalog.damage[t])
@@ -323,8 +328,9 @@ func state_hash() -> int:
 	return hash([tick, clock, run_state, paused, run.id if run else "", _spawn_rng.state, _loot_rng.state,
 		guardian_hp, gold, enemies.pos_x, enemies.pos_z, enemies.hp,
 		enemies.type_id, enemies.state, enemies.anim_frame, enemies.cooldown, enemies.slow_factor, enemies.slow_ticks,
-		enemies.target_id,
+		enemies.target_id, enemies.mark_gold, enemies.mark_until,
 		towers.pos_x, towers.pos_z, towers.attack_range, towers.target, next_tower_uid,
 		towers.uid, towers.type_id, towers.hp, towers.husk, towers.paid, towers.cell_i, towers.cell_j,
 		towers.cooldown, towers.level, towers.damage, towers.reload, towers.max_hp, towers.splash_radius,
-		towers.slow_factor, towers.slow_ticks, towers.stats_dirty, modifiers.hash_parts(), skills.ready_at, skills.shield_left, skills.shield_until])
+		towers.slow_factor, towers.slow_ticks, towers.thorns, towers.mark_gold, towers.mark_ticks,
+		towers.stats_dirty, modifiers.hash_parts(), skills.ready_at, skills.shield_left, skills.shield_until])
