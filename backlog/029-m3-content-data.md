@@ -1,8 +1,8 @@
 # 029 — Data: M3 content files and schemas
-- Status: planned
+- Status: review
 - Milestone: M3
 - Depends on: -
-- PR:
+- PR: #36
 
 ## Goal
 Put the approved M3 content into data files with schemas and validator checks, so every later M3 task only reads it: waifus, waifu towers with 4 levels, the 6 Guardians and their signature skills, the 25 cards, the relationship files, the 12 meta nodes and the new run fields.
