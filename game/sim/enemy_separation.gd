@@ -13,6 +13,10 @@ var _push_x: PackedFloat32Array = PackedFloat32Array()
 var _push_z: PackedFloat32Array = PackedFloat32Array()
 ## Boss indices of the current apply(), ascending.
 var _bosses: PackedInt32Array = PackedInt32Array()
+## Queue flag (D-107), per enemy, refilled by apply(): 1 when the enemy overlaps a
+## stopped one (state != MOVING last tick) that is closer to the Guardian. Read by
+## EnemyMovement.advance() in the same tick. Task 024 swaps the "closer" compare.
+var blocked: PackedByteArray = PackedByteArray()
 
 
 ## grid must match the enemy positions (02_TECH_ARCHITECTURE.md 3a, tick order).
@@ -22,6 +26,7 @@ func apply(enemies: SimEnemies, grid: SpatialGrid, catalog: EnemyCatalog) -> voi
 	var xs := enemies.pos_x
 	var zs := enemies.pos_z
 	var types := enemies.type_id
+	var st := enemies.state
 	var radius := catalog.radius
 	var strength := catalog.separation_strength
 	var is_boss := catalog.is_boss
@@ -38,6 +43,8 @@ func apply(enemies: SimEnemies, grid: SpatialGrid, catalog: EnemyCatalog) -> voi
 	_push_z.resize(n)
 	_push_x.fill(0.0)
 	_push_z.fill(0.0)
+	blocked.resize(n)
+	blocked.fill(0)
 	_bosses.clear()
 	for i in n:
 		var ti := types[i]
@@ -48,6 +55,7 @@ func apply(enemies: SimEnemies, grid: SpatialGrid, catalog: EnemyCatalog) -> voi
 		var ki := 0.5 * strength[ti]
 		var x := xs[i]
 		var z := zs[i]
+		var di := x * x + z * z
 		var reach := ri + max_r
 		var x0 := clampi(floori((x - reach + he) / cs), 0, dmax)
 		var x1 := clampi(floori((x + reach + he) / cs), 0, dmax)
@@ -66,6 +74,11 @@ func apply(enemies: SimEnemies, grid: SpatialGrid, catalog: EnemyCatalog) -> voi
 				var d2 := dx * dx + dz * dz
 				if d2 >= rr * rr or is_boss[tj]:  # boss pairs: _apply_bosses
 					continue
+				if xs[j] * xs[j] + zs[j] * zs[j] > di:
+					if st[i] != SimEnemies.State.MOVING:
+						blocked[j] = 1
+				elif st[j] != SimEnemies.State.MOVING:
+					blocked[i] = 1
 				var d := sqrt(d2)
 				var ux := -1.0  # coincident: i (lower index) goes -x, j goes +x
 				var uz := 0.0
@@ -79,7 +92,7 @@ func apply(enemies: SimEnemies, grid: SpatialGrid, catalog: EnemyCatalog) -> voi
 				_push_z[i] += pi * uz
 				_push_x[j] -= pj * ux
 				_push_z[j] -= pj * uz
-	_apply_bosses(xs, zs, types, grid, catalog)
+	_apply_bosses(xs, zs, types, st, grid, catalog)
 	for i in n:
 		var px := _push_x[i]
 		var pz := _push_z[i]
@@ -96,7 +109,7 @@ func apply(enemies: SimEnemies, grid: SpatialGrid, catalog: EnemyCatalog) -> voi
 
 # Every boss-horde pair from the grid, then every boss-boss pair directly (bosses are few).
 func _apply_bosses(xs: PackedFloat32Array, zs: PackedFloat32Array, types: PackedInt32Array,
-		grid: SpatialGrid, catalog: EnemyCatalog) -> void:
+		st: PackedInt32Array, grid: SpatialGrid, catalog: EnemyCatalog) -> void:
 	for b in _bosses.size():
 		var i := _bosses[b]
 		var x := xs[i]
@@ -109,20 +122,25 @@ func _apply_bosses(xs: PackedFloat32Array, zs: PackedFloat32Array, types: Packed
 			for k in range(grid.cell_start[row + x0], grid.cell_start[row + x1 + 1]):
 				var j := grid.cell_items[k]
 				if not catalog.is_boss[types[j]]:
-					_push_pair(mini(i, j), maxi(i, j), xs, zs, types, catalog)
+					_push_pair(mini(i, j), maxi(i, j), xs, zs, types, st, catalog)
 		for c in range(b + 1, _bosses.size()):
-			_push_pair(i, _bosses[c], xs, zs, types, catalog)
+			_push_pair(i, _bosses[c], xs, zs, types, st, catalog)
 
 
 # Same pair rule as the horde loop; i < j (coincident: i goes -x).
 func _push_pair(i: int, j: int, xs: PackedFloat32Array, zs: PackedFloat32Array,
-		types: PackedInt32Array, catalog: EnemyCatalog) -> void:
+		types: PackedInt32Array, st: PackedInt32Array, catalog: EnemyCatalog) -> void:
 	var dx := xs[i] - xs[j]
 	var dz := zs[i] - zs[j]
 	var rr := catalog.radius[types[i]] + catalog.radius[types[j]]
 	var d2 := dx * dx + dz * dz
 	if d2 >= rr * rr:
 		return
+	if xs[j] * xs[j] + zs[j] * zs[j] > xs[i] * xs[i] + zs[i] * zs[i]:
+		if st[i] != SimEnemies.State.MOVING:
+			blocked[j] = 1
+	elif st[j] != SimEnemies.State.MOVING:
+		blocked[i] = 1
 	var d := sqrt(d2)
 	var ux := -1.0
 	var uz := 0.0
