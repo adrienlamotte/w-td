@@ -250,3 +250,60 @@ func test_determinism() -> void:
 	var h := _hash_run(7)
 	assert_eq(_hash_run(7), h)
 	assert_ne(_hash_run(8), h)
+
+
+# check_place (D-121): each reason, and place() is accepted iff OK.
+func _check_then_place(id: String, x: float, z: float, want: TowerBuilding.Reason, why: String) -> void:
+	var c := TowerBuilding.check_place(world, id, x, z)
+	assert_eq(c.reason, want, why)
+	var gold := world.gold
+	var n := world.towers.count()
+	var owned := world.build.owner.duplicate()
+	_place(x, z, id)
+	if want != TowerBuilding.Reason.OK:
+		assert_eq(world.gold, gold, why + ": gold")
+		assert_eq(world.towers.count(), n, why + ": towers")
+		assert_eq(world.build.owner, owned, why + ": grid")
+		return
+	var t := world.towers.count() - 1
+	assert_eq(world.towers.count(), n + 1, why)
+	assert_eq(world.towers.pos_x[t], c.x, why + ": snapped x")
+	assert_eq(world.towers.pos_z[t], c.z, why + ": snapped z")
+	assert_eq(gold - world.gold, c.price, why + ": price")
+	assert_eq(world.towers.footprint[t], c.footprint, why + ": footprint")
+
+
+func test_check_place_reasons() -> void:
+	var R := TowerBuilding.Reason
+	world.gold = 1000
+	_check_then_place("tower_nope", 3.0, 4.0, R.NOT_OFFERED, "not offered")
+	_check_then_place(SINGLE, 3.2, 4.1, R.OK, "ok")
+	_check_then_place(SINGLE, 3.5, 4.0, R.OCCUPIED, "tower there")
+	_check_then_place(SINGLE, 100.0, 0.0, R.OCCUPIED, "outside the grid")
+	_check_then_place(SINGLE, 15.0, 15.0, R.OUT_OF_RADIUS, "out of radius")
+	_check_then_place(SINGLE, 1.0, 0.0, R.TOO_CLOSE, "too close")
+	_place(6.0, 4.0)
+	world.damage_tower(world.towers.count() - 1, 1000.0)
+	_check_then_place(SINGLE, 6.0, 4.0, R.OCCUPIED, "husk there")
+	world.gold = 0
+	_check_then_place(SINGLE, 9.0, 4.0, R.NO_GOLD, "no gold")
+
+
+func test_prices_match_commands() -> void:
+	var cat := world.tower_catalog
+	world.gold = 1000
+	assert_eq(TowerBuilding.price(world, single), cat.cost[single])
+	_place(3.0, 4.0)
+	_place(6.0, 4.0)
+	world.damage_tower(1, 1000.0)
+	assert_eq(TowerBuilding.price(world, single), cat.cost[single] + 2 * cat.cost_per_copy[single], "husks count")
+	var refund := TowerBuilding.sell_refund(world, 0)
+	assert_gt(refund, 0)
+	assert_eq(TowerBuilding.sell_refund(world, 1), 0, "husk refunds 0")
+	var rebuild := TowerBuilding.rebuild_price(world, 1)
+	var gold := world.gold
+	_do(SimCommand.rebuild_tower(world.tick, 1))
+	assert_eq(gold - world.gold, rebuild, "rebuild charges rebuild_price")
+	gold = world.gold
+	_do(SimCommand.sell_tower(world.tick, 0))
+	assert_eq(world.gold - gold, refund, "sell refunds sell_refund")

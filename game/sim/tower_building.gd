@@ -5,41 +5,90 @@ extends RefCounted
 ## changes nothing and pushes no event.
 
 
-static func place(w: SimWorld, cmd: SimCommand) -> void:
+## Verdicts of check_place, in check order (D-121).
+enum Reason { OK, NOT_OFFERED, OCCUPIED, OUT_OF_RADIUS, TOO_CLOSE, NO_GOLD }
+
+
+## Result of check_place: the verdict and, from OCCUPIED on, where the tower would stand.
+class Check:
+	var reason: Reason = Reason.NOT_OFFERED
+	var type: int = -1
+	## Snapped footprint centre.
+	var x: float = 0.0
+	var z: float = 0.0
+	## Cells per side, and the first cell of the footprint.
+	var footprint: int = 0
+	var i0: int = 0
+	var j0: int = 0
+	var price: int = 0
+
+
+## The single placement rule (D-121): the build UI shows this, place() commits it.
+## Read-only. The RUNNING/not-paused gate is the caller's (SimWorld._apply).
+static func check_place(w: SimWorld, tower_id: String, x: float, z: float) -> Check:
+	var c := Check.new()
 	var cat := w.tower_catalog
-	var type := cat.type_of(cmd.tower_id)
-	if type < 0 or not w.run.tower_types.has(type):
-		return
+	c.type = cat.type_of(tower_id)
+	if c.type < 0 or not w.run.tower_types.has(c.type):
+		return c
 	var b := w.build
-	var radius := cat.radius[type]
-	var n := BuildGrid.footprint(radius, b.step)
-	var i0 := b.first_cell(cmd.x, n)
-	var j0 := b.first_cell(cmd.z, n)
-	if not b.is_free(i0, j0, n):  # out of the grid, or a tower or husk is there
+	var radius := cat.radius[c.type]
+	c.footprint = BuildGrid.footprint(radius, b.step)
+	c.i0 = b.first_cell(x, c.footprint)
+	c.j0 = b.first_cell(z, c.footprint)
+	c.x = b.cell_centre(c.i0, c.footprint)
+	c.z = b.cell_centre(c.j0, c.footprint)
+	c.price = price(w, c.type)
+	var dist := sqrt(c.x * c.x + c.z * c.z)
+	if not b.is_free(c.i0, c.j0, c.footprint):  # out of the grid, or a tower or husk is there
+		c.reason = Reason.OCCUPIED
+	elif dist + radius > w.run.build_radius:
+		c.reason = Reason.OUT_OF_RADIUS
+	elif dist < w.run.guardian_contact_radius + radius:
+		c.reason = Reason.TOO_CLOSE
+	elif w.gold < c.price:
+		c.reason = Reason.NO_GOLD
+	else:
+		c.reason = Reason.OK
+	return c
+
+
+## Price of the next tower of this catalog type: rises per copy, husks count (D-113).
+static func price(w: SimWorld, type: int) -> int:
+	return w.tower_catalog.cost[type] + w.tower_catalog.cost_per_copy[type] * w.towers.copies(type)
+
+
+## Price to rebuild husk t: a fraction of what was paid (D-113).
+static func rebuild_price(w: SimWorld, t: int) -> int:
+	return floori(w.towers.paid[t] * w.tower_catalog.rebuild_fraction[w.towers.type_id[t]])
+
+
+## Gold back for selling tower t; 0 for a husk (D-113).
+static func sell_refund(w: SimWorld, t: int) -> int:
+	if w.towers.husk[t]:
+		return 0
+	return floori(w.towers.paid[t] * w.tower_catalog.sell_refund[w.towers.type_id[t]])
+
+
+static func place(w: SimWorld, cmd: SimCommand) -> void:
+	var c := check_place(w, cmd.tower_id, cmd.x, cmd.z)
+	if c.reason != Reason.OK:
 		return
-	var cx := b.cell_centre(i0, n)
-	var cz := b.cell_centre(j0, n)
-	var dist := sqrt(cx * cx + cz * cz)
-	if dist + radius > w.run.build_radius or dist < w.run.guardian_contact_radius + radius:
-		return
-	var price := cat.cost[type] + cat.cost_per_copy[type] * w.towers.copies(type)  # husks count (D-113)
-	if w.gold < price:
-		return
-	w.gold -= price
+	w.gold -= c.price
 	var uid := w.next_tower_uid
 	w.next_tower_uid += 1
 	var towers := w.towers
-	var t := towers.add(cx, cz, cat.attack_range[type])
+	var t := towers.add(c.x, c.z, w.tower_catalog.attack_range[c.type])
 	towers.uid[t] = uid
-	towers.type_id[t] = type
-	towers.paid[t] = price
-	towers.cell_i[t] = i0
-	towers.cell_j[t] = j0
-	towers.footprint[t] = n
-	towers.hp[t] = cat.hp[type]
+	towers.type_id[t] = c.type
+	towers.paid[t] = c.price
+	towers.cell_i[t] = c.i0
+	towers.cell_j[t] = c.j0
+	towers.footprint[t] = c.footprint
+	towers.hp[t] = w.tower_catalog.hp[c.type]
 	# Enemies standing on the footprint are allowed; task 024 pushes them out (D-112).
-	b.fill(i0, j0, n, uid, 1)
-	w.events.push(SimEvents.Kind.TOWER_PLACED, uid, cx, cz, type)
+	w.build.fill(c.i0, c.j0, c.footprint, uid, 1)
+	w.events.push(SimEvents.Kind.TOWER_PLACED, uid, c.x, c.z, c.type)
 
 
 static func sell(w: SimWorld, tower_uid: int) -> void:
@@ -47,9 +96,7 @@ static func sell(w: SimWorld, tower_uid: int) -> void:
 	var t := _find(towers, tower_uid)
 	if t < 0:
 		return
-	var refund := 0  # selling a husk just clears it (D-113)
-	if not towers.husk[t]:
-		refund = floori(towers.paid[t] * w.tower_catalog.sell_refund[towers.type_id[t]])
+	var refund := sell_refund(w, t)  # selling a husk just clears it (D-113)
 	w.gold += refund
 	w.build.fill(towers.cell_i[t], towers.cell_j[t], towers.footprint[t], -1, 0)
 	w.events.push(SimEvents.Kind.TOWER_SOLD, tower_uid, towers.pos_x[t], towers.pos_z[t], refund)
@@ -62,7 +109,7 @@ static func rebuild(w: SimWorld, tower_uid: int) -> void:
 	if t < 0 or not towers.husk[t]:
 		return
 	var type := towers.type_id[t]
-	var price := floori(towers.paid[t] * w.tower_catalog.rebuild_fraction[type])  # of the price paid (D-113)
+	var price := rebuild_price(w, t)
 	if w.gold < price:
 		return
 	w.gold -= price

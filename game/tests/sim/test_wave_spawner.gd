@@ -85,3 +85,33 @@ func test_last_entry_repeats() -> void:
 func test_spawn_ring_outside_camera_bounds() -> void:
 	var cam := DataFiles.read_id("res://data/camera", "camera_default")
 	assert_gt(_run.spawn_ring_min, float(cam.bounds_radius) + float(cam.bounds_margin))
+
+
+# timeline() agrees with WAVE_STARTED over two periods (D-121). Mismatches are collected:
+# one assert per check instead of thousands.
+func test_timeline_matches_step() -> void:
+	var to := _run.first_wave_tick + 2 * _period()
+	var waves: Dictionary = _simulate(0, to).waves
+	var wave := -1
+	var bad: Array[String] = []
+	for clock in range(0, to):
+		if waves.has(clock):
+			wave = waves[clock]
+		var tl := WaveSpawner.timeline(clock, _run)
+		var t := clock - _run.first_wave_tick - wave * _period()
+		var in_break := 1 if wave < 0 or t >= _run.wave_ticks else 0
+		if tl.x != wave or tl.y != in_break:
+			bad.append("%d: %s, want wave %d break %d" % [clock, tl, wave, in_break])
+		# ticks_left counts down to the switch: it flips exactly ticks_left ticks later.
+		if WaveSpawner.timeline(clock + tl.z, _run).y == tl.y 				or WaveSpawner.timeline(clock + tl.z - 1, _run).y != tl.y:
+			bad.append("%d: ticks_left %d" % [clock, tl.z])
+	assert_eq(bad, [] as Array[String], str(bad.slice(0, 5)))
+	assert_eq(WaveSpawner.timeline(_run.wave_ticks, _run), Vector3i(0, 1, _run.break_ticks), "break starts")
+
+
+func test_timeline_before_first_wave() -> void:
+	var run := RunData.load_id(RUN, _catalog, TowerCatalog.load_dir())
+	run.first_wave_tick = 90
+	assert_eq(WaveSpawner.timeline(0, run), Vector3i(-1, 1, 90))
+	assert_eq(WaveSpawner.timeline(89, run), Vector3i(-1, 1, 1))
+	assert_eq(WaveSpawner.timeline(90, run), Vector3i(0, 0, run.wave_ticks))
