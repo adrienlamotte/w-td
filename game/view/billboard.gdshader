@@ -1,5 +1,5 @@
 // Horde/tower billboard sprite (D-087). Camera-facing quad pivoted at the instance
-// origin (bottom-centre). INSTANCE_CUSTOM.r = frame offset, .g = flip (0 or 1).
+// origin (bottom-centre). INSTANCE_CUSTOM.r = frame offset, .g = flip (0 or 1), .b = flash (D-120).
 // The walk frame comes from TIME: cosmetic, so it stays in the view.
 shader_type spatial;
 render_mode unshaded, cull_disabled;
@@ -11,6 +11,7 @@ uniform float fps = 0.0;
 
 varying flat float v_frame;
 varying flat float v_flip;
+varying flat float v_flash;
 
 void vertex() {
 	// Same as a StandardMaterial3D with billboard enabled; the shader sizes the quad.
@@ -18,12 +19,13 @@ void vertex() {
 	VERTEX.xy *= sprite_size;
 	v_frame = float((int(INSTANCE_CUSTOM.r) + int(TIME * fps)) % frames);
 	v_flip = INSTANCE_CUSTOM.g;
+	v_flash = INSTANCE_CUSTOM.b;
 }
 
 void fragment() {
 	float u = v_flip > 0.5 ? 1.0 - UV.x : UV.x;
 	vec4 c = texture(tex, vec2((v_frame + u) / float(frames), UV.y));
-	ALBEDO = c.rgb;
+	ALBEDO = mix(c.rgb, vec3(1.0), v_flash);
 	ALPHA = c.a;
 	ALPHA_SCISSOR_THRESHOLD = 0.5;  // opaque cut-out: depth-tested, no sorting
 }

@@ -50,3 +50,17 @@ func test_growth_keeps_instances_and_identity() -> void:
 	assert_almost_eq(buf[(n - 1) * S + 3], (n - 1) * 0.01, 1e-5)
 	var last := (b.capacity(0) - 1) * S
 	assert_eq([buf[last], buf[last + 5], buf[last + 10]], [1.0, 1.0, 1.0], "identity basis in new slots")
+
+
+func test_skips_corpses_and_flags_flash() -> void:
+	var b := HordeBatcher.new(1, 4)
+	var xs := PackedFloat32Array([1, 2, 3])
+	var zs := PackedFloat32Array([0, 0, 0])
+	b.fill(xs, zs, xs, zs, 0.0, PackedInt32Array([0, 0, 0]), cull,
+		PackedFloat32Array([5, 0, 5]), PackedInt32Array([10, 10, 2]), 8)
+	assert_eq(b.counts[0], 2, "corpse not packed")
+	var buf := b.buffers[0]
+	assert_almost_eq(buf[3], 1.0, 1e-5)
+	assert_eq(buf[14], 1.0, "hit at tick 10: flashing")
+	assert_almost_eq(buf[S + 3], 3.0, 1e-5)
+	assert_eq(buf[S + 14], 0.0, "hit at tick 2: not flashing")

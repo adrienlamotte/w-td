@@ -1,8 +1,41 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "id": "render_default",
   "enemy_sprite_height": 1.8,
   "tower_sprite_height": 4.0,
   "walk_frames": 8,
-  "walk_fps": 12
+  "walk_fps": 12,
+  "enemy_looks": {
+    "swarmer": {"shape": "blob", "color": [0.55, 0.85, 0.35], "height_scale": 1.0},
+    "brute": {"shape": "brute", "color": [0.8, 0.4, 0.25], "height_scale": 1.3},
+    "ranged": {"shape": "ranged", "color": [0.45, 0.5, 0.95], "height_scale": 1.0},
+    "miniboss": {"shape": "crown", "color": [0.8, 0.3, 0.85], "height_scale": 2.0},
+    "boss": {"shape": "crown", "color": [0.9, 0.15, 0.2], "height_scale": 3.0}
+  },
+  "tower_looks": {
+    "single": {"shape": "single", "color": [0.95, 0.85, 0.3], "height_scale": 1.0},
+    "splash": {"shape": "splash", "color": [0.95, 0.5, 0.2], "height_scale": 0.9},
+    "slow": {"shape": "slow", "color": [0.4, 0.8, 0.95], "height_scale": 1.0},
+    "husk": {"shape": "husk", "color": [0.5, 0.5, 0.5], "height_scale": 0.6},
+    "bare": {"shape": "bare", "color": [0.95, 0.85, 0.3], "height_scale": 1.0}
+  },
+  "fx": {
+    "flash_sec": 0.1,
+    "death_sec": 0.35,
+    "death_size": 1.2,
+    "coin_sec": 0.6,
+    "coin_size": 0.5,
+    "coin_color": [1.0, 0.85, 0.2],
+    "shot_sec": 0.08,
+    "shot_width": 0.12,
+    "spark_sec": 0.2,
+    "spark_size": 0.8,
+    "spark_color": [1.0, 0.6, 0.2],
+    "ring_sec": 0.4,
+    "ring_width": 0.6,
+    "ring_color": [1.0, 0.9, 0.5],
+    "max_effects": 512,
+    "shield_radius": 1.6,
+    "shield_color": [0.4, 0.7, 1.0, 0.3]
+  }
 }

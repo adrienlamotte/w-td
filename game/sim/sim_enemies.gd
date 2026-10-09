@@ -7,6 +7,9 @@ extends RefCounted
 ## QUEUED: stopped behind the crowd, does not attack (D-107).
 enum State { MOVING = 0, ATTACKING = 1, QUEUED = 2 }
 
+## hit_tick of an enemy never hit.
+const NEVER_HIT: int = -1000000
+
 var pos_x: PackedFloat32Array = PackedFloat32Array()
 var pos_z: PackedFloat32Array = PackedFloat32Array()
 var hp: PackedFloat32Array = PackedFloat32Array()
@@ -18,6 +21,12 @@ var cooldown: PackedInt32Array = PackedInt32Array()
 ## Speed multiplier while slowed, 1 = none; slow_ticks MOVE phases left, 0 = none (D-114, D-117).
 var slow_factor: PackedFloat32Array = PackedFloat32Array()
 var slow_ticks: PackedInt32Array = PackedInt32Array()
+## Presentation only (D-120): no rule reads them, not in state_hash(). Kept here so they
+## follow every swap-remove. prev_* = position at the start of the tick; hit_tick = tick of
+## the last damage_enemy (NEVER_HIT before).
+var prev_x: PackedFloat32Array = PackedFloat32Array()
+var prev_z: PackedFloat32Array = PackedFloat32Array()
+var hit_tick: PackedInt32Array = PackedInt32Array()
 
 
 func count() -> int:
@@ -35,6 +44,9 @@ func add(p_type_id: int, x: float, z: float, p_hp: float) -> int:
 	cooldown.append(0)
 	slow_factor.append(1.0)
 	slow_ticks.append(0)
+	prev_x.append(x)
+	prev_z.append(z)
+	hit_tick.append(NEVER_HIT)
 	return pos_x.size() - 1
 
 
@@ -50,6 +62,9 @@ func remove(i: int) -> void:
 	cooldown[i] = cooldown[last]
 	slow_factor[i] = slow_factor[last]
 	slow_ticks[i] = slow_ticks[last]
+	prev_x[i] = prev_x[last]
+	prev_z[i] = prev_z[last]
+	hit_tick[i] = hit_tick[last]
 	pos_x.resize(last)
 	pos_z.resize(last)
 	hp.resize(last)
@@ -59,4 +74,7 @@ func remove(i: int) -> void:
 	cooldown.resize(last)
 	slow_factor.resize(last)
 	slow_ticks.resize(last)
+	prev_x.resize(last)
+	prev_z.resize(last)
+	hit_tick.resize(last)
 

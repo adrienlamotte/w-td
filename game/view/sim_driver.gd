@@ -7,8 +7,8 @@ extends RefCounted
 const MAX_STEPS_PER_FRAME: int = 5
 
 var world: SimWorld
-var prev_x: PackedFloat32Array = PackedFloat32Array()
-var prev_z: PackedFloat32Array = PackedFloat32Array()
+## Called after each world.step() when valid (events are cleared at the next step, D-120).
+var on_step: Callable
 var _acc: float = 0.0
 
 
@@ -22,10 +22,9 @@ func advance(delta: float) -> int:
 	_acc += delta
 	var steps := 0
 	while _acc >= SimWorld.SIM_DT and steps < MAX_STEPS_PER_FRAME:
-		# Packed arrays are shared on assignment: copy explicitly (once per tick, not per frame).
-		prev_x = world.enemies.pos_x.duplicate()
-		prev_z = world.enemies.pos_z.duplicate()
 		world.step()
+		if on_step.is_valid():
+			on_step.call()
 		_acc -= SimWorld.SIM_DT
 		steps += 1
 	if _acc >= SimWorld.SIM_DT:
@@ -38,13 +37,11 @@ func alpha() -> float:
 	return _acc / SimWorld.SIM_DT
 
 
-# ponytail: after a swap-remove (D-081) prev[i] belongs to another enemy for one tick.
-# HordeBatcher snaps on jumps above 2 units (D-087); these helpers do not.
+# prev_* live in SimEnemies and follow every swap-remove (D-120). HordeBatcher also snaps
+# on jumps above 2 units (D-087); these helpers do not.
 func interp_x(i: int) -> float:
-	var cur := world.enemies.pos_x[i]
-	return cur if i >= prev_x.size() else lerpf(prev_x[i], cur, alpha())
+	return lerpf(world.enemies.prev_x[i], world.enemies.pos_x[i], alpha())
 
 
 func interp_z(i: int) -> float:
-	var cur := world.enemies.pos_z[i]
-	return cur if i >= prev_z.size() else lerpf(prev_z[i], cur, alpha())
+	return lerpf(world.enemies.prev_z[i], world.enemies.pos_z[i], alpha())

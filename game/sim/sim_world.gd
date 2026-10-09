@@ -98,6 +98,9 @@ func spawn_ring(p_type_id: int, count: int, ring_radius: float) -> void:
 func step() -> void:
 	events.clear()
 	_t = Time.get_ticks_usec()
+	# View interpolation (D-120). Packed arrays are shared on assignment: copy explicitly.
+	enemies.prev_x = enemies.pos_x.duplicate()
+	enemies.prev_z = enemies.pos_z.duplicate()
 	while not _queue.is_empty() and _queue[0].tick <= tick:
 		_apply(_queue.pop_front())
 	_lap(Phase.COMMANDS)
@@ -203,6 +206,7 @@ func damage_enemy(i: int, amount: float) -> void:
 	if enemies.hp[i] <= 0.0:
 		return
 	enemies.hp[i] -= amount
+	enemies.hit_tick[i] = tick
 	events.push(SimEvents.Kind.ENEMY_HIT, enemies.type_id[i], enemies.pos_x[i], enemies.pos_z[i], amount)
 
 

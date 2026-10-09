@@ -58,7 +58,7 @@ func _process(_delta: float) -> void:
 	_render_cpu_ms += RenderingServer.viewport_get_measured_render_time_cpu(vp)
 	_gpu_ms += RenderingServer.viewport_get_measured_render_time_gpu(vp)
 	if now - _start_usec >= float(_cfg.measure_sec) * 1e6:
-		_results.append(_finish(sc, world, _view.driver))
+		_results.append(_finish(sc, world))
 		_view.queue_free()
 		_view = null
 
@@ -87,7 +87,7 @@ func _next_scenario(now: int) -> void:
 	_gpu_ms = 0.0
 
 
-func _finish(sc: Dictionary, world: SimWorld, driver: SimDriver) -> Dictionary:
+func _finish(sc: Dictionary, world: SimWorld) -> Dictionary:
 	var n := maxi(1, _frames.size())
 	var ticks := world.tick - _start_tick
 	var elapsed := (_last_usec - _start_usec) / 1e6
@@ -100,8 +100,8 @@ func _finish(sc: Dictionary, world: SimWorld, driver: SimDriver) -> Dictionary:
 	var speed := 0.0
 	var moved := 0
 	var e := world.enemies
-	for i in mini(e.count(), driver.prev_x.size()):
-		var d := Vector2(e.pos_x[i] - driver.prev_x[i], e.pos_z[i] - driver.prev_z[i]).length()
+	for i in e.count():
+		var d := Vector2(e.pos_x[i] - e.prev_x[i], e.pos_z[i] - e.prev_z[i]).length()
 		if d <= 2.0:
 			speed += d / SimWorld.SIM_DT
 			moved += 1

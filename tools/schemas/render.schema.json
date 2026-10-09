@@ -1,16 +1,92 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Render",
-  "description": "Horde/tower sprite rendering tunables (D-087). Values are placeholders judged at CP-M1; per-type sizes move to sprite metadata in M4.",
+  "description": "Horde/tower sprite rendering, placeholder looks and combat effects (D-087, D-120). Values are placeholders; per-type sizes move to sprite metadata in M4.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version", "id", "enemy_sprite_height", "tower_sprite_height", "walk_frames", "walk_fps"],
+  "required": ["schema_version", "id", "enemy_sprite_height", "tower_sprite_height", "walk_frames", "walk_fps", "enemy_looks", "tower_looks", "fx"],
+  "$defs": {
+    "rgb": {"type": "array", "items": {"type": "number", "minimum": 0, "maximum": 1}, "minItems": 3, "maxItems": 3},
+    "rgba": {"type": "array", "items": {"type": "number", "minimum": 0, "maximum": 1}, "minItems": 4, "maxItems": 4},
+    "pos_sec": {"type": "number", "exclusiveMinimum": 0},
+    "enemy_look": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["shape", "color", "height_scale"],
+      "properties": {
+        "shape": {"enum": ["blob", "brute", "ranged", "crown"]},
+        "color": {"$ref": "#/$defs/rgb"},
+        "height_scale": {"type": "number", "exclusiveMinimum": 0}
+      }
+    },
+    "tower_look": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["shape", "color", "height_scale"],
+      "properties": {
+        "shape": {"enum": ["single", "splash", "slow", "husk", "bare"]},
+        "color": {"$ref": "#/$defs/rgb"},
+        "height_scale": {"type": "number", "exclusiveMinimum": 0}
+      }
+    }
+  },
   "properties": {
-    "schema_version": {"const": 1},
+    "schema_version": {"const": 2},
     "id": {"type": "string", "pattern": "^render_[a-z0-9_]+$"},
     "enemy_sprite_height": {"type": "number", "exclusiveMinimum": 0},
     "tower_sprite_height": {"type": "number", "exclusiveMinimum": 0},
     "walk_frames": {"type": "integer", "minimum": 1, "maximum": 16},
-    "walk_fps": {"type": "number", "exclusiveMinimum": 0}
+    "walk_fps": {"type": "number", "exclusiveMinimum": 0},
+    "enemy_looks": {
+      "description": "By enemy archetype.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["swarmer", "brute", "ranged", "miniboss", "boss"],
+      "properties": {
+        "swarmer": {"$ref": "#/$defs/enemy_look"},
+        "brute": {"$ref": "#/$defs/enemy_look"},
+        "ranged": {"$ref": "#/$defs/enemy_look"},
+        "miniboss": {"$ref": "#/$defs/enemy_look"},
+        "boss": {"$ref": "#/$defs/enemy_look"}
+      }
+    },
+    "tower_looks": {
+      "description": "By tower attack kind, plus husk (dead tower) and bare (M1 bench tower).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["single", "splash", "slow", "husk", "bare"],
+      "properties": {
+        "single": {"$ref": "#/$defs/tower_look"},
+        "splash": {"$ref": "#/$defs/tower_look"},
+        "slow": {"$ref": "#/$defs/tower_look"},
+        "husk": {"$ref": "#/$defs/tower_look"},
+        "bare": {"$ref": "#/$defs/tower_look"}
+      }
+    },
+    "fx": {
+      "description": "Combat effects; lifetimes in view seconds, sizes in world units.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["flash_sec", "death_sec", "death_size", "coin_sec", "coin_size", "coin_color", "shot_sec", "shot_width", "spark_sec", "spark_size", "spark_color", "ring_sec", "ring_width", "ring_color", "max_effects", "shield_radius", "shield_color"],
+      "properties": {
+        "flash_sec": {"$ref": "#/$defs/pos_sec"},
+        "death_sec": {"$ref": "#/$defs/pos_sec"},
+        "death_size": {"type": "number", "exclusiveMinimum": 0},
+        "coin_sec": {"$ref": "#/$defs/pos_sec"},
+        "coin_size": {"type": "number", "exclusiveMinimum": 0},
+        "coin_color": {"$ref": "#/$defs/rgb"},
+        "shot_sec": {"$ref": "#/$defs/pos_sec"},
+        "shot_width": {"type": "number", "exclusiveMinimum": 0},
+        "spark_sec": {"$ref": "#/$defs/pos_sec"},
+        "spark_size": {"type": "number", "exclusiveMinimum": 0},
+        "spark_color": {"$ref": "#/$defs/rgb"},
+        "ring_sec": {"$ref": "#/$defs/pos_sec"},
+        "ring_width": {"type": "number", "exclusiveMinimum": 0},
+        "ring_color": {"$ref": "#/$defs/rgb"},
+        "max_effects": {"type": "integer", "minimum": 1, "maximum": 4096},
+        "shield_radius": {"type": "number", "exclusiveMinimum": 0},
+        "shield_color": {"$ref": "#/$defs/rgba"}
+      }
+    }
   }
 }
