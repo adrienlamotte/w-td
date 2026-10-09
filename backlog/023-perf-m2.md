@@ -10,6 +10,7 @@ Keep the budgets with the M2 load: apply the cheap GDScript optimisations listed
 ## Context
 - `reports/perf_m1.md` (cheap optimisations, GDExtension triggers), D-088 (bench method)
 - `02_TECH_ARCHITECTURE.md` 4 budgets
+- Baseline after 011/012 (lead-dev bench, 2026-10-09, no combat yet): step 6.4 / 7.9 / 10.5 ms on pc typical / stress / piled, up from 5.7 / 6.6 / 8.7 ms at M1, most likely the larger horde cell (1.4 -> 1.6, brute radius 0.4, D-099). `pc_stress` is already near the 8 ms budget before combat.
 
 ## Acceptance criteria
 - Bench scenarios include combat (towers attacking, deaths, spawns).
