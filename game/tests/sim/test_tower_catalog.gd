@@ -25,7 +25,6 @@ func test_values_match_json_for_every_file() -> void:
 		assert_eq(catalog.slow_ticks[t], roundi(json.get("slow_sec", 0.0) * SimWorld.TICK_RATE))
 		assert_almost_eq(catalog.sell_refund[t], float(json.sell_refund), 1e-6)
 		assert_almost_eq(catalog.rebuild_fraction[t], float(json.rebuild_fraction), 1e-6)
-		assert_eq(catalog.husk_blocks[t] == 1, bool(json.husk_blocks))
 
 
 func test_sorted_by_id() -> void:

@@ -77,7 +77,7 @@ All displayed text (names, barks, card text) is stored as localisation keys, nev
 
 **M2 data files (D-099).** Every M2 content file has `"placeholder": true` while its numbers are placeholders. Sim loaders read them once per world through `sim/data_files.gd` (`DataFiles`): ids are resolved to catalog indices and every `*_sec` value becomes integer ticks (`DataFiles.ticks`) at load, so the sim never accumulates float time.
 - `data/enemies/`: swarmer, brute, ranged, 2 mini-bosses, final boss (`archetype` enum `swarmer, brute, ranged, miniboss, boss`) -> `EnemyCatalog`.
-- `data/towers/`: the 3 M2 types (`attack` `single`, `splash`, `slow`): cost, `cost_per_copy` (linear growth), hp, footprint `radius`, range, damage, cooldown, splash radius, slow factor/duration, sell refund, husk rebuild fraction, `husk_blocks` -> `TowerCatalog` (`sim/tower_catalog.gd`).
+- `data/towers/`: the 3 M2 types (`attack` `single`, `splash`, `slow`): cost, `cost_per_copy` (linear growth), hp, footprint `radius`, range, damage, cooldown, splash radius, slow factor/duration, sell refund, husk rebuild fraction (husks are walkable, D-104) -> `TowerCatalog` (`sim/tower_catalog.gd`).
 - `data/skills/`: Guardian skills (`kind` `area_blast`, `shield`) and `data/guardians/`: Guardian hp, contact radius, skill ids.
 - `data/runs/`: run timeline and economy (starting gold, build radius, placement grid step, spawn ring, `first_wave_sec`, `wave_sec`, `break_sec`, `waves` with count and enemy mix, the last entry repeating once the list runs out, mini-boss times, final boss, towers offered) -> `RunData` (`sim/run_data.gd`), which also holds the run's Guardian and her skills.
 ## 4. Performance budgets (targets, validated in milestone M1) **[P]**

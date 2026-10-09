@@ -29,7 +29,6 @@ var slow_factor: PackedFloat32Array = PackedFloat32Array()
 var slow_ticks: PackedInt32Array = PackedInt32Array()
 var sell_refund: PackedFloat32Array = PackedFloat32Array()
 var rebuild_fraction: PackedFloat32Array = PackedFloat32Array()
-var husk_blocks: PackedByteArray = PackedByteArray()
 
 
 static func load_dir(path: String = "res://data/towers") -> TowerCatalog:
@@ -50,7 +49,6 @@ static func load_dir(path: String = "res://data/towers") -> TowerCatalog:
 		catalog.slow_ticks.append(DataFiles.ticks(data.get("slow_sec", 0.0)))
 		catalog.sell_refund.append(data.sell_refund)
 		catalog.rebuild_fraction.append(data.rebuild_fraction)
-		catalog.husk_blocks.append(1 if data.husk_blocks else 0)
 	return catalog
 
 

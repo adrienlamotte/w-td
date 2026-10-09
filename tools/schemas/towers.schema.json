@@ -4,7 +4,7 @@
   "description": "M2 tower type (D-042, D-043, D-045, D-099). All numbers are placeholders, not balance decisions.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version", "id", "placeholder", "name_key", "attack", "cost", "cost_per_copy", "hp", "radius", "range", "damage", "cooldown_sec", "sell_refund", "rebuild_fraction", "husk_blocks", "sprite", "tags"],
+  "required": ["schema_version", "id", "placeholder", "name_key", "attack", "cost", "cost_per_copy", "hp", "radius", "range", "damage", "cooldown_sec", "sell_refund", "rebuild_fraction", "sprite", "tags"],
   "properties": {
     "schema_version": {"const": 1},
     "id": {"type": "string", "pattern": "^tower_[a-z0-9_]+$"},
@@ -23,7 +23,6 @@
     "slow_sec": {"type": "number", "exclusiveMinimum": 0},
     "sell_refund": {"type": "number", "minimum": 0, "maximum": 1},
     "rebuild_fraction": {"type": "number", "minimum": 0, "maximum": 1},
-    "husk_blocks": {"type": "boolean"},
     "sprite": {"type": "string"},
     "tags": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
   },

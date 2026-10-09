@@ -15,7 +15,6 @@
   "slow_sec": 2,
   "sell_refund": 0.5,
   "rebuild_fraction": 0.3,
-  "husk_blocks": true,
   "sprite": "towers/slow_01",
   "tags": []
 }

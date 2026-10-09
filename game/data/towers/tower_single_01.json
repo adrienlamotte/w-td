@@ -13,7 +13,6 @@
   "cooldown_sec": 0.5,
   "sell_refund": 0.5,
   "rebuild_fraction": 0.3,
-  "husk_blocks": true,
   "sprite": "towers/single_01",
   "tags": []
 }
