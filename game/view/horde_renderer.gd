@@ -1,7 +1,8 @@
 class_name HordeRenderer
 extends Node3D
-## Draws enemies (one MultiMeshInstance3D per type) and towers (one more) as billboard
-## sprites from the sim arrays (D-087). Never one Node per enemy. View only, no rules.
+## Draws enemies (one MultiMeshInstance3D per type) and towers (one per tower type, plus
+## husk and bare) as billboard sprites from the sim arrays (D-087). Looks come from
+## render data by enemy archetype and tower attack kind (D-120). Never one Node per enemy.
 
 const CONFIG_PATH := "res://data/render/render_default.json"
 const SHADER := preload("res://view/billboard.gdshader")
@@ -15,28 +16,63 @@ var _camera: Camera3D
 var _enemy_batcher: HordeBatcher
 var _tower_batcher: HordeBatcher
 var _enemy_mm: Array[MultiMesh] = []
-var _tower_mm: MultiMesh
-var _tower_type: PackedInt32Array = PackedInt32Array()
+var _tower_mm: Array[MultiMesh] = []
+## Per-frame batch index of each tower: catalog type, then husk, then bare.
+var _tower_batch: PackedInt32Array = PackedInt32Array()
+var _flash_ticks: int = 0
+## Tallest enemy sprite: cull margin, so a boss never pops at the screen edge.
+var _enemy_margin: float = 0.0
+
+
+static func load_config() -> Dictionary:
+	var c: Variant = JSON.parse_string(FileAccess.get_file_as_string(CONFIG_PATH))
+	assert(c is Dictionary, "HordeRenderer: cannot read %s" % CONFIG_PATH)
+	return c
+
+
+static func enemy_look(cfg: Dictionary, catalog: EnemyCatalog, t: int) -> Dictionary:
+	return cfg.enemy_looks[catalog.archetype[t]]
+
+
+## type -1 = bare tower.
+static func tower_look(cfg: Dictionary, catalog: TowerCatalog, type: int) -> Dictionary:
+	if type < 0:
+		return cfg.tower_looks.bare
+	return cfg.tower_looks[TowerCatalog.Attack.keys()[catalog.attack[type]].to_lower()]
+
+
+static func rgb(a: Array) -> Color:
+	return Color(a[0], a[1], a[2], a[3] if a.size() > 3 else 1.0)
 
 
 func setup(driver: SimDriver, camera: Camera3D) -> void:
 	_driver = driver
 	_camera = camera
-	config = JSON.parse_string(FileAccess.get_file_as_string(CONFIG_PATH))
-	assert(config is Dictionary, "HordeRenderer: cannot read %s" % CONFIG_PATH)
+	config = load_config()
+	_flash_ticks = ceili(float(config.fx.flash_sec) * SimWorld.TICK_RATE)
 	var frames := int(config.walk_frames)
-	var types := driver.world.catalog.ids.size()
+	var catalog := driver.world.catalog
+	var tcat := driver.world.tower_catalog
 	var area := driver.world.grid.half_extent
-	_enemy_batcher = HordeBatcher.new(types, frames)
-	_tower_batcher = HordeBatcher.new(1, 1)
+	_enemy_batcher = HordeBatcher.new(catalog.ids.size(), frames)
+	_tower_batcher = HordeBatcher.new(tcat.ids.size() + 2, 1)
 	var quad := QuadMesh.new()
 	quad.center_offset = Vector3(0.0, 0.5, 0.0)  # bottom edge on the ground
-	for t in types:
-		var strip := PlaceholderArt.enemy_strip(PlaceholderArt.type_color(t), frames, CELL_PX)
-		_enemy_mm.append(_add_batch(quad, strip, frames, float(config.walk_fps),
-			float(config.enemy_sprite_height), area))
-	var tower := PlaceholderArt.tower_image(Color(0.95, 0.85, 0.3), CELL_PX)
-	_tower_mm = _add_batch(quad, tower, 1, 0.0, float(config.tower_sprite_height), area)
+	for t in catalog.ids.size():
+		var look := enemy_look(config, catalog, t)
+		var strip := PlaceholderArt.enemy_strip(rgb(look.color), frames, CELL_PX, look.shape)
+		var h := float(config.enemy_sprite_height) * float(look.height_scale)
+		_enemy_margin = maxf(_enemy_margin, h)
+		_enemy_mm.append(_add_batch(quad, strip, frames, float(config.walk_fps), h, area))
+	var looks: Array = []
+	for type in tcat.ids.size():
+		looks.append(tower_look(config, tcat, type))
+	looks.append(config.tower_looks.husk)
+	looks.append(config.tower_looks.bare)
+	for look: Dictionary in looks:
+		var img := PlaceholderArt.tower_image(rgb(look.color), CELL_PX, look.shape)
+		_tower_mm.append(_add_batch(quad, img, 1, 0.0,
+			float(config.tower_sprite_height) * float(look.height_scale), area))
 
 
 func _add_batch(quad: QuadMesh, img: Image, frames: int, fps: float, h: float, area: float) -> MultiMesh:
@@ -67,15 +103,21 @@ func _process(_delta: float) -> void:
 	var aspect := get_viewport().get_visible_rect().size.aspect()
 	var cam := _camera.global_transform
 	var e := _driver.world.enemies
-	_enemy_batcher.fill(e.pos_x, e.pos_z, _driver.prev_x, _driver.prev_z, _driver.alpha(), e.type_id,
-		HordeBatcher.make_cull(cam, _camera.size, aspect, float(config.enemy_sprite_height)))
+	_enemy_batcher.fill(e.pos_x, e.pos_z, e.prev_x, e.prev_z, _driver.alpha(), e.type_id,
+		HordeBatcher.make_cull(cam, _camera.size, aspect, _enemy_margin),
+		e.hp, e.hit_tick, _driver.world.tick - _flash_ticks)
 	for t in _enemy_mm.size():
 		_upload(_enemy_mm[t], _enemy_batcher, t)
 	var towers := _driver.world.towers
-	_tower_type.resize(towers.count())  # zeros: one tower batch
-	_tower_batcher.fill(towers.pos_x, towers.pos_z, towers.pos_x, towers.pos_z, 0.0, _tower_type,
+	var husk_batch := _tower_mm.size() - 2
+	_tower_batch.resize(towers.count())
+	for t in towers.count():
+		var type := towers.type_id[t]
+		_tower_batch[t] = husk_batch + 1 if type < 0 else (husk_batch if towers.husk[t] else type)
+	_tower_batcher.fill(towers.pos_x, towers.pos_z, towers.pos_x, towers.pos_z, 0.0, _tower_batch,
 		HordeBatcher.make_cull(cam, _camera.size, aspect, float(config.tower_sprite_height)))
-	_upload(_tower_mm, _tower_batcher, 0)
+	for t in _tower_mm.size():
+		_upload(_tower_mm[t], _tower_batcher, t)
 	last_fill_usec = Time.get_ticks_usec() - start
 
 
