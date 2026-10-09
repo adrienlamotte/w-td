@@ -20,3 +20,17 @@ skill.shield.name,Shield
 tower.single_01.name,Arrow Tower
 tower.slow_01.name,Frost Tower
 tower.splash_01.name,Bomb Tower
+build.slot,[{n}] {name}
+build.gold,{gold} gold
+build.cost,Build: {gold} gold
+build.reason.occupied,Occupied
+build.reason.out_of_radius,Too far from the Guardian
+build.reason.too_close,Too close to the Guardian
+build.reason.no_gold,Not enough gold ({gold})
+build.reason.not_offered,Not in this run
+build.hint.sell,{key}: sell (+{gold})
+build.hint.rebuild,{key}: rebuild ({gold})
+input.kbm.build_place,Left click
+input.pad.build_place,A
+input.kbm.tower_sell,X
+input.pad.tower_sell,X

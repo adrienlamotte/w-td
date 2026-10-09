@@ -4,6 +4,8 @@ extends CanvasLayer
 ## when the value behind it changed. Strings are localisation keys (game/loc/strings.csv).
 
 var world: SimWorld
+var ghost: PlacementGhost
+var _cursor_offset: Vector2
 # Last value shown per label (no per-frame string churn).
 var _last: Dictionary = {}
 var _skill_state: Array[Label] = []
@@ -16,10 +18,18 @@ var _skill_bar: Array[ProgressBar] = []
 @onready var _gold: Label = $Root/TopRight/Gold
 @onready var _skills: HBoxContainer = $Root/Skills
 @onready var _paused: Label = $Root/Paused
+@onready var _cursor: Label = $Root/Cursor
 
 
-func setup(w: SimWorld) -> void:
+## input and p_ghost are optional: without them the HUD shows no build UI (tests).
+func setup(w: SimWorld, input: PlayerInput = null, p_ghost: PlacementGhost = null) -> void:
 	world = w
+	ghost = p_ghost
+	if input != null:
+		var config := PlacementGhost.load_config()
+		_cursor_offset = Vector2(config.cursor_label_offset_px[0], config.cursor_label_offset_px[1])
+		($Root/BuildBar as BuildBar).setup(w, input)
+		($Root/Radial as RadialMenu).setup(w, input, config)
 	refresh()
 
 
@@ -70,6 +80,20 @@ func refresh() -> void:
 		if _changed(_skill_state[i], s):
 			_skill_state[i].text = tr("hud.ready") if s == 0 else tr("hud.seconds").format({"value": s})
 	_paused.visible = world.paused
+	_refresh_cursor()
+
+
+# Cursor label at the screen projection of the cursor point (D-122).
+func _refresh_cursor() -> void:
+	var t := PlacementGhost.text(ghost.hints) if ghost != null else ""
+	_cursor.visible = t != ""
+	if t == "":
+		return
+	_cursor.text = t
+	var cam: Camera3D = ghost.input.camera.get_node("Camera3D")
+	var p := cam.unproject_position(Vector3(ghost.input.cursor.x, 0.0, ghost.input.cursor.y))
+	_cursor.position = p + _cursor_offset
+	_cursor.size = Vector2.ZERO  # shrink to the text
 
 
 func _changed(label: Label, value: int) -> bool:

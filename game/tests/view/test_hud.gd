@@ -3,19 +3,38 @@ extends GutTest
 
 const HUD_SCENE := preload("res://view/ui/hud.tscn")
 const KEYS := ["hud.hp", "hud.gold", "hud.wave", "hud.break", "hud.ready", "hud.seconds",
-	"hud.hint.skill_1", "hud.hint.skill_2", "hud.paused", "guardian.placeholder_01.name"]
+	"hud.hint.skill_1", "hud.hint.skill_2", "hud.paused", "guardian.placeholder_01.name",
+	"build.slot", "build.gold", "build.cost", "build.reason.occupied", "build.reason.out_of_radius",
+	"build.reason.too_close", "build.reason.no_gold", "build.reason.not_offered", "build.hint.sell",
+	"build.hint.rebuild", "input.kbm.build_place", "input.pad.build_place", "input.kbm.tower_sell",
+	"input.pad.tower_sell"]
 
 var world: SimWorld
 var hud: Hud
+var input: PlayerInput
+var ghost: PlacementGhost
 
 
 func before_each() -> void:
 	world = SimWorld.new(1)
 	world.queue(SimCommand.start_run(0, 7, "run_m2"))
 	world.step()
+	var cam := IsoCamera.new()
+	var c3 := Camera3D.new()
+	c3.name = "Camera3D"
+	cam.add_child(c3)
+	add_child_autofree(cam)
+	input = PlayerInput.new()
+	input.world = world
+	input.camera = cam
+	add_child_autofree(input)
+	input.set_process(false)
+	ghost = PlacementGhost.new()
+	add_child_autofree(ghost)
+	ghost.setup(world, input)
 	hud = HUD_SCENE.instantiate()
 	add_child_autofree(hud)
-	hud.setup(world)
+	hud.setup(world, input, ghost)
 
 
 func _label(path: String) -> Label:
@@ -81,11 +100,30 @@ func test_clock_text_and_seconds_left() -> void:
 	assert_eq(Hud.seconds_left(131, 100), 2)
 
 
+func test_cursor_label() -> void:
+	var cursor := _label("Cursor")
+	assert_false(cursor.visible)
+	input.selected_tower = "tower_single_01"
+	input.cursor = Vector2(5.0, 5.0)
+	ghost.update()
+	hud.refresh()
+	assert_true(cursor.visible)
+	assert_eq(cursor.text, PlacementGhost.text(ghost.hints))
+
+
 func test_readable_and_click_through() -> void:
+	input.menu_open = true  # the radial builds its labels
+	(hud.get_node("Root/Radial") as RadialMenu).refresh()
+	input.selected_tower = "tower_single_01"
+	ghost.update()
+	hud.refresh()
 	var controls := hud.find_children("*", "Control", true, false)
-	assert_gt(controls.size(), 10)
+	assert_gt(controls.size(), 18)
 	for c: Control in controls:
-		assert_eq(c.mouse_filter, Control.MOUSE_FILTER_IGNORE, "%s ignores the mouse" % c.name)
+		if c is Button:  # the build bar is clickable
+			assert_eq(c.get_parent(), hud.get_node("Root/BuildBar"), c.name)
+		else:
+			assert_eq(c.mouse_filter, Control.MOUSE_FILTER_IGNORE, "%s ignores the mouse" % c.name)
 		if c is Label or c is Button:
 			assert_gte(c.get_theme_font_size("font_size"), 32, "%s font size" % c.name)
 

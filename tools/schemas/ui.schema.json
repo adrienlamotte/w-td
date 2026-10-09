@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "UI",
+  "description": "Build UI look: placement ghost, radial menu, cursor label (D-122). Values are placeholders.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "ghost_valid_color", "ghost_invalid_color", "ghost_height", "range_ring_width", "radial_radius_px", "radial_deadzone", "cursor_label_offset_px"],
+  "$defs": {
+    "rgba": {"type": "array", "items": {"type": "number", "minimum": 0, "maximum": 1}, "minItems": 4, "maxItems": 4}
+  },
+  "properties": {
+    "schema_version": {"const": 1},
+    "id": {"type": "string", "pattern": "^ui_[a-z0-9_]+$"},
+    "ghost_valid_color": {"$ref": "#/$defs/rgba"},
+    "ghost_invalid_color": {"$ref": "#/$defs/rgba"},
+    "ghost_height": {"description": "World units.", "type": "number", "exclusiveMinimum": 0},
+    "range_ring_width": {"description": "World units.", "type": "number", "exclusiveMinimum": 0},
+    "radial_radius_px": {"description": "Outer radius at the 2560x1440 base.", "type": "number", "exclusiveMinimum": 0},
+    "radial_deadzone": {"description": "Left stick length under which a release keeps the selection.", "type": "number", "minimum": 0, "maximum": 1},
+    "cursor_label_offset_px": {"description": "Label offset from the cursor point, screen px at base.", "type": "array", "items": {"type": "number"}, "minItems": 2, "maxItems": 2}
+  }
+}

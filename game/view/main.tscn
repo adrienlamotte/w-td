@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://input/player_input.gd" id="4_input"]
 [ext_resource type="Script" path="res://view/fx_layer.gd" id="5_fx"]
 [ext_resource type="PackedScene" path="res://view/ui/hud.tscn" id="6_hud"]
+[ext_resource type="Script" path="res://view/placement_ghost.gd" id="7_ghost"]
 
 [sub_resource type="StandardMaterial3D" id="mat_ground"]
 shading_mode = 0
@@ -49,5 +50,8 @@ script = ExtResource("5_fx")
 
 [node name="PlayerInput" type="Node" parent="."]
 script = ExtResource("4_input")
+
+[node name="PlacementGhost" type="Node3D" parent="."]
+script = ExtResource("7_ghost")
 
 [node name="Hud" parent="." instance=ExtResource("6_hud")]

@@ -86,7 +86,7 @@ func handle(event: InputEvent) -> void:
 		_use_skill(0)
 	elif _pressed(event, &"skill_2"):
 		_use_skill(1)
-	elif _can_build():
+	elif can_build(world):
 		_build(event)
 
 
@@ -147,8 +147,9 @@ func _update_mode(event: InputEvent) -> void:
 		cursor = camera.focus()
 
 
-func _can_build() -> bool:
-	return world.run_state == SimWorld.RunState.RUNNING and not world.paused
+## Building is possible: a run is RUNNING and not paused (D-105). The build UI uses it too.
+static func can_build(w: SimWorld) -> bool:
+	return w != null and w.run_state == SimWorld.RunState.RUNNING and not w.paused
 
 
 func _use_skill(slot: int) -> void:
