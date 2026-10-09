@@ -1,8 +1,8 @@
 # 026 — Sim: walled-in enemies attack the blocking tower
-- Status: planned
+- Status: review
 - Milestone: M2
 - Depends on: 024
-- PR: -
+- PR: #28
 
 ## Goal
 When the player walls the Guardian in (allowed, D-102), enemies with no path take the straight path and attack the tower that blocks it until a gap opens (D-103). Split out of 024 by the lead dev.
