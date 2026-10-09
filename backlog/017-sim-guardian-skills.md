@@ -1,5 +1,5 @@
 # 017 — Sim: Guardian skills (Area blast, Shield)
-- Status: review
+- Status: done
 - Milestone: M2
 - Depends on: 014
 - PR: #23
@@ -52,3 +52,4 @@ Size: about 80 lines of code, about 150 of tests. One PR.
 ## Questions
 
 ## Review log
+- 2026-10-09 lead-dev: PR #23 approved and squash-merged into m2/dev. Matches the plan and D-110; sim-only, typed, blast through damage_enemy, Shield in _hit_guardian, hash extended, determinism and replay covered. Accepted deviation: blast kills leave in the same tick's DEATHS phase (DEATHS follows COMMANDS in step(); the plan's "next DEATHS phase" meant exactly that), docs say so. test.ps1 147/147 + tools OK, validate 0 errors (reviewer run). needs-human:balance at CP-M2 (placeholder skill numbers; confirm "both skills ready at run start" and "no skill while paused").
