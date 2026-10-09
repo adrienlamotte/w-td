@@ -1,5 +1,5 @@
 # 014 — Sim: enemy HP and death, Guardian HP, gold, win and lose
-- Status: review
+- Status: done
 - Milestone: M2
 - Depends on: 011, 012, 013, 025
 - PR: #20
@@ -81,3 +81,4 @@ Notes on the WIP (no decision needed, for the reviewer):
 - Since 025 the code the plan relies on did not move (cell size change only); no adaptation needed.
 
 ## Review log
+- 2026-10-09 lead-dev: PR #20 approved and squash-merged into m2/dev. Re-ran `scripts\test.ps1` (109 GUT + 13 Python green) and `scripts\validate.ps1` (0 errors). Gate met at the unchanged 0.14 bound (min pair 0.649); release pc_piled step 6.09 ms. Code matches the re-plan (queue rule A, D-107 PROPOSED, docs 3a updated). Non-blocking: `test_determinism_with_combat` does not assert that an `ENEMY_DIED` happened (events are per tick, so it needs a counter over the run); task 016's determinism test with tower kills covers deaths. CP-M2 `needs-human:playtest`: crowd look (front ring attacks, the rest queued) and ranged enemies queued behind a melee crowd.
