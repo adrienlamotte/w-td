@@ -1,8 +1,7 @@
 # 038 — UI: tower upgrade controls, hints and level display
-- Status: blocked
+- Status: todo
 - Milestone: M3
 - Depends on: 030
-- Blocked on: Q-67
 - Labels: needs-human:playtest
 - PR:
 
@@ -10,6 +9,7 @@
 The player can upgrade a placed tower with mouse/keyboard and with the gamepad, and sees its level and the next price, or why it cannot be upgraded.
 
 ## Context
+- D-141 (owner, 2026-10-09) answers Q-67.
 - `docs/10_M3_CONTENT.md` 3.2 (per placed tower, gold, level 4 needs the signature card), D-134, D-137.
 - `docs/09_CONTROLS.md` has no upgrade binding (Q-67); D-121 (verdict and price from the sim's `check_upgrade`), D-122 (hints).
 

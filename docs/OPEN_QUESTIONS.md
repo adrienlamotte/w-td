@@ -20,6 +20,9 @@ Last reviewed: 2026-10-08 (daily docs review; owner answers recorded the same da
 | Q-64 Poppy's repair | Towers, else heals the Guardian in range for less | D-135 |
 | Q-65 Rival distance | Only 2-6 units apart (across a corridor) | D-136 |
 | Q-66 Upgrades per tower or per type | Per placed tower | D-137 |
+| Q-67 How to upgrade a placed tower | Dedicated action (R / d-pad up) | D-141 |
+| Q-68 Offer after all 6 rescues | All 6 again, no new unlock | D-142 |
+| Q-69 M3 maze balance target | Maze beats spread by 20+ points | D-143 |
 | Q-60 When higher tiers and rivals open | After all 6 rescues; Vexa Hard, Gilda Nightmare | D-131 |
 | Q-61 Guardian in relationship bonuses | She counts like a placed waifu | D-132 |
 | Q-59 Maze tick budget | Accept within noise for M2, track worst case | D-124 |
@@ -75,28 +78,6 @@ Last reviewed: 2026-10-08 (daily docs review; owner answers recorded the same da
 | Q-31 Name, price, Early Access, DLC | Keep WTD until M5; EUR 7.99-9.99 in Early Access; no DLC before launch | D-064 |
 | Q-33 Camera controls | Pan + zoom, cursor at screen centre | D-041 |
 | Q-34 Build radius and performance with no cap | Growable radius, rising costs, 300/150 stress target | D-042 |
-
----
-
-## M3 (current milestone)
-
-### Q-67 How does the player upgrade a placed tower? (blocks task 038)
-`UPGRADE_TOWER` (D-134, D-137) has no binding in `09_CONTROLS.md`. Free inputs: keyboard R, gamepad d-pad.
-- A) **A new `tower_upgrade` action on the tower under the cursor: R (keyboard) / d-pad up (gamepad); the hint shows "R: upgrade (price)" or why not, like sell** ★
-- B) Place / A on a live tower with nothing selected upgrades it (as it rebuilds a husk); fewer buttons, but a misclick spends gold.
-- C) Place / A on a tower opens a small tower panel (Upgrade, Sell, level and stats) navigated with GUI focus; clearest, most UI work.
-
-### Q-68 Guardian offer once all 6 Guardians are rescued (M3 has no tiers yet; safe to assume ★ A)
-D-050 offers locked waifus; after 6 wins none is left, and tiers, endless and challenges (D-058, D-131) are later milestones.
-- A) **Offer all 6 rescued Guardians again (normal run, no new unlock, hearts as usual)** ★
-- B) Offer only the last rescued Guardian until tiers exist.
-- C) Offer all 8 including the starters, with the M2 Area blast as their placeholder skill.
-
-### Q-69 M3 balance targets: what does "the maze pays off" mean in numbers? (blocks task 042)
-D-128 makes it the M3 balance goal; D-126 set the M2 targets (best builder bot wins 60 %+ of seeds, passive none). Measured by the 041 runner on the `fresh` (first run) and `full` (all rescued, whole tree) presets.
-- A) **Maze bot wins at least 20 points more seeds than the spread bot on both presets; the maze bot wins 50-80 % on `fresh` and at least 80 % on `full`; passive wins none** ★
-- B) The maze bot only has to win more seeds than the spread bot (no fixed numbers).
-- C) No numeric target in M3: the owner reads the first report at CP-M3 and sets targets then (042 waits).
 
 ---
 

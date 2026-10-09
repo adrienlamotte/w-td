@@ -1,8 +1,7 @@
 # 042 — Balance: tune M3 so the maze pays off
-- Status: blocked
+- Status: todo
 - Milestone: M3
 - Depends on: 041
-- Blocked on: Q-69
 - Labels: needs-human:balance
 - PR:
 
@@ -10,6 +9,7 @@
 Tune placeholder numbers (data only) until the runner meets the M3 targets, the main one being that a maze beats spreading towers (D-128).
 
 ## Context
+- D-143 (owner, 2026-10-09) answers Q-69.
 - D-128; D-126 (tuning order: economy first, then tower stats, then wave counts; never the fixed timeline D-093, D-032, D-097, D-047); the task 041 report.
 - Q-69 (target numbers).
 
