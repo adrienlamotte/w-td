@@ -1,8 +1,8 @@
 # 021 — UI: run flow, pause, win and lose screens
-- Status: planned
+- Status: review
 - Milestone: M2
 - Depends on: 014, 020, 027
-- PR: -
+- PR: #31
 
 ## Goal
 A complete loop from start to end: start screen, run, pause menu, win/lose screens, restart.
