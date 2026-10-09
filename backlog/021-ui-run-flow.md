@@ -1,7 +1,7 @@
 # 021 — UI: run flow, pause, win and lose screens
 - Status: todo
 - Milestone: M2
-- Depends on: 014, 020
+- Depends on: 014, 020, 027
 - PR: -
 
 ## Goal

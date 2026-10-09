@@ -37,6 +37,7 @@ Decision ID: **D-120**. Mostly `view/`; three presentation-only fields in `sim/`
   - Shield: a translucent disc around the Guardian, shown while `clock < skills.shield_until and skills.shield_left > 0` (state read, no event needed).
   - `ENEMY_HIT` spawns nothing (the flash covers it; one blast can hit thousands).
 - Effects are capped at `max_effects` (new ones dropped when full); lifetimes are view seconds; no Node per enemy or per effect.
+- **Coordination with 020 (added at 020 planning):** if 020 has merged first, the main scene already queues StartRun and the player builds; skip this item (no scripted towers). If 019 merges first, 020 keeps the StartRun and deletes the scripted list.
 - **Main scene runs a real run** (placeholder until 021's start screen): `game_view` queues `StartRun(RUN_SEED, "run_m2")` and a short scripted tower list (const array of `(tick, tower_id, x, z)`: single and slow at tick 0, splash at about 30 s once gold allows; rejected silently if not affordable). Commands only, the view writes no sim state. The M1 demo horde (`spawn_ring`, recycle, bare towers) leaves the main scene. `demo = false` (bench) skips it as today.
 
 ### Files
