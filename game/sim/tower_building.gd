@@ -68,6 +68,7 @@ static func rebuild(w: SimWorld, tower_uid: int) -> void:
 	w.gold -= price
 	towers.hp[t] = w.tower_catalog.hp[type]
 	towers.husk[t] = 0
+	towers.cooldown[t] = 0
 	w.build.fill(towers.cell_i[t], towers.cell_j[t], towers.footprint[t], tower_uid, 1)
 	w.events.push(SimEvents.Kind.TOWER_PLACED, tower_uid, towers.pos_x[t], towers.pos_z[t], type)
 

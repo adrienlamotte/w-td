@@ -33,6 +33,7 @@ var build: BuildGrid = null
 ## Uid of the next placed tower: starts at 0, never reused (D-109).
 var next_tower_uid: int = 0
 var movement: EnemyMovement = EnemyMovement.new()
+var tower_attacks: TowerAttacks = TowerAttacks.new()
 ## Set from the run at StartRun (D-107); 0 before.
 var guardian_hp: float = 0.0
 var gold: int = 0
@@ -121,6 +122,7 @@ func step() -> void:
 	towers.retarget(grid, enemies.pos_x, enemies.pos_z)
 	_lap(Phase.TARGETING)
 	if run_state == RunState.RUNNING:
+		tower_attacks.fire(self)  # towers first: an enemy killed this tick does not attack (D-114)
 		_enemy_attacks()
 	_lap(Phase.ATTACKS)
 	if run_state == RunState.RUNNING:
@@ -247,6 +249,7 @@ func _lap(phase: Phase) -> void:
 func state_hash() -> int:
 	return hash([tick, clock, run_state, paused, run.id if run else "", _spawn_rng.state, _loot_rng.state,
 		guardian_hp, gold, enemies.pos_x, enemies.pos_z, enemies.hp,
-		enemies.type_id, enemies.state, enemies.anim_frame, enemies.cooldown,
+		enemies.type_id, enemies.state, enemies.anim_frame, enemies.cooldown, enemies.slow_factor, enemies.slow_ticks,
 		towers.pos_x, towers.pos_z, towers.attack_range, towers.target, next_tower_uid,
-		towers.uid, towers.type_id, towers.hp, towers.husk, towers.paid, towers.cell_i, towers.cell_j])
+		towers.uid, towers.type_id, towers.hp, towers.husk, towers.paid, towers.cell_i, towers.cell_j,
+		towers.cooldown])

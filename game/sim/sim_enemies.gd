@@ -15,6 +15,9 @@ var state: PackedInt32Array = PackedInt32Array()
 var anim_frame: PackedInt32Array = PackedInt32Array()
 ## Attack cooldown in ticks; 0 = ready (D-107).
 var cooldown: PackedInt32Array = PackedInt32Array()
+## Speed multiplier while slowed, 1 = none; slow_ticks MOVE phases left, 0 = none (D-114, D-117).
+var slow_factor: PackedFloat32Array = PackedFloat32Array()
+var slow_ticks: PackedInt32Array = PackedInt32Array()
 
 
 func count() -> int:
@@ -30,6 +33,8 @@ func add(p_type_id: int, x: float, z: float, p_hp: float) -> int:
 	state.append(State.MOVING)
 	anim_frame.append(0)
 	cooldown.append(0)
+	slow_factor.append(1.0)
+	slow_ticks.append(0)
 	return pos_x.size() - 1
 
 
@@ -43,6 +48,8 @@ func remove(i: int) -> void:
 	state[i] = state[last]
 	anim_frame[i] = anim_frame[last]
 	cooldown[i] = cooldown[last]
+	slow_factor[i] = slow_factor[last]
+	slow_ticks[i] = slow_ticks[last]
 	pos_x.resize(last)
 	pos_z.resize(last)
 	hp.resize(last)
@@ -50,4 +57,6 @@ func remove(i: int) -> void:
 	state.resize(last)
 	anim_frame.resize(last)
 	cooldown.resize(last)
+	slow_factor.resize(last)
+	slow_ticks.resize(last)
 
