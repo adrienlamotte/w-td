@@ -1,8 +1,8 @@
 # 025 — Sim: cheap separation and targeting optimisations (priority)
-- Status: planned
+- Status: review
 - Milestone: M2
 - Depends on: -
-- PR: -
+- PR: #19
 
 ## Goal
 Recover per-tick headroom before combat and the maze land. The sim step is already 15-20% slower than in M1 (PC stress 7.9 ms against the 8 ms budget, measured during the 012 review), most likely because the brute's radius grew the grid cell from 1.4 to 1.6. Apply the cheap GDScript optimisations already identified in M1, measure before and after.
