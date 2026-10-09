@@ -1,8 +1,8 @@
 # 015 — Sim: placing, selling, tower HP, husks and blocking
-- Status: planned
+- Status: review
 - Milestone: M2
 - Depends on: 014
-- PR: -
+- PR: #21
 
 ## Goal
 Building in real time and during breaks: placement on the fine grid inside the build radius, costs that grow per copy, selling, tower HP, enemies attacking towers that block their path, husks.
