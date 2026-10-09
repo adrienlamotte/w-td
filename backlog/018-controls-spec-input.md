@@ -1,8 +1,8 @@
 # 018 — Controls spec and input layer (mouse and gamepad)
-- Status: planned
+- Status: review
 - Milestone: M2
 - Depends on: 012
-- PR: -
+- PR: #24
 
 ## Goal
 Write the controls spec and map keyboard, mouse and gamepad to sim commands and camera actions. Gamepad is first-class.
