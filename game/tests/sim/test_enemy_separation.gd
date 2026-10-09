@@ -83,7 +83,19 @@ func test_strength_zero_leaves_overlap() -> void:
 
 
 func test_crowd_stays_soft_not_collapsed() -> void:
+	_check_crowd(SimWorld.new(7))
+
+
+## Same check during a run: Guardian contact radius from run_m2, Guardian unkillable.
+func test_crowd_stays_soft_during_run() -> void:
 	var world := SimWorld.new(7)
+	world.queue(SimCommand.start_run(0, 7, "run_m2"))
+	world.step()
+	world.guardian_hp = 1e12
+	_check_crowd(world)
+
+
+func _check_crowd(world: SimWorld) -> void:
 	world.spawn_ring(world.catalog.type_of(SWARMER), 200, 10.0)
 	for n in 300:
 		world.step()

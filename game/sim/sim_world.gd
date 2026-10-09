@@ -38,7 +38,7 @@ var phase_usec: PackedInt64Array = PackedInt64Array()
 ## Running sum of phase_usec over every step() (benchmark, task 008). Diagnostics only,
 ## not in state_hash(); the caller resets it.
 var phase_usec_sum: PackedInt64Array = PackedInt64Array()
-## Test/benchmark/demo setting: when > 0, every ATTACKING enemy is moved back to a
+## Test/benchmark/demo setting: when > 0, every stopped enemy (ATTACKING or QUEUED) is moved back to a
 ## ring of this radius each tick (MOVING again), so a demo horde never empties.
 ## 0 = off. Runs spawn from their timeline instead (WaveSpawner).
 var recycle_radius: float = 0.0
@@ -103,7 +103,7 @@ func step() -> void:
 	separation.apply(enemies, grid, catalog)
 	_lap(Phase.SEPARATE)
 	movement.steer(enemies)
-	movement.advance(enemies, catalog.speed, SIM_DT)
+	movement.advance(enemies, catalog.speed, SIM_DT, separation.blocked)
 	if recycle_radius > 0.0:
 		_recycle()
 	_lap(Phase.MOVE)
@@ -150,7 +150,7 @@ func _apply(cmd: SimCommand) -> void:
 func _recycle() -> void:
 	var st := enemies.state
 	for i in st.size():
-		if st[i] != SimEnemies.State.ATTACKING:
+		if st[i] == SimEnemies.State.MOVING:
 			continue
 		var angle := _spawn_rng.randf() * TAU
 		enemies.pos_x[i] = cos(angle) * recycle_radius

@@ -45,8 +45,10 @@ func steer(enemies: SimEnemies) -> void:
 
 
 ## Moves each live enemy along its steer direction by min(speed * dt, gap).
-## State is re-evaluated every tick: ATTACKING once the gap is closed, else MOVING.
-func advance(enemies: SimEnemies, type_speed: PackedFloat32Array, dt: float) -> void:
+## State is re-evaluated every tick: ATTACKING once the gap is closed, QUEUED (no move)
+## when blocked (EnemySeparation.blocked, same tick), else MOVING.
+func advance(enemies: SimEnemies, type_speed: PackedFloat32Array, dt: float,
+		blocked: PackedByteArray) -> void:
 	var hp := enemies.hp
 	var ty := enemies.type_id
 	var st := enemies.state
@@ -58,6 +60,9 @@ func advance(enemies: SimEnemies, type_speed: PackedFloat32Array, dt: float) -> 
 		var g := gap[i]
 		if g <= 0.0:
 			st[i] = SimEnemies.State.ATTACKING
+			continue
+		if blocked[i] != 0:
+			st[i] = SimEnemies.State.QUEUED
 			continue
 		var step := type_speed[ty[i]] * dt
 		if g <= step:

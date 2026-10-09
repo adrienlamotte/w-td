@@ -4,7 +4,8 @@ extends RefCounted
 ## Every array has size() == count(). Indices are only valid within one tick:
 ## remove() swap-removes, so the last enemy takes the removed slot (D-081).
 
-enum State { MOVING = 0, ATTACKING = 1 }
+## QUEUED: stopped behind the crowd, does not attack (D-107).
+enum State { MOVING = 0, ATTACKING = 1, QUEUED = 2 }
 
 var pos_x: PackedFloat32Array = PackedFloat32Array()
 var pos_z: PackedFloat32Array = PackedFloat32Array()

@@ -90,6 +90,40 @@ func test_far_enemy_keeps_moving() -> void:
 func test_corpse_does_not_move() -> void:
 	world.enemies.add(sw, 10.0, 0.0, 0.0)
 	world.movement.steer(world.enemies)
-	world.movement.advance(world.enemies, world.catalog.speed, SimWorld.SIM_DT)
+	var blocked := PackedByteArray([0])
+	world.movement.advance(world.enemies, world.catalog.speed, SimWorld.SIM_DT, blocked)
 	assert_eq(world.enemies.pos_x[0], 10.0)
 	assert_eq(world.enemies.state[0], SimEnemies.State.MOVING)
+
+
+func test_queues_behind_stopped_enemy_then_walks_on() -> void:
+	_start_run()
+	var stop := world.run.guardian_contact_radius + radius
+	var front := world.enemies.add(sw, stop, 0.0, 1.0)
+	world.enemies.state[front] = SimEnemies.State.ATTACKING
+	world.enemies.add(sw, stop + radius, 0.0, 1.0)  # overlaps the front one
+	world.step()
+	assert_eq(world.enemies.state[1], SimEnemies.State.QUEUED)
+	var x_queued := world.enemies.pos_x[1]
+	var hits := 0
+	for e in world.events.count:
+		if world.events.kind[e] == SimEvents.Kind.GUARDIAN_HIT:
+			hits += 1
+	assert_eq(hits, 1, "only the front one attacks")
+	world.step()
+	assert_eq(world.enemies.state[1], SimEnemies.State.QUEUED)
+	assert_almost_eq(world.enemies.pos_x[1], x_queued, 0.05, "only separation moves it")
+	world.enemies.remove(front)  # the queued one takes slot 0
+	x_queued = world.enemies.pos_x[0]
+	world.step()
+	assert_ne(world.enemies.state[0], SimEnemies.State.QUEUED)
+	assert_lt(world.enemies.pos_x[0], x_queued, "walks on")
+
+
+func test_does_not_queue_behind_moving_enemy() -> void:
+	_start_run()
+	world.enemies.add(sw, 10.0, 0.0, 1.0)
+	world.enemies.add(sw, 10.0 + radius, 0.0, 1.0)
+	world.step()
+	assert_eq(world.enemies.state[0], SimEnemies.State.MOVING)
+	assert_eq(world.enemies.state[1], SimEnemies.State.MOVING)
