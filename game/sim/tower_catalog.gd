@@ -3,7 +3,7 @@ extends RefCounted
 ## Tower types loaded from data/towers (D-099). Index = position sorted by id,
 ## like EnemyCatalog. Seconds are converted to ticks at load.
 ## M3 kinds (D-140) are loaded but not simulated yet (030-032): range, damage and
-## cooldown default to 0 for kinds that have none; levels and kind fields are not read.
+## cooldown default to 0 for kinds that have none. Kind fields are read through level_stats.
 
 ## Appended only, so existing values never move; the view looks kinds up by lowercased key.
 enum Attack { SINGLE, SPLASH, SLOW, WALL, AURA, REPAIR, MARK, SLOW_AREA }
@@ -34,6 +34,15 @@ var slow_factor: PackedFloat32Array = PackedFloat32Array()
 var slow_ticks: PackedInt32Array = PackedInt32Array()
 var sell_refund: PackedFloat32Array = PackedFloat32Array()
 var rebuild_fraction: PackedFloat32Array = PackedFloat32Array()
+## 1 + the size of `levels` (D-144); 1 for a type without levels.
+var max_level: PackedInt32Array = PackedInt32Array()
+## Per type, an Array of resolved stat Dictionaries, index = level - 1 (D-144). Keys as in data
+## (seconds, not ticks); a level inherits the level below and overrides what its entry lists.
+var level_stats: Array = []
+
+## Level 1 values of the stats a kind may lack.
+const _LEVEL_DEFAULTS := {"range": 0.0, "damage": 0.0, "cooldown_sec": 0.0, "splash_radius": 0.0,
+		"slow_factor": 1.0, "slow_sec": 0.0}
 
 
 static func load_dir(path: String = "res://data/towers") -> TowerCatalog:
@@ -54,6 +63,15 @@ static func load_dir(path: String = "res://data/towers") -> TowerCatalog:
 		catalog.slow_ticks.append(DataFiles.ticks(data.get("slow_sec", 0.0)))
 		catalog.sell_refund.append(data.sell_refund)
 		catalog.rebuild_fraction.append(data.rebuild_fraction)
+		var levels: Array = data.get("levels", [])
+		var lv: Dictionary = _LEVEL_DEFAULTS.merged(data, true)
+		lv.erase("levels")
+		var table: Array = [lv]
+		for entry: Dictionary in levels:
+			lv = lv.merged(entry, true)
+			table.append(lv)
+		catalog.max_level.append(table.size())
+		catalog.level_stats.append(table)
 	return catalog
 
 

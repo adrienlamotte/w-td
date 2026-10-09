@@ -6,6 +6,7 @@ extends RefCounted
 
 var pos_x: PackedFloat32Array = PackedFloat32Array()
 var pos_z: PackedFloat32Array = PackedFloat32Array()
+## Derived (D-144, TowerStats), like damage..slow_ticks below; set at add() for a bare tower.
 var attack_range: PackedFloat32Array = PackedFloat32Array()
 ## Nearest enemy index in range, -1 if none (always -1 on a husk). Valid within this tick only (D-081).
 var target: PackedInt32Array = PackedInt32Array()
@@ -27,6 +28,17 @@ var cooldown: PackedInt32Array = PackedInt32Array()
 ## Tower index by uid, -1 = none (sold or never placed). Refreshed by SimWorld in the PATH
 ## phase; valid until the end of that tick (indices only move on sell, in COMMANDS; D-116).
 var uid_index: PackedInt32Array = PackedInt32Array()
+## Upgrade level, 1 at placement (D-144).
+var level: PackedInt32Array = PackedInt32Array()
+## Derived stats (D-144, TowerStats). `reload` = cooldown in ticks after a shot.
+var damage: PackedFloat32Array = PackedFloat32Array()
+var reload: PackedInt32Array = PackedInt32Array()
+var max_hp: PackedFloat32Array = PackedFloat32Array()
+var splash_radius: PackedFloat32Array = PackedFloat32Array()
+var slow_factor: PackedFloat32Array = PackedFloat32Array()
+var slow_ticks: PackedInt32Array = PackedInt32Array()
+## Set by every layout, level or modifier change; TowerStats.recompute clears it in the PATH phase.
+var stats_dirty: bool = false
 
 
 func count() -> int:
@@ -48,6 +60,13 @@ func add(x: float, z: float, p_range: float) -> int:
 	hp.append(1.0)
 	husk.append(0)
 	cooldown.append(0)
+	level.append(1)
+	damage.append(0.0)
+	reload.append(0)
+	max_hp.append(1.0)
+	splash_radius.append(0.0)
+	slow_factor.append(1.0)
+	slow_ticks.append(0)
 	return pos_x.size() - 1
 
 
@@ -67,6 +86,13 @@ func remove(t: int) -> void:
 	hp[t] = hp[last]
 	husk[t] = husk[last]
 	cooldown[t] = cooldown[last]
+	level[t] = level[last]
+	damage[t] = damage[last]
+	reload[t] = reload[last]
+	max_hp[t] = max_hp[last]
+	splash_radius[t] = splash_radius[last]
+	slow_factor[t] = slow_factor[last]
+	slow_ticks[t] = slow_ticks[last]
 	pos_x.resize(last)
 	pos_z.resize(last)
 	attack_range.resize(last)
@@ -80,6 +106,13 @@ func remove(t: int) -> void:
 	hp.resize(last)
 	husk.resize(last)
 	cooldown.resize(last)
+	level.resize(last)
+	damage.resize(last)
+	reload.resize(last)
+	max_hp.resize(last)
+	splash_radius.resize(last)
+	slow_factor.resize(last)
+	slow_ticks.resize(last)
 
 
 ## Towers of this catalog type on the field, husks included (D-113).

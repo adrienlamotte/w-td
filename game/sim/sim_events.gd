@@ -4,7 +4,7 @@ extends RefCounted
 ## Cleared at the start of every step; the view reads them after each step.
 ## Payload per kind: 02_TECH_ARCHITECTURE.md 3a. Never holds enemy indices (D-081).
 
-enum Kind { ENEMY_DIED, ENEMY_HIT, TOWER_PLACED, TOWER_DIED, SKILL_USED, GUARDIAN_HIT, WAVE_STARTED, RUN_ENDED, TOWER_SOLD, TOWER_FIRED, TOWER_HIT }
+enum Kind { ENEMY_DIED, ENEMY_HIT, TOWER_PLACED, TOWER_DIED, SKILL_USED, GUARDIAN_HIT, WAVE_STARTED, RUN_ENDED, TOWER_SOLD, TOWER_FIRED, TOWER_HIT, TOWER_UPGRADED }
 
 const _START_CAPACITY: int = 64
 

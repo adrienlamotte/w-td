@@ -93,14 +93,15 @@ static func add_built(w: SimWorld, type: int, x: float, z: float, paid: int = 0)
 	var uid := w.next_tower_uid
 	w.next_tower_uid += 1
 	var towers := w.towers
-	var t := towers.add(x, z, w.tower_catalog.attack_range[type])
+	var t := towers.add(x, z, 0.0)
 	towers.uid[t] = uid
 	towers.type_id[t] = type
 	towers.paid[t] = paid
 	towers.cell_i[t] = i0
 	towers.cell_j[t] = j0
 	towers.footprint[t] = n
-	towers.hp[t] = w.tower_catalog.hp[type]
+	TowerStats.apply(w, t)  # level 1, full HP (D-144)
+	towers.stats_dirty = true
 	# Enemies standing on the footprint are allowed; FlowField pushes them out (D-112, D-115).
 	b.fill(i0, j0, n, uid, 1)
 	w.events.push(SimEvents.Kind.TOWER_PLACED, uid, x, z, type)
@@ -117,6 +118,7 @@ static func sell(w: SimWorld, tower_uid: int) -> void:
 	w.build.fill(towers.cell_i[t], towers.cell_j[t], towers.footprint[t], -1, 0)
 	w.events.push(SimEvents.Kind.TOWER_SOLD, tower_uid, towers.pos_x[t], towers.pos_z[t], refund)
 	towers.remove(t)
+	towers.stats_dirty = true
 
 
 static func rebuild(w: SimWorld, tower_uid: int) -> void:
@@ -129,8 +131,9 @@ static func rebuild(w: SimWorld, tower_uid: int) -> void:
 	if w.gold < price:
 		return
 	w.gold -= price
-	towers.hp[t] = w.tower_catalog.hp[type]
+	towers.hp[t] = towers.max_hp[t]  # the level is kept (D-144)
 	towers.husk[t] = 0
+	towers.stats_dirty = true
 	towers.cooldown[t] = 0
 	w.build.fill(towers.cell_i[t], towers.cell_j[t], towers.footprint[t], tower_uid, 1)
 	w.events.push(SimEvents.Kind.TOWER_PLACED, tower_uid, towers.pos_x[t], towers.pos_z[t], type)
@@ -147,6 +150,7 @@ static func damage(w: SimWorld, t: int, amount: float) -> void:
 	towers.hp[t] = 0.0
 	towers.husk[t] = 1
 	towers.target[t] = -1
+	towers.stats_dirty = true
 	if w.build:  # a bare tower (add()) has no cells
 		w.build.fill(towers.cell_i[t], towers.cell_j[t], towers.footprint[t], towers.uid[t], 0)
 	w.events.push(SimEvents.Kind.TOWER_DIED, towers.uid[t], towers.pos_x[t], towers.pos_z[t], 0.0)

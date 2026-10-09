@@ -80,3 +80,23 @@ func test_maze_deterministic() -> void:
 	var h := _run_maze(7)
 	assert_eq(_run_maze(7), h)
 	assert_ne(_run_maze(8), h)
+
+
+# Place, upgrade and sell commands (D-144).
+func test_upgrade_replay_deterministic() -> void:
+	assert_eq(_replay_upgrades(), _replay_upgrades())
+
+
+func _replay_upgrades() -> int:
+	var w := SimWorld.new(1)
+	w.queue(SimCommand.start_run(0, 3, "run_m2"))
+	w.step()
+	w.gold = 1000
+	var u := TowerBuilding.add_built(w, w.tower_catalog.type_of("tower_pip"), 6.0, 0.0)
+	w.queue(SimCommand.place_tower(w.tick + 5, "tower_single_01", -6.0, 0.0))
+	w.queue(SimCommand.upgrade_tower(w.tick + 10, u))
+	w.queue(SimCommand.upgrade_tower(w.tick + 20, u))
+	w.queue(SimCommand.sell_tower(w.tick + 30, u))
+	for i in 900:
+		w.step()
+	return w.state_hash()
