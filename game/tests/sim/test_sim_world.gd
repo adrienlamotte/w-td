@@ -51,7 +51,7 @@ func test_recycle_off_by_default() -> void:
 	var world := SimWorld.new(1)
 	world.enemies.add(world.catalog.type_of(SWARMER), 0.4, 0.0, 1.0)  # within one tick of contact (radius 0.35)
 	world.step()
-	assert_eq(world.enemies.state[0], SimEnemies.State.AT_GUARDIAN)
+	assert_eq(world.enemies.state[0], SimEnemies.State.ATTACKING)
 
 
 func test_start_run_starts_wave_zero_and_spawns() -> void:

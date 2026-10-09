@@ -5,7 +5,7 @@ extends Node
 
 const CONFIG_PATH := "res://data/bench/bench_m1.json"
 const MAIN_SCENE := preload("res://view/main.tscn")
-const PHASES: Array[String] = ["commands", "separation", "movement", "spawn", "grid", "targeting"]
+const PHASES: Array[String] = ["commands", "separation", "movement", "deaths", "spawn", "grid", "targeting", "attacks"]
 
 var _cfg: Dictionary
 var _out: String = "user://perf_%s.json" % Time.get_date_string_from_system()
