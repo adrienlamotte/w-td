@@ -71,6 +71,10 @@ class ValidateDataTest(unittest.TestCase):
         errors = self.check_repo_with("runs", "run_m2", lambda d: d["final_boss"].update(enemy="enemy_swarmer_01"))
         self.assertTrue(any("not a miniboss/boss" in e for e in errors))
 
+    def test_rejects_inverted_spawn_ring(self):
+        errors = self.check_repo_with("runs", "run_m2", lambda d: d.update(spawn_ring_min=50))
+        self.assertTrue(any("spawn_ring_min" in e for e in errors))
+
     def test_splash_tower_needs_splash_radius(self):
         errors = self.check_repo_with("towers", "tower_splash_01", lambda d: d.pop("splash_radius"))
         self.assertTrue(any("splash_radius" in e for e in errors))

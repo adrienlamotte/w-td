@@ -2,6 +2,8 @@ extends GutTest
 ## Soft separation (D-079, D-084).
 
 const SWARMER := "enemy_swarmer_01"  # catalog sorted by id: type 0 is not the swarmer
+const BOSS := "enemy_boss_01"
+const MINIBOSS := "enemy_miniboss_01"
 const CX: float = 10.0
 
 var _catalog: EnemyCatalog
@@ -95,6 +97,25 @@ func test_crowd_stays_soft_not_collapsed() -> void:
 	# Plan bound was 0.5 * 2r; strength 0.5 measured 0.164 (0.23 * 2r) and strength 1.0
 	# measured 0.32 (task 004 PR). Bound lowered openly to "not collapsed" until balance.
 	assert_true(min_d >= 0.2 * 2.0 * world.catalog.radius[world.catalog.type_of(SWARMER)])
+
+
+func test_boss_pushes_swarmer_beyond_horde_reach() -> void:
+	var e := SimEnemies.new()
+	e.add(_catalog.type_of(BOSS), 0.0, 0.0, 1.0)
+	e.add(_catalog.type_of(SWARMER), 1.2, 0.0, 1.0)
+	assert_lt(_catalog.radius[_catalog.type_of(SWARMER)] + _catalog.max_radius, 1.2, "outside the horde scan")
+	_run(e, 1)
+	assert_lt(e.pos_x[0], 0.0, "boss pushed -x")
+	assert_gt(e.pos_x[1], _f32(1.2), "swarmer pushed +x")
+
+
+func test_overlapping_bosses_push_apart() -> void:
+	var e := SimEnemies.new()
+	e.add(_catalog.type_of(BOSS), CX, 0.0, 1.0)
+	e.add(_catalog.type_of(MINIBOSS), CX + 1.0, 0.0, 1.0)
+	_run(e, 1)
+	assert_lt(e.pos_x[0], _f32(CX))
+	assert_gt(e.pos_x[1], _f32(CX + 1.0))
 
 
 func test_separation_cost_3000_piled() -> void:

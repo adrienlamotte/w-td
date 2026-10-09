@@ -58,7 +58,8 @@ def _strings(value):
 
 
 def check_references(docs: dict, ids: dict) -> list[str]:
-    """Every id-like string must name a known document; run bosses must be boss enemies."""
+    """Every id-like string must name a known document; run bosses must be boss enemies;
+    a run's spawn ring must not be inverted."""
     errors = []
     for rel, doc in docs.items():
         own = doc.get("id")
@@ -66,6 +67,9 @@ def check_references(docs: dict, ids: dict) -> list[str]:
             if s != own and ID_REF.match(s) and s not in ids:
                 errors.append(f"{rel}: unknown reference '{s}'")
         if rel.parts[0] == "runs":
+            ring = (doc.get("spawn_ring_min"), doc.get("spawn_ring_max"))
+            if all(isinstance(v, (int, float)) for v in ring) and ring[0] > ring[1]:
+                errors.append(f"{rel}: spawn_ring_min is greater than spawn_ring_max")
             for boss in [*doc.get("bosses", []), doc.get("final_boss")]:
                 if not isinstance(boss, dict):
                     continue  # the schema pass reports it

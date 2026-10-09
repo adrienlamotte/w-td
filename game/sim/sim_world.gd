@@ -7,7 +7,7 @@ const TICK_RATE: int = 30  # D-038
 const SIM_DT: float = 1.0 / TICK_RATE
 
 ## Phases of step(), in tick order (D-083).
-enum Phase { COMMANDS, SEPARATE, MOVE, GRID, TARGETING }
+enum Phase { COMMANDS, SEPARATE, MOVE, SPAWN, GRID, TARGETING }
 ## IDLE: no run started; still simulates (M1 demo, bench, tests). D-100.
 enum RunState { IDLE, RUNNING, WON, LOST }
 
@@ -30,13 +30,13 @@ var separation: EnemySeparation = EnemySeparation.new()
 var towers: SimTowers = SimTowers.new()
 ## Wall-clock usec of each phase of the last step(), indexed by Phase.
 ## Diagnostics only: never read by rules, not in state_hash(). A missing phase reads 0.
-var phase_usec: PackedInt64Array = PackedInt64Array([0, 0, 0, 0, 0])
+var phase_usec: PackedInt64Array = PackedInt64Array()
 ## Running sum of phase_usec over every step() (benchmark, task 008). Diagnostics only,
 ## not in state_hash(); the caller resets it.
-var phase_usec_sum: PackedInt64Array = PackedInt64Array([0, 0, 0, 0, 0])
+var phase_usec_sum: PackedInt64Array = PackedInt64Array()
 ## Test/benchmark/demo setting: when > 0, every AT_GUARDIAN enemy is moved back to a
 ## ring of this radius each tick (MOVING again), so a demo horde never empties.
-## 0 = off. The real spawn curve is M2.
+## 0 = off. Runs spawn from their timeline instead (WaveSpawner).
 var recycle_radius: float = 0.0
 var _grid_count: int = -1
 var _t: int = 0
@@ -49,6 +49,8 @@ var _queue: Array[SimCommand] = []
 func _init(run_seed: int, p_catalog: EnemyCatalog = null) -> void:
 	catalog = p_catalog if p_catalog else EnemyCatalog.load_dir()
 	tower_catalog = TowerCatalog.load_dir()
+	phase_usec.resize(Phase.size())
+	phase_usec_sum.resize(Phase.size())
 	_seed_rngs(run_seed)
 	# Cell size = largest enemy collision diameter x 2 (3a).
 	grid = SpatialGrid.new(4.0 * catalog.max_radius)
@@ -69,7 +71,7 @@ func queue(cmd: SimCommand) -> void:
 
 
 ## Spawns count enemies of type_id on a ring of ring_radius around the Guardian,
-## at angles drawn from the spawn RNG. Test/benchmark API; the real spawn curve is M2.
+## at angles drawn from the spawn RNG. Test/benchmark API; runs spawn through WaveSpawner.
 func spawn_ring(p_type_id: int, count: int, ring_radius: float) -> void:
 	var type_hp := catalog.hp[p_type_id]
 	for n in count:
@@ -97,6 +99,9 @@ func step() -> void:
 	if recycle_radius > 0.0:
 		_recycle()
 	_lap(Phase.MOVE)
+	if run_state == RunState.RUNNING:
+		WaveSpawner.step(clock, run, catalog, enemies, _spawn_rng, events)
+	_lap(Phase.SPAWN)
 	_rebuild_grid()
 	_lap(Phase.GRID)
 	towers.retarget(grid, enemies.pos_x, enemies.pos_z)

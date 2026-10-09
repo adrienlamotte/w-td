@@ -39,3 +39,18 @@ func test_same_seed_same_state() -> void:
 
 func test_different_seed_different_state() -> void:
 	assert_ne(_hash_a, _hash_b)
+
+
+func _run_m2(run_seed: int) -> int:
+	var world := SimWorld.new(1)
+	world.queue(SimCommand.start_run(0, run_seed, "run_m2"))
+	for i in 2400:  # wave 0, its break, the start of wave 1
+		world.step()
+	assert_gt(world.enemies.count(), 0)
+	return world.state_hash()
+
+
+func test_run_spawns_deterministic() -> void:
+	var h := _run_m2(7)
+	assert_eq(_run_m2(7), h)
+	assert_ne(_run_m2(8), h)
