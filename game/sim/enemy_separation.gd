@@ -55,11 +55,9 @@ func apply(enemies: SimEnemies, grid: SpatialGrid, catalog: EnemyCatalog) -> voi
 				var dx := x - xs[j]
 				var dz := z - zs[j]
 				var tj := types[j]
-				if is_boss[tj]:
-					continue
 				var rr := ri + radius[tj]
 				var d2 := dx * dx + dz * dz
-				if d2 >= rr * rr:
+				if d2 >= rr * rr or is_boss[tj]:  # boss pairs: _apply_bosses
 					continue
 				var d := sqrt(d2)
 				var ux := -1.0  # coincident: i (lower index) goes -x, j goes +x
