@@ -8,6 +8,7 @@
 Enemies path around towers to the Guardian (maze-style, D-101), cheaply enough for thousands of enemies, with a bounded per-tick cost. Walled-in attacks on towers (D-103) are task 026.
 
 ## Context
+- D-118 (owner, 2026-10-09): towers block ranged enemies' line of sight. A ranged enemy shoots the Guardian only when its straight line is clear (the flow field's per-cell "first tower on the straight line" gives this for free); otherwise it keeps walking the maze. Update the plan's steering/stop rule for ranged enemies accordingly.
 - D-101 to D-104; D-111 (every enemy is a point for pathing); D-112 (placing on enemies allowed, enemies pushed out); D-079 (soft separation still applies)
 - `02_TECH_ARCHITECTURE.md` 3a (tick order D-083, spatial grid), 4 (budgets); `reports/perf_m1.md` (separation already 60-79% of a tick)
 - Technical approach is the lead dev's call (a flow field from the Guardian over the build grid, recomputed only when towers or husks change, is the expected direction)

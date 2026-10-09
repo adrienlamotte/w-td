@@ -116,3 +116,5 @@ Format: `ID | date | decision | status | notes`. Status: DECIDED (owner confirme
 | D-111 | 2026-10-09 | Maze pathing treats every enemy as a point: any gap between towers lets every enemy through, bosses included | DECIDED | Q-54 |
 | D-112 | 2026-10-09 | Placing or rebuilding a tower where enemies stand is allowed; enemies inside the new tower are pushed out of it | DECIDED | Q-55 |
 | D-113 | 2026-10-09 | Husk economy: a husk still counts as a copy for the rising price; selling a husk refunds nothing; rebuilding costs `rebuild_fraction` of the price paid | DECIDED | Q-56. Fractions are placeholders in data |
+| D-117 | 2026-10-09 | Slows do not stack: the strongest active slow applies, and a new hit refreshes the duration to the longer of what is left and the new duration | DECIDED | Q-57 |
+| D-118 | 2026-10-09 | Towers block ranged enemies' line of sight: a ranged enemy shoots the Guardian only with a clear straight line; otherwise it keeps walking the maze | DECIDED | Q-58. Walled-in enemies still attack the blocking tower (D-103) |

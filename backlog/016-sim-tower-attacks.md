@@ -8,6 +8,7 @@
 The three M2 tower types fight: ranged single target, splash, slow.
 
 ## Context
+- D-117 (owner, 2026-10-09): Q-57 answered with the plan's default (no stacking, strongest slow applies, refresh to the longer duration).
 - D-045, D-098 (instant hit)
 - Targeting from M1 (nearest in range, D-085)
 - From 014's plan (D-107): all damage goes through `SimWorld.damage_enemy(i, amount)`; tower attacks run in the ATTACKS phase before the enemy attacks; a tower skips a target with `hp <= 0` (killed earlier in the same phase; corpses are removed in the next tick's DEATHS phase).

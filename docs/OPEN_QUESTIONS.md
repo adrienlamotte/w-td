@@ -15,6 +15,8 @@ Last reviewed: 2026-10-08 (daily docs review; owner answers recorded the same da
 | Q-02 Data format | JSON + JSON Schema | D-034 |
 | Q-03 Where builds, tests and nightly runs execute | Everything on the owner's PC | D-035 (scheduling: Q-35) |
 | Q-04 Godot version | Pin at M0 start | D-036 |
+| Q-57 Slow stacking | No stacking, strongest applies, refresh | D-117 |
+| Q-58 Ranged enemies and the maze | Towers block line of sight | D-118 |
 | Q-54 Narrow gaps for big enemies | Every enemy is a point for pathing | D-111 |
 | Q-55 Placing on enemies | Allowed, enemies pushed out | D-112 |
 | Q-56 Husk economy | Counts as a copy, no refund, rebuild fraction | D-113 |
@@ -65,22 +67,6 @@ Last reviewed: 2026-10-08 (daily docs review; owner answers recorded the same da
 | Q-31 Name, price, Early Access, DLC | Keep WTD until M5; EUR 7.99-9.99 in Early Access; no DLC before launch | D-064 |
 | Q-33 Camera controls | Pan + zoom, cursor at screen centre | D-041 |
 | Q-34 Build radius and performance with no cap | Growable radius, rising costs, 300/150 stress target | D-042 |
-
----
-
-## M2 (open, none blocks a task: the ★ default is safe to assume as a placeholder until answered, revisit at CP-M2)
-
-### Q-57 Slow stacking
-The slow tower (D-045) slows its target by `slow_factor` for `slow_sec` (data). Nothing says what happens when a slowed enemy is hit again. Used by task 016.
-- A) **No stacking: the strongest active slow applies, and a new hit refreshes the duration to the longer of what is left and the new duration.** ★
-- B) Multiplicative stacking (two 0.5 slows give 0.25) down to a floor in data.
-- C) The newest hit replaces the old slow (factor and duration).
-
-### Q-58 Ranged enemies and the maze: do towers block their shots? (affects 016/024 behaviour; raised while planning 024)
-As planned, a ranged enemy with a path stops at its range and shoots the Guardian across the towers, so a maze close to the Guardian does not protect her from ranged enemies.
-- A) **Towers block line of sight: a ranged enemy shoots the Guardian only with a clear line; otherwise it keeps walking the maze** ★
-- B) Shots go over towers: ranged enemies shoot from range regardless of the maze (as planned now).
-- C) Ranged enemies shoot the towers in range as they walk the maze, and the Guardian once in range.
 
 ---
 
