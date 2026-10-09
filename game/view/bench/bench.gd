@@ -21,6 +21,7 @@ var _frames: PackedInt64Array = PackedInt64Array()
 var _fill_usec: int = 0
 var _render_cpu_ms: float = 0.0
 var _gpu_ms: float = 0.0
+var _deaths: int = 0
 
 
 func _ready() -> void:
@@ -44,6 +45,8 @@ func _process(_delta: float) -> void:
 	var world: SimWorld = _view.world
 	if sc.get("churn", false):
 		_churn(world)
+	if sc.get("combat", false):
+		BenchScenario.refill(world, _cfg, sc)
 	if not _measuring:
 		if now - _start_usec >= float(sc.warmup_sec) * 1e6:
 			_measuring = true
@@ -51,6 +54,7 @@ func _process(_delta: float) -> void:
 			_start_tick = world.tick
 			world.phase_usec_sum.resize(SimWorld.Phase.size())
 			world.phase_usec_sum.fill(0)
+			_deaths = 0
 		_last_usec = now
 		return
 	_frames.append(now - _last_usec)
@@ -77,6 +81,10 @@ func _next_scenario(now: int) -> void:
 	_view.driver = SimDriver.new(_view.world)
 	BenchScenario.apply(_view.world, _cfg, sc)
 	add_child(_view)
+	var fx: Callable = _view.driver.on_step
+	_view.driver.on_step = func() -> void:
+		fx.call()
+		_count_deaths(_view.world)
 	var rig: IsoCamera = _view.get_node("CameraRig")
 	_view.get_node("PlayerInput").process_mode = Node.PROCESS_MODE_DISABLED  # no player input during a run
 	rig.set_zoom(int(sc.zoom))
@@ -87,6 +95,15 @@ func _next_scenario(now: int) -> void:
 	_fill_usec = 0
 	_render_cpu_ms = 0.0
 	_gpu_ms = 0.0
+	_deaths = 0
+
+
+# Events are valid until the next step (D-120): read them right after each step.
+func _count_deaths(world: SimWorld) -> void:
+	var ev := world.events
+	for e in ev.count:
+		if ev.kind[e] == SimEvents.Kind.ENEMY_DIED:
+			_deaths += 1
 
 
 # Worst case (D-115): one maze tower's cells flip every frame, so a recompute is always in
@@ -123,6 +140,9 @@ func _finish(sc: Dictionary, world: SimWorld) -> Dictionary:
 		r[k] = int(r[k])
 	if sc.get("maze", false):
 		r["maze_towers"] = world.towers.count()
+	if sc.get("combat", false):
+		r["towers_built"] = world.towers.count()
+		r["deaths_per_sec"] = _deaths / elapsed
 	r.merge({
 		"render_size": [roundi(render_size.x), roundi(render_size.y)],
 		"frame": BenchStats.summarize(_frames),
@@ -168,7 +188,7 @@ func _write_report() -> void:
 	var report := {"bench": _cfg.id, "machine": _machine(), "scenarios": _results}
 	for r in _results:
 		var f: Dictionary = r.frame
-		print("%-13s avg %6.1f fps  1%%-low %6.1f  frame %6.2f ms  step %6.2f ms  gpu %6.2f ms  speed %.2f" % [
+		print("%-18s avg %6.1f fps  1%%-low %6.1f  frame %6.2f ms  step %6.2f ms  gpu %6.2f ms  speed %.2f" % [
 			r.name, f.avg_fps, f.low1_fps, f.frame_ms_avg, r.sim.step_ms_avg, r.cpu_gpu.gpu_ms_avg, r.mean_speed])
 	var file := FileAccess.open(_out, FileAccess.WRITE)
 	if file == null:
