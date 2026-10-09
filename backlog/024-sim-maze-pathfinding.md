@@ -1,8 +1,8 @@
 # 024 — Sim: maze pathfinding (flow field)
-- Status: blocked
+- Status: done
 - Milestone: M2
 - Depends on: 015
-- PR: -
+- PR: #27
 
 ## Goal
 Enemies path around towers to the Guardian (maze-style, D-101), cheaply enough for thousands of enemies, with a bounded per-tick cost. Walled-in attacks on towers (D-103) are task 026.
@@ -117,4 +117,7 @@ Options:
 3. Lower the bench maze density (wider gaps, fewer rings) and keep the 8 ms gate - not allowed without the owner (the plan forbids it).
 4. Relax the per-tick gate for maze scenarios only (e.g. <= 10.5 ms) until 023.
 
+**A (lead dev, 2026-10-09, product owner agrees): option 1.** The pathing meets its own budget (PATH <= 1.5 ms, about 1 ms of per-enemy lookups); the overshoot is the M1 separation loop under corridor density, which is not this task's scope and has no cheap safe fix here. 024 is accepted; the dense-crowd separation cost and the maze gate (pc_maze and pc_maze_churn under 8 ms per tick) move to task 023, priority right after 026. Bench density and enemy counts unchanged.
+
 ## Review log
+- 2026-10-09 lead-dev: PR #27 opened from the WIP branch and reviewed. Tests 203/203, validator green. Release bench (lead dev): M1 scenarios unchanged (pc 5.06 / 6.32 / 5.80, deck 2.43 / 2.67 / 3.02 ms step); pc_maze 8.27 (separation 5.61, movement 1.24, path 0.00), deck_maze 4.59, pc_maze_churn 9.56 (separation 5.94, path 0.78). Maze gate deferred to 023 (answer above). Code follows D-118 (no Guardian attack through towers, ranged included). Non-blocking: flow_field.gd is 282 lines (unrolled hot loop). Merged (squash).
