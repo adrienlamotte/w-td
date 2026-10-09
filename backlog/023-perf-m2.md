@@ -1,8 +1,8 @@
 # 023 — Performance with combat: optimise and re-bench
-- Status: planned
+- Status: review
 - Milestone: M2
 - Depends on: 013, 016, 024, 026
-- PR: -
+- PR: #29
 
 ## Goal
 Keep the budgets with the M2 load: apply the cheap GDScript optimisations listed in the M1 report if needed and re-run the benchmark with combat.
