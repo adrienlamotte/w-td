@@ -1,5 +1,5 @@
 # 025 — Sim: cheap separation and targeting optimisations (priority)
-- Status: review
+- Status: done
 - Milestone: M2
 - Depends on: -
 - PR: #19
@@ -52,3 +52,4 @@ Size: about 60-100 changed lines of code, about 80 of tests. One PR.
 ## Questions
 
 ## Review log
+- 2026-10-09 lead-dev: approved, PR #19 squash-merged. Reference test is an independent O(n^2) D-084 implementation (float64, all pairs incl. boss, cap) and passed on the tests-first commit f7999c6 (old code) and on the head, for cells 4r and 2r; lattice ties test likewise. Gate supported: pc_stress sep+grid+targeting 5.91 -> 4.99 ms, pc_typical step 5.60 -> 4.60. Re-bench (reviewer, release): step pc_typical 4.51, pc_stress 5.18, pc_piled 6.58, deck_typical 2.17, deck_stress 2.50, deck_piled 3.56 ms (within ~2% of the PR). Tests 90 GUT + 13 Python green, validator OK. perf_m1.md 5 only gains a 'Task 025' status column, M1 numbers untouched. Nit for a later touch: spatial_grid.gd rebuild() line 41 has tabs mid-line (lost line continuation), cosmetic only.
