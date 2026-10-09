@@ -123,7 +123,7 @@ func _walled_in_then_opened(open: Callable) -> void:
 		world.step()
 		assert_false(_in_tower(0), "tick %d: centre in a tower" % t)
 	assert_gt(_radius(0), 5.5, "pressed against the ring, outside")
-	assert_ne(world.enemies.state[0], SimEnemies.State.ATTACKING)
+	assert_gt(world.enemies.target_id[0], -1, "attacks the ring (D-116)")
 	assert_eq(world.guardian_hp, HP, "Guardian untouched")
 	# Open the ring at the tower nearest to the enemy.
 	var best := 0
@@ -133,10 +133,10 @@ func _walled_in_then_opened(open: Callable) -> void:
 			best = t
 	open.call(best)
 	var n := 0
-	while world.enemies.state[0] != SimEnemies.State.ATTACKING and n < 1000:
+	while world.guardian_hp == HP and n < 1000:
 		world.step()
 		n += 1
-	assert_eq(world.enemies.state[0], SimEnemies.State.ATTACKING, "went through the opening")
+	assert_lt(world.guardian_hp, HP, "went through the opening")
 
 
 func test_full_ring_then_husk() -> void:

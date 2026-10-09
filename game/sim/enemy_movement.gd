@@ -13,19 +13,27 @@ var dir_z: PackedFloat32Array = PackedFloat32Array()
 var gap: PackedFloat32Array = PackedFloat32Array()
 ## Per type: distance from the Guardian centre at which the enemy stops and attacks.
 var stop_dist: PackedFloat32Array = PackedFloat32Array()
+# Per type, copied by set_stop() for the walled-in stop (D-116).
+var _radius: PackedFloat32Array = PackedFloat32Array()
+var _range: PackedFloat32Array = PackedFloat32Array()
 
 
 ## stop = contact_radius + radius + attack_range (range between body edges; 0 = melee).
 func set_stop(catalog: EnemyCatalog, contact_radius: float) -> void:
 	stop_dist.resize(catalog.radius.size())
+	_radius = catalog.radius
+	_range = catalog.attack_range
 	for t in stop_dist.size():
 		stop_dist[t] = contact_radius + catalog.radius[t] + catalog.attack_range[t]
 
 
 ## Straight line to the Guardian at (0, 0); with a field, the D-115 cases: outside the
-## grid or with a clear line, straight; else the field step (or straight when walled in),
-## and BLOCKED_GAP so it never stops to attack through a tower (D-118).
-func steer(enemies: SimEnemies, field: FlowField = null) -> void:
+## grid or with a clear line, straight; else the field step, and BLOCKED_GAP so it never
+## stops to attack through a tower (D-118). Walled in (no path), it heads for the first
+## live tower on its line and stops at its range from it (D-116, needs build and towers);
+## sets enemies.target_id (tower uid, or -1 = the Guardian).
+func steer(enemies: SimEnemies, field: FlowField = null, build: BuildGrid = null,
+		towers: SimTowers = null, tower_catalog: TowerCatalog = null) -> void:
 	var n := enemies.count()
 	dir_x.resize(n)
 	dir_z.resize(n)
@@ -34,6 +42,7 @@ func steer(enemies: SimEnemies, field: FlowField = null) -> void:
 	var zs := enemies.pos_z
 	var hp := enemies.hp
 	var ty := enemies.type_id
+	var tgt := enemies.target_id
 	var size := 0
 	var half := 0.0
 	var fstep := 1.0
@@ -52,6 +61,7 @@ func steer(enemies: SimEnemies, field: FlowField = null) -> void:
 	for i in n:
 		if hp[i] <= 0.0:
 			continue
+		tgt[i] = -1
 		var x := xs[i]
 		var z := zs[i]
 		var d := sqrt(x * x + z * z)
@@ -76,6 +86,29 @@ func steer(enemies: SimEnemies, field: FlowField = null) -> void:
 			var k := fdir[c]
 			dir_x[i] = FlowField.DIR_X[k]
 			dir_z[i] = FlowField.DIR_Z[k]
+		elif towers:
+			_attack_wall(i, fhit[c], enemies, build, towers, tower_catalog)
+
+
+# Walled in (D-116): toward the tower holding cell h, gap to its range from the tower body.
+# Sold, husk or unknown (the field lags a few ticks): keep the straight chase, BLOCKED_GAP.
+func _attack_wall(i: int, h: int, enemies: SimEnemies, build: BuildGrid, towers: SimTowers,
+		tower_catalog: TowerCatalog) -> void:
+	var u := build.owner[h]
+	if u < 0 or u >= towers.uid_index.size():
+		return
+	var t := towers.uid_index[u]
+	if t < 0 or towers.husk[t]:
+		return
+	var dx := towers.pos_x[t] - enemies.pos_x[i]
+	var dz := towers.pos_z[t] - enemies.pos_z[i]
+	var d := sqrt(dx * dx + dz * dz)
+	if d > 1e-6:
+		dir_x[i] = dx / d
+		dir_z[i] = dz / d
+	var e := enemies.type_id[i]
+	gap[i] = d - (tower_catalog.radius[towers.type_id[t]] + _radius[e] + _range[e])
+	enemies.target_id[i] = u
 
 
 ## D-112: a live enemy whose cell is solid and known as such by the field is clamped

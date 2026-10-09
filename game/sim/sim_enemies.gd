@@ -21,6 +21,8 @@ var cooldown: PackedInt32Array = PackedInt32Array()
 ## Speed multiplier while slowed, 1 = none; slow_ticks MOVE phases left, 0 = none (D-114, D-117).
 var slow_factor: PackedFloat32Array = PackedFloat32Array()
 var slow_ticks: PackedInt32Array = PackedInt32Array()
+## Attack target: tower uid, -1 = the Guardian. Set by EnemyMovement.steer() every tick (D-116).
+var target_id: PackedInt32Array = PackedInt32Array()
 ## Presentation only (D-120): no rule reads them, not in state_hash(). Kept here so they
 ## follow every swap-remove. prev_* = position at the start of the tick; hit_tick = tick of
 ## the last damage_enemy (NEVER_HIT before).
@@ -44,6 +46,7 @@ func add(p_type_id: int, x: float, z: float, p_hp: float) -> int:
 	cooldown.append(0)
 	slow_factor.append(1.0)
 	slow_ticks.append(0)
+	target_id.append(-1)
 	prev_x.append(x)
 	prev_z.append(z)
 	hit_tick.append(NEVER_HIT)
@@ -62,6 +65,7 @@ func remove(i: int) -> void:
 	cooldown[i] = cooldown[last]
 	slow_factor[i] = slow_factor[last]
 	slow_ticks[i] = slow_ticks[last]
+	target_id[i] = target_id[last]
 	prev_x[i] = prev_x[last]
 	prev_z[i] = prev_z[last]
 	hit_tick[i] = hit_tick[last]
@@ -74,6 +78,7 @@ func remove(i: int) -> void:
 	cooldown.resize(last)
 	slow_factor.resize(last)
 	slow_ticks.resize(last)
+	target_id.resize(last)
 	prev_x.resize(last)
 	prev_z.resize(last)
 	hit_tick.resize(last)

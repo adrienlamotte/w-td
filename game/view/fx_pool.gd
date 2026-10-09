@@ -27,8 +27,6 @@ var _tower_color: PackedColorArray = PackedColorArray()
 var _coin_color: Color
 var _spark_color: Color
 var _ring_color: Color
-# -1 until task 026 adds the kind: never a parse-time reference.
-var _tower_hit: int = SimEvents.Kind.get("TOWER_HIT", -1)
 
 
 func _init(cfg: Dictionary, world: SimWorld) -> void:
@@ -74,7 +72,7 @@ func read_events(world: SimWorld) -> void:
 			if world.run.skill_kind[a] == RunData.Skill.AREA_BLAST:
 				add(Kind.RING, 0.0, 0.0, world.run.skill_radius[a], 0.0, float(fx.ring_sec),
 					_ring_color, float(fx.ring_width))
-		elif k == _tower_hit:
+		elif k == SimEvents.Kind.TOWER_HIT:
 			var t := world.towers.uid.find(a)
 			if t >= 0:
 				add(Kind.SPARK, world.towers.pos_x[t], world.towers.pos_z[t], 0.0, 0.0,
