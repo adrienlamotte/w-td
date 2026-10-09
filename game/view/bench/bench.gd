@@ -5,7 +5,7 @@ extends Node
 
 const CONFIG_PATH := "res://data/bench/bench_m1.json"
 const MAIN_SCENE := preload("res://view/main.tscn")
-const PHASES: Array[String] = ["separation", "movement", "grid", "targeting"]
+const PHASES: Array[String] = ["commands", "separation", "movement", "grid", "targeting"]
 
 var _cfg: Dictionary
 var _out: String = "user://perf_%s.json" % Time.get_date_string_from_system()
@@ -47,7 +47,8 @@ func _process(_delta: float) -> void:
 			_measuring = true
 			_start_usec = now
 			_start_tick = world.tick
-			world.phase_usec_sum = PackedInt64Array([0, 0, 0, 0])
+			world.phase_usec_sum.resize(SimWorld.Phase.size())
+			world.phase_usec_sum.fill(0)
 		_last_usec = now
 		return
 	_frames.append(now - _last_usec)

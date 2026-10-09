@@ -1,6 +1,6 @@
 extends GutTest
 ## Same seed + same commands = same state (02_TECH_ARCHITECTURE.md section 6).
-## No commands exist yet; feed the same command list to both worlds once they do.
+## No commands here; test_replay.gd covers same seed + same commands.
 
 const SWARMER := "enemy_swarmer_01"  # catalog sorted by id: type 0 is not the swarmer
 const TICKS: int = 30 * 60  # one simulated minute
