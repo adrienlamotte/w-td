@@ -13,6 +13,7 @@ You are an AI agent working on this repo, mostly unattended. Read this file firs
 | How you work: loops, routines, branches, human checkpoints | `04_AGENT_WORKFLOW.md` |
 | Steam rules, content limits, AI disclosure | `05_STEAM_AND_COMPLIANCE.md` |
 | Milestones and current scope | `06_ROADMAP.md` |
+| Launch roster: waifus, roles, relationships, offer order | `07_ROSTER.md` |
 | Keyboard/mouse and gamepad mapping | `09_CONTROLS.md` |
 | Plan of the current milestone | `plans/M<n>.md` |
 | Why things were decided | `DECISIONS.md` |
