@@ -1,5 +1,5 @@
 # 021 — UI: run flow, pause, win and lose screens
-- Status: review
+- Status: done
 - Milestone: M2
 - Depends on: 014, 020, 027
 - PR: #31
@@ -60,3 +60,4 @@ Size: about 200 lines of code (+ scenes, data, strings), about 170 of tests. One
 ## Questions
 
 ## Review log
+- 2026-10-09 lead-dev: PR #31 approved and squash-merged into m2/dev. All criteria met, matches the plan (D-125 PROPOSED). Reviewer ran test.ps1 (241 GUT + 14 Python green) and validate.ps1 (0 errors). Out-of-plan change accepted: gamepad A/B added to `ui_accept`/`ui_cancel` in project.godot (engine defaults lack them; checked at runtime that Enter/KP Enter/Space/Esc are kept and d-pad + left stick are already in `ui_up/down`); no conflict with 018 bindings, the pause menu consumes `ui_cancel` only while shown. project.godot is LF, no control chars. Hidden menus release focus (checked). needs-human:playtest at CP-M2 (flow, slow-time feel, real gamepad).
