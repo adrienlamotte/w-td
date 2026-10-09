@@ -68,13 +68,6 @@ Last reviewed: 2026-10-08 (daily docs review; owner answers recorded the same da
 
 ---
 
-## M2 (open, none blocks a task: the ★ default is safe to assume as a placeholder until answered, revisit at CP-M2)
-
-
-
-
----
-
 ## A. Deferred until the first real asset arrives
 
 ### Q-37 Where are large art files stored? (DEFERRED by the owner: decide when the first real asset arrives)
