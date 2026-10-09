@@ -5,7 +5,7 @@ extends Node
 
 const CONFIG_PATH := "res://data/bench/bench_m1.json"
 const MAIN_SCENE := preload("res://view/main.tscn")
-const PHASES: Array[String] = ["commands", "separation", "movement", "deaths", "spawn", "grid", "targeting", "attacks"]
+const PHASES: Array[String] = ["commands", "path", "separation", "movement", "deaths", "spawn", "grid", "targeting", "attacks"]
 
 var _cfg: Dictionary
 var _out: String = "user://perf_%s.json" % Time.get_date_string_from_system()
@@ -42,6 +42,8 @@ func _process(_delta: float) -> void:
 		return
 	var sc: Dictionary = _cfg.scenarios[_index]
 	var world: SimWorld = _view.world
+	if sc.get("churn", false):
+		_churn(world)
 	if not _measuring:
 		if now - _start_usec >= float(sc.warmup_sec) * 1e6:
 			_measuring = true
@@ -87,6 +89,16 @@ func _next_scenario(now: int) -> void:
 	_gpu_ms = 0.0
 
 
+# Worst case (D-115): one maze tower's cells flip every frame, so a recompute is always in
+# flight. Harness only, like spawn_ring: the tower stays live in the arrays.
+func _churn(world: SimWorld) -> void:
+	var t := world.towers.count() - 1
+	var i0 := world.towers.cell_i[t]
+	var j0 := world.towers.cell_j[t]
+	var b := world.build
+	b.fill(i0, j0, world.towers.footprint[t], world.towers.uid[t], 1 - b.solid[j0 * b.size + i0])
+
+
 func _finish(sc: Dictionary, world: SimWorld) -> Dictionary:
 	var n := maxi(1, _frames.size())
 	var ticks := world.tick - _start_tick
@@ -109,6 +121,8 @@ func _finish(sc: Dictionary, world: SimWorld) -> Dictionary:
 	var r := sc.duplicate()
 	for k in ["enemies", "towers", "zoom"]:
 		r[k] = int(r[k])
+	if sc.get("maze", false):
+		r["maze_towers"] = world.towers.count()
 	r.merge({
 		"render_size": [roundi(render_size.x), roundi(render_size.y)],
 		"frame": BenchStats.summarize(_frames),

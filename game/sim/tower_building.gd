@@ -75,20 +75,36 @@ static func place(w: SimWorld, cmd: SimCommand) -> void:
 	if c.reason != Reason.OK:
 		return
 	w.gold -= c.price
+	add_built(w, c.type, c.x, c.z, c.price)
+
+
+## Snaps and appends a built tower of catalog type `type` and fills its cells; returns its
+## uid, or -1 when a cell is out of the grid or taken. No gate, gold, radius or run checks:
+## place() is the command path; tests and the bench lay out mazes with this (D-115).
+static func add_built(w: SimWorld, type: int, x: float, z: float, paid: int = 0) -> int:
+	var b := w.build
+	var n := BuildGrid.footprint(w.tower_catalog.radius[type], b.step)
+	var i0 := b.first_cell(x, n)
+	var j0 := b.first_cell(z, n)
+	if not b.is_free(i0, j0, n):
+		return -1
+	x = b.cell_centre(i0, n)
+	z = b.cell_centre(j0, n)
 	var uid := w.next_tower_uid
 	w.next_tower_uid += 1
 	var towers := w.towers
-	var t := towers.add(c.x, c.z, w.tower_catalog.attack_range[c.type])
+	var t := towers.add(x, z, w.tower_catalog.attack_range[type])
 	towers.uid[t] = uid
-	towers.type_id[t] = c.type
-	towers.paid[t] = c.price
-	towers.cell_i[t] = c.i0
-	towers.cell_j[t] = c.j0
-	towers.footprint[t] = c.footprint
-	towers.hp[t] = w.tower_catalog.hp[c.type]
-	# Enemies standing on the footprint are allowed; task 024 pushes them out (D-112).
-	w.build.fill(c.i0, c.j0, c.footprint, uid, 1)
-	w.events.push(SimEvents.Kind.TOWER_PLACED, uid, c.x, c.z, c.type)
+	towers.type_id[t] = type
+	towers.paid[t] = paid
+	towers.cell_i[t] = i0
+	towers.cell_j[t] = j0
+	towers.footprint[t] = n
+	towers.hp[t] = w.tower_catalog.hp[type]
+	# Enemies standing on the footprint are allowed; FlowField pushes them out (D-112, D-115).
+	b.fill(i0, j0, n, uid, 1)
+	w.events.push(SimEvents.Kind.TOWER_PLACED, uid, x, z, type)
+	return uid
 
 
 static func sell(w: SimWorld, tower_uid: int) -> void:
