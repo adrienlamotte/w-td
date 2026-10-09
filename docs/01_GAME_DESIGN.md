@@ -70,7 +70,7 @@ Each waifu has: role (damage / crowd control / support / tank / economy), attack
 ## 9. Controls and platforms **[D]**
 - Windows PC (mouse + keyboard) and **Steam Deck** (gamepad). Gamepad must be a first-class input from the start; no feature may require a mouse only.
 - **Camera (D-041):** PC uses WASD/arrows, edge scroll and mouse-wheel zoom; gamepad pans with the right stick, zooms with the bumpers and recentres on the Guardian with a button. The camera is limited to the buildable radius plus a margin and has 3 zoom levels. **[D]**
-- **Gamepad building (D-046):** hold a button to open a radial tower menu, release to select; the placement cursor is at the screen centre (the world moves under it, snapped to the grid); A places, B cancels, skills are on the triggers. A slow-time-while-placing toggle is an accessibility option. Exact mapping goes in a controls spec. **[D]**
+- **Gamepad building (D-046):** hold a button to open a radial tower menu, release to select; the placement cursor is at the screen centre (the world moves under it, snapped to the grid); A places, B cancels, skills are on the triggers. A slow-time-while-placing toggle is an accessibility option. Exact mapping: `09_CONTROLS.md` (PROPOSED, CP-M2). **[D]**
 
 ## 10. Art direction **[P]**
 - Adult-proportioned stylized waifus (no chibi, D-030), 2.5D: 3D isometric camera, billboarded 2D art. Base resolution 2560x1440 (D-039). Details in `03_ART_PIPELINE.md`.
