@@ -15,6 +15,11 @@ Last reviewed: 2026-10-08 (daily docs review; owner answers recorded the same da
 | Q-02 Data format | JSON + JSON Schema | D-034 |
 | Q-03 Where builds, tests and nightly runs execute | Everything on the owner's PC | D-035 (scheduling: Q-35) |
 | Q-04 Godot version | Pin at M0 start | D-036 |
+| Q-49 Building while paused | No | D-105 |
+| Q-50 Path blocking | Maze: enemies path around towers | D-101 |
+| Q-51 Full walls | Allowed | D-102 |
+| Q-52 When enemies attack towers | Only when walled in | D-103 |
+| Q-53 Husks block the path | No, walkable | D-104 |
 | Q-43 Wave length | 60 s waves | D-093 |
 | Q-44 Gold collection | Automatic on death | D-094 |
 | Q-45 M2 enemy types | Swarmer, brute, ranged + bosses | D-095 |
@@ -57,15 +62,6 @@ Last reviewed: 2026-10-08 (daily docs review; owner answers recorded the same da
 | Q-31 Name, price, Early Access, DLC | Keep WTD until M5; EUR 7.99-9.99 in Early Access; no DLC before launch | D-064 |
 | Q-33 Camera controls | Pan + zoom, cursor at screen centre | D-041 |
 | Q-34 Build radius and performance with no cap | Growable radius, rising costs, 300/150 stress target | D-042 |
-
----
-
-## M2 (current milestone)
-
-### Q-49 Can the player build while the game is paused? (blocks tasks 020/021, not the sim)
-- A) **No: pause stops everything; building happens in real time and during the breaks (D-032)** ★
-- B) Yes: the pause doubles as a planning pause (easier game).
-- C) Only with the slow-time-while-placing accessibility option on (D-046).
 
 ---
 

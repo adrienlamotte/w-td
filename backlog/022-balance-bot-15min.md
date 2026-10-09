@@ -1,7 +1,7 @@
 # 022 — Headless bot run: a 15-minute run is playable
 - Status: todo
 - Milestone: M2
-- Depends on: 013, 016, 017
+- Depends on: 013, 016, 017, 024
 - PR: -
 
 ## Goal
