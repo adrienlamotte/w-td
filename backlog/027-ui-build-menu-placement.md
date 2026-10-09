@@ -1,5 +1,6 @@
 # 027 — UI: build menu, radial menu, placement ghost, sell and rebuild
-- Status: review
+- Status: done
+- Labels: needs-human:playtest
 - Milestone: M2
 - Depends on: 018, 020
 - PR: #30
@@ -62,3 +63,4 @@ Size: about 250 lines of code (+ about 30 of data/schema), about 180 of tests. O
 ## Questions
 
 ## Review log
+- 2026-10-09 lead-dev: approved and merged PR #30 (squash). `test.ps1` 229/229, `validate.ps1` 0 errors on the PR branch. Matches the plan; deviations accepted (static `PlayerInput.can_build` shared with the UI, `hint()` returns a list of lines, HUD click-through test exempts only the bar buttons). View only, all values in `data/ui`, every string a key. Nit, not blocking: the radial rebuilds its label text every frame while open. Radial only covered by tests (no pad): needs-human:playtest at CP-M2.
