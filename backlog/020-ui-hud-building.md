@@ -1,8 +1,8 @@
 # 020 — UI: HUD, sim queries for the UI, localisation, real run in the main scene
-- Status: planned
+- Status: review
 - Milestone: M2
 - Depends on: 015, 017, 018
-- PR: -
+- PR: #26
 
 ## Goal
 Everything the player needs to play: HUD and building with mouse and gamepad.
