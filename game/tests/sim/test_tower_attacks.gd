@@ -179,7 +179,7 @@ func test_slow_hit_duration_and_speed() -> void:
 	var type := cat.type_of(SLOW)
 	var f := cat.slow_factor[type]
 	var n := cat.slow_ticks[type]
-	_place(SLOW, 4.0, 0.0)
+	_place(SLOW, 4.0, 2.0)  # off the enemy's line: no detour (D-115)
 	world.enemies.add(sw, 8.0, 0.0, 1000.0)
 	world.step()  # MOVE at full speed, then the hit
 	assert_eq(world.enemies.slow_factor[0], f)

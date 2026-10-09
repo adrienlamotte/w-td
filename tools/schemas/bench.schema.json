@@ -17,6 +17,10 @@
     "spawn_ring_min": {"type": "number", "exclusiveMinimum": 0},
     "spawn_ring_max": {"type": "number", "exclusiveMinimum": 0},
     "recycle_radius": {"type": "number", "minimum": 0},
+    "grid_step": {"type": "number", "exclusiveMinimum": 0, "description": "Build/path grid step of maze scenarios (task 024)"},
+    "maze_tower": {"type": "string", "pattern": "^tower_[a-z0-9_]+$"},
+    "maze_rings": {"type": "array", "items": {"type": "number", "exclusiveMinimum": 0}, "description": "Ring radii of the maze, inside the build radius"},
+    "maze_gap": {"type": "number", "exclusiveMinimum": 0, "description": "Arc length of the one gap per ring"},
     "scenarios": {
       "type": "array",
       "minItems": 1,
@@ -31,7 +35,9 @@
           "piled": {"type": "boolean"},
           "warmup_sec": {"type": "number", "exclusiveMinimum": 0},
           "zoom": {"type": "integer", "minimum": 0, "maximum": 2},
-          "render_scale": {"type": "number", "exclusiveMinimum": 0, "maximum": 1}
+          "render_scale": {"type": "number", "exclusiveMinimum": 0, "maximum": 1},
+          "maze": {"type": "boolean", "description": "Lay out the maze rings with built towers (needs grid_step, maze_tower, maze_rings, maze_gap)"},
+          "churn": {"type": "boolean", "description": "Flip one maze tower's cells every frame: a recompute always in flight"}
         }
       }
     }

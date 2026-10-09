@@ -54,3 +54,29 @@ func test_run_spawns_deterministic() -> void:
 	var h := _run_m2(7)
 	assert_eq(_run_m2(7), h)
 	assert_ne(_run_m2(8), h)
+
+
+# Maze routing (D-115): a wall placed, one tower killed into a husk, one sold, mid-run.
+func _run_maze(run_seed: int) -> int:
+	var world := SimWorld.new(1)
+	world.queue(SimCommand.start_run(0, run_seed, "run_m2"))
+	world.step()
+	world.gold = 1 << 30
+	for z in range(-6, 7):
+		world.queue(SimCommand.place_tower(world.tick, "tower_single_01", 8.0, z))
+		world.queue(SimCommand.place_tower(world.tick, "tower_single_01", -8.0, z))
+	for i in 600:
+		world.step()
+	world.damage_tower(3, 1e9)
+	world.queue(SimCommand.sell_tower(world.tick, world.towers.uid[20]))
+	for i in 900:
+		world.step()
+	assert_gt(world.field.recomputes, 2)
+	assert_gt(world.enemies.count(), 0)
+	return world.state_hash()
+
+
+func test_maze_deterministic() -> void:
+	var h := _run_maze(7)
+	assert_eq(_run_maze(7), h)
+	assert_ne(_run_maze(8), h)

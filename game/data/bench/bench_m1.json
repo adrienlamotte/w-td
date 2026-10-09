@@ -10,12 +10,19 @@
   "spawn_ring_min": 24,
   "spawn_ring_max": 44,
   "recycle_radius": 40,
+  "grid_step": 0.5,
+  "maze_tower": "tower_single_01",
+  "maze_rings": [8, 13, 18],
+  "maze_gap": 2,
   "scenarios": [
     {"name": "pc_typical", "enemies": 3000, "towers": 50, "piled": false, "warmup_sec": 5, "zoom": 1, "render_scale": 1.0},
     {"name": "pc_stress", "enemies": 3000, "towers": 300, "piled": false, "warmup_sec": 5, "zoom": 2, "render_scale": 1.0},
     {"name": "deck_typical", "enemies": 1500, "towers": 50, "piled": false, "warmup_sec": 5, "zoom": 1, "render_scale": 0.5},
     {"name": "deck_stress", "enemies": 1500, "towers": 150, "piled": false, "warmup_sec": 5, "zoom": 2, "render_scale": 0.5},
     {"name": "pc_piled", "enemies": 3000, "towers": 300, "piled": true, "warmup_sec": 20, "zoom": 1, "render_scale": 1.0},
-    {"name": "deck_piled", "enemies": 1500, "towers": 150, "piled": true, "warmup_sec": 20, "zoom": 1, "render_scale": 0.5}
+    {"name": "deck_piled", "enemies": 1500, "towers": 150, "piled": true, "warmup_sec": 20, "zoom": 1, "render_scale": 0.5},
+    {"name": "pc_maze", "enemies": 3000, "towers": 0, "piled": false, "maze": true, "warmup_sec": 5, "zoom": 1, "render_scale": 1.0},
+    {"name": "deck_maze", "enemies": 1500, "towers": 0, "piled": false, "maze": true, "warmup_sec": 5, "zoom": 1, "render_scale": 0.5},
+    {"name": "pc_maze_churn", "enemies": 3000, "towers": 0, "piled": false, "maze": true, "churn": true, "warmup_sec": 5, "zoom": 1, "render_scale": 1.0}
   ]
 }

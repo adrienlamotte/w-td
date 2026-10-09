@@ -9,6 +9,9 @@ func _commands(run_seed: int, unpause_tick: int) -> Array[SimCommand]:
 	return [
 		SimCommand.start_run(0, run_seed, "run_m2"),
 		SimCommand.place_tower(30, "tower_single_01", 3.0, 4.0),
+		SimCommand.place_tower(40, "tower_single_01", 6.0, -1.0),  # in the way: enemies route (D-115)
+		SimCommand.place_tower(41, "tower_single_01", 6.0, 0.0),
+		SimCommand.place_tower(42, "tower_single_01", 6.0, 1.0),
 		SimCommand.pause(100, true),
 		SimCommand.pause(unpause_tick, false),
 		SimCommand.use_skill(200, "skill_area_blast"),

@@ -7,7 +7,7 @@ const TICK_RATE: int = 30  # D-038
 const SIM_DT: float = 1.0 / TICK_RATE
 
 ## Phases of step(), in tick order (D-083).
-enum Phase { COMMANDS, SEPARATE, MOVE, DEATHS, SPAWN, GRID, TARGETING, ATTACKS }
+enum Phase { COMMANDS, PATH, SEPARATE, MOVE, DEATHS, SPAWN, GRID, TARGETING, ATTACKS }
 ## IDLE: no run started; still simulates (M1 demo, bench, tests). D-100.
 enum RunState { IDLE, RUNNING, WON, LOST }
 
@@ -30,6 +30,9 @@ var separation: EnemySeparation = EnemySeparation.new()
 var towers: SimTowers = SimTowers.new()
 ## Created at StartRun from the run's build radius and grid step; null before (D-109).
 var build: BuildGrid = null
+## Flow field over `build` (D-115); created (full first computation) in the PATH phase when
+## `build` exists and the field does not match it. Derived: not in state_hash().
+var field: FlowField = null
 ## Uid of the next placed tower: starts at 0, never reused (D-109).
 var next_tower_uid: int = 0
 var movement: EnemyMovement = EnemyMovement.new()
@@ -107,13 +110,17 @@ func step() -> void:
 	if paused or run_state == RunState.WON or run_state == RunState.LOST:
 		tick += 1
 		return
+	_path()
+	_lap(Phase.PATH)
 	if _grid_count != enemies.count():  # safety net: enemies added/removed outside step()
 		_rebuild_grid()
 		_t = Time.get_ticks_usec()
-	separation.apply(enemies, grid, catalog)
+	separation.apply(enemies, grid, catalog, field)
 	_lap(Phase.SEPARATE)
-	movement.steer(enemies)
+	movement.steer(enemies, field)
 	movement.advance(enemies, catalog.speed, SIM_DT, separation.blocked)
+	if field:
+		movement.push_out(enemies, build, field)
 	if recycle_radius > 0.0:
 		_recycle()
 	_lap(Phase.MOVE)
@@ -133,6 +140,17 @@ func step() -> void:
 	if run_state == RunState.RUNNING:
 		clock += 1
 	tick += 1
+
+
+# A new build grid (StartRun, or set by a test or the bench) gets a new field, computed in
+# full at once; then at most CELLS_PER_TICK units per tick, only after a layout change.
+func _path() -> void:
+	if build == null:
+		return
+	if field == null or field.grid != build:
+		field = FlowField.new(build, run.guardian_contact_radius if run else 0.0)
+		field.update(FlowField.FULL)
+	field.update(FlowField.CELLS_PER_TICK)
 
 
 func _apply(cmd: SimCommand) -> void:
@@ -210,7 +228,7 @@ func damage_enemy(i: int, amount: float) -> void:
 	events.push(SimEvents.Kind.ENEMY_HIT, enemies.type_id[i], enemies.pos_x[i], enemies.pos_z[i], amount)
 
 
-## Single entry point for damage to towers (task 024 calls it). A lethal hit leaves a husk (D-104, D-109).
+## Single entry point for damage to towers (task 026 calls it). A lethal hit leaves a husk (D-104, D-109).
 func damage_tower(t: int, amount: float) -> void:
 	TowerBuilding.damage(self, t, amount)
 
