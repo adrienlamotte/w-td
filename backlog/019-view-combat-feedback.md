@@ -1,8 +1,8 @@
 # 019 — View: combat feedback and enemy/tower visuals
-- Status: planned
+- Status: review
 - Milestone: M2
 - Depends on: 016, 017
-- PR: -
+- PR: #25
 
 ## Goal
 Make combat readable: hits, deaths, shots, coins, skills, husks, and distinct placeholder looks per enemy and tower type.
