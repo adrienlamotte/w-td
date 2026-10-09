@@ -65,6 +65,28 @@ Last reviewed: 2026-10-08 (daily docs review; owner answers recorded the same da
 
 ---
 
+## M2 (open, none blocks a task: the ★ default is safe to assume as a placeholder until answered, revisit at CP-M2)
+
+### Q-54 Can an enemy pass a gap narrower than its body?
+Towers cover 2 x 2 build cells (1 x 1 unit, D-109); one free cell is a 0.5-unit gap. Bodies: swarmer 0.7, brute 0.8, mini-boss 1.6, final boss 2.0 units wide. Used by task 024 (pathfinding).
+- A) **Every enemy is a point for pathing: any free cell is passable for all, bosses included; bodies overlap tower edges in tight gaps.** One path field, cheapest. ★
+- B) Size classes: the horde uses any gap, bosses need a gap at least as wide as their body; a boss with no wide-enough path counts as walled in and attacks the blocking tower (D-103). Two path fields; makes bosses wall-breakers.
+- C) Every enemy needs a gap at least its body width (one-cell gaps block everyone). One field per size, most realistic, most cost.
+
+### Q-55 Placing or rebuilding a tower where enemies stand
+Building is real time (D-032, D-105), so enemies are often on the spot, and husks are walkable (D-104).
+- A) **Allowed: enemies inside the new tower are pushed out to the nearest free cell (task 024).** ★
+- B) Refused while an enemy body overlaps the footprint (the UI shows it as blocked).
+- C) Allowed, and enemies inside take damage or are killed.
+
+### Q-56 Husk economy
+D-043 says a husk is rebuilt "for a fraction of the cost"; copies (cost growth, D-042) and selling a husk are not covered.
+- A) **A husk counts as a copy for cost growth; selling a husk clears it for no refund; rebuild price = `rebuild_fraction` x the price paid for that tower.** ★
+- B) A husk does not count as a copy; selling a husk refunds `sell_refund` x the rebuild price; rebuild price = `rebuild_fraction` x the base cost.
+- C) Husks cannot be sold, only rebuilt.
+
+---
+
 ## A. Deferred until the first real asset arrives
 
 ### Q-37 Where are large art files stored? (DEFERRED by the owner: decide when the first real asset arrives)
