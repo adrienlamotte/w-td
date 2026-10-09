@@ -12,6 +12,7 @@ func _commands(run_seed: int, unpause_tick: int) -> Array[SimCommand]:
 		SimCommand.pause(100, true),
 		SimCommand.pause(unpause_tick, false),
 		SimCommand.use_skill(200, "skill_area_blast"),
+		SimCommand.use_skill(220, "skill_shield"),
 		SimCommand.sell_tower(210, 0),
 	]
 
