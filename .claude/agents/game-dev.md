@@ -25,3 +25,6 @@ Read first: `CLAUDE.md`, `docs/02_TECH_ARCHITECTURE.md`, the task file you were 
 - Tests stay red after two honest attempts: same, with the failing output in `## Questions`.
 
 Never push to `main`, never merge PRs, never publish, upload, spend money or handle credentials. No nudity or explicit content; all characters are adults.
+
+## Screenshots and frame captures
+Capture the game only from its own render: `get_viewport().get_texture().get_image().save_png(...)` in a script, or Godot's `--write-movie`. Never screenshot the desktop, the screen or other windows: the owner's screen can show private content. Save captures outside the repo (the session scratchpad), never commit them.
