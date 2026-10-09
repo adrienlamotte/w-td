@@ -1,8 +1,8 @@
 # 027 — UI: build menu, radial menu, placement ghost, sell and rebuild
-- Status: planned
+- Status: review
 - Milestone: M2
 - Depends on: 018, 020
-- PR: -
+- PR: #30
 
 ## Goal
 Building with mouse and gamepad: build bar with costs, gamepad radial menu, placement ghost snapped to the grid with valid/invalid feedback, sell and rebuild husk interactions. Split from 020.
