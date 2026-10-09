@@ -76,6 +76,12 @@ The slow tower (D-045) slows its target by `slow_factor` for `slow_sec` (data). 
 - B) Multiplicative stacking (two 0.5 slows give 0.25) down to a floor in data.
 - C) The newest hit replaces the old slow (factor and duration).
 
+### Q-58 Ranged enemies and the maze: do towers block their shots? (affects 016/024 behaviour; raised while planning 024)
+As planned, a ranged enemy with a path stops at its range and shoots the Guardian across the towers, so a maze close to the Guardian does not protect her from ranged enemies.
+- A) **Towers block line of sight: a ranged enemy shoots the Guardian only with a clear line; otherwise it keeps walking the maze** ★
+- B) Shots go over towers: ranged enemies shoot from range regardless of the maze (as planned now).
+- C) Ranged enemies shoot the towers in range as they walk the maze, and the Guardian once in range.
+
 ---
 
 ## A. Deferred until the first real asset arrives
