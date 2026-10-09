@@ -7,6 +7,9 @@
 [ext_resource type="Script" path="res://view/fx_layer.gd" id="5_fx"]
 [ext_resource type="PackedScene" path="res://view/ui/hud.tscn" id="6_hud"]
 [ext_resource type="Script" path="res://view/placement_ghost.gd" id="7_ghost"]
+[ext_resource type="PackedScene" path="res://view/ui/start_screen.tscn" id="8_start"]
+[ext_resource type="PackedScene" path="res://view/ui/pause_menu.tscn" id="9_pause"]
+[ext_resource type="PackedScene" path="res://view/ui/end_screen.tscn" id="10_end"]
 
 [sub_resource type="StandardMaterial3D" id="mat_ground"]
 shading_mode = 0
@@ -55,3 +58,9 @@ script = ExtResource("4_input")
 script = ExtResource("7_ghost")
 
 [node name="Hud" parent="." instance=ExtResource("6_hud")]
+
+[node name="StartScreen" parent="." instance=ExtResource("8_start")]
+
+[node name="PauseMenu" parent="." instance=ExtResource("9_pause")]
+
+[node name="EndScreen" parent="." instance=ExtResource("10_end")]

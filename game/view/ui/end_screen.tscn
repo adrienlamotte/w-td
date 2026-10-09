@@ -1,0 +1,51 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://view/ui/end_screen.gd" id="1_script"]
+
+[sub_resource type="StyleBoxFlat" id="style_bg"]
+bg_color = Color(0.08, 0.06, 0.12, 0.75)
+
+[node name="EndScreen" type="CanvasLayer"]
+layer = 10
+script = ExtResource("1_script")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("style_bg")
+
+[node name="Box" type="VBoxContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 24
+
+[node name="Title" type="Label" parent="Panel/Box"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 72
+text = "flow.lost"
+horizontal_alignment = 1
+
+[node name="Time" type="Label" parent="Panel/Box"]
+layout_mode = 2
+horizontal_alignment = 1
+text = "flow.time_survived"
+
+[node name="Restart" type="Button" parent="Panel/Box"]
+layout_mode = 2
+custom_minimum_size = Vector2(560, 0)
+text = "flow.restart"
+
+[node name="MainMenu" type="Button" parent="Panel/Box"]
+layout_mode = 2
+custom_minimum_size = Vector2(560, 0)
+text = "flow.main_menu"
