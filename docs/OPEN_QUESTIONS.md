@@ -71,6 +71,22 @@ Last reviewed: 2026-10-08 (daily docs review; owner answers recorded the same da
 
 ---
 
+## M3 (roster, task 001)
+
+### Q-60 When do the higher tiers (and so the rivals) open?
+D-055 puts the 2 rivals on higher difficulty tiers; `01_GAME_DESIGN.md` 3 lists tiers as replay value "after everyone is unlocked", but rivals are part of "everyone". Blocks: the rival unlock timing in `07_ROSTER.md` and the M3/M5 progression data.
+- A) Hard opens once all 6 Guardians are rescued; Vexa (rival) on Hard, Gilda on Nightmare (opens after Hard is won); "everyone unlocked" for D-058 means the 8 non-rival waifus plus any rival already beaten ★
+- B) Hard opens earlier (for example after 3 rescues), so rivals can be recruited in the middle of progression.
+- C) Rivals also appear on Normal once all Guardians are rescued; tiers stay post-unlock.
+
+### Q-61 Do relationship bonuses count the current Guardian?
+The Guardian is not placed as a tower, so "placed near each other" (D-057) does not say whether a tower near her gets a relationship bonus with her. Blocks: synergy rules in task 028.
+- A) Towers only; the Guardian never triggers relationships ★ (safe to assume)
+- B) The Guardian counts like a placed waifu for her own relationships.
+- C) The Guardian gives a separate, smaller "cheer" bonus to her related towers.
+
+---
+
 ## A. Deferred until the first real asset arrives
 
 ### Q-37 Where are large art files stored? (DEFERRED by the owner: decide when the first real asset arrives)

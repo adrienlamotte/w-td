@@ -12,6 +12,7 @@ Last updated: 2026-10-08 (daily docs review; open questions restructured with st
 - `04_AGENT_WORKFLOW.md` — automation loops/routines and human checkpoints.
 - `05_STEAM_AND_COMPLIANCE.md` — Steam release, content limits, AI disclosure.
 - `06_ROADMAP.md` — milestones and acceptance criteria.
+- `07_ROSTER.md` — launch roster proposal (PROPOSED, task 001): waifus, roles, relationships, offer order.
 - `08_FIRST_CHARACTER_BRIEF.md` — exact deliverables for the first (test) character the owner generates externally.
 - `09_CONTROLS.md` — keyboard/mouse and gamepad mapping, cursor and device-mode rules.
 - `DECISIONS.md` — decision log (append-only).
