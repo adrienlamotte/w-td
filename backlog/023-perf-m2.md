@@ -1,5 +1,5 @@
 # 023 — Performance with combat: optimise and re-bench
-- Status: review
+- Status: done
 - Milestone: M2
 - Depends on: 013, 016, 024, 026
 - PR: #29
@@ -103,3 +103,4 @@ The nine existing scenarios stay **exactly** as they are (the gate and the M1 co
 ## Questions
 
 ## Review log
+- 2026-10-09 lead dev: PR #29 approved and merged (squash) into `m2/dev`. Tests 215/215 and validator green on the branch. Code checked: the half box covers every pair once (the lower cell-order visitor scans the other's cell; own row from `p + 1`, rows above in full), key tie and coincident rules match the old `i < j` loop, bosses sorted back into index order; `test_separation_order.gd` is a real brute-force reference. Combat harness stays in `view/bench` using sim test APIs, as planned. `reports/perf_m2.md` is honest and clear. Acceptance criterion "`pc_maze` and `pc_maze_churn` < 8 ms" **not met** (step C, as planned): 7.55 / 8.12 ms median of 3; a lead-dev rerun gave 8.03 / 8.06 ms, so both gate scenarios sit on the 8 ms line within noise (+-0.4 ms). Merged because the gap is a budget decision, not a defect: put to the owner as Q-59. The flat `deck_*` frame p99 of about 4.8 ms (M1 2.5-3.0) is a CP-M2 note, not a task: it does not threaten any budget (pessimistic Deck tick frame 15.6 ms vs 25 ms) and belongs with view profiling.

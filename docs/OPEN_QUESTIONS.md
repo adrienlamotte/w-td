@@ -70,6 +70,18 @@ Last reviewed: 2026-10-08 (daily docs review; owner answers recorded the same da
 
 ---
 
+## M2 (blocks CP-M2 sign-off on performance)
+
+### Q-59 The maze tick budget: what to do about `pc_maze_churn` at ~8.1 ms (budget 8 ms)
+Task 023 (`reports/perf_m2.md`) made separation 15-20% faster (D-123). `pc_maze` is at 7.55 ms per tick and `pc_maze_churn` at 8.12 ms (median of 3 runs, range 7.98-8.16). A lead-dev rerun gave 8.03 / 8.06 ms, so both scenarios sit on the 8 ms line within run-to-run noise (about +-0.4 ms). `pc_maze_churn` is a synthetic worst case: one tower flips every frame, so a path recompute is always running. In play a recompute only follows a build, a sale or a tower death. All other scenarios pass, combat included (`pc_maze_combat` 7.04 ms). The worst estimated Deck tick frame is 15.6 ms against 25 ms. None of the `perf_m1.md` section 6 GDExtension triggers fired. Frames stay above 90 FPS 1%-low on PC. Separation is still about 60% of a maze tick, and the remaining cost is the work done for each overlapping pair, which plain GDScript cannot reduce without changing the rule.
+- A) **Accept for M2: the maze gate becomes "about 8 ms" (`pc_maze` and `pc_maze_churn` within noise of 8 ms), `pc_maze_churn` is tracked as the known worst case, and every milestone bench re-checks it. A GDExtension separation loop (D-018) is planned only when a section 6 trigger fires (for example, M3 adds load).** ★ Why: the miss is 1.5%, inside the noise. The scenario cannot happen at that rate in play. The Deck estimate has 40% headroom. A native module now adds a C++ build to every machine and to the Proton path for a gain no player would see.
+- B) GDExtension separation loop now (D-018): expected several times faster and clears the gate for good, at the cost of a C++ toolchain, a per-platform build and a second code path to keep in step with the GDScript rule.
+- C) Threaded GDScript separation (split the horde into bands and merge the pushes in a fixed order): no new toolchain, but threads in the sim make determinism harder to keep and to test, and on the Deck's 4 cores the gain is uncertain.
+- D) Change the rule: skip pairs where both enemies are stopped (queued or attacking). This is probably the cheapest fix in corridors, but it changes how crowds pile up and needs a playtest.
+Safe to assume: yes, A (no code change). Agents keep the budget at 8 ms in `02_TECH_ARCHITECTURE.md` 4 until the owner answers.
+
+---
+
 ## A. Deferred until the first real asset arrives
 
 ### Q-37 Where are large art files stored? (DEFERRED by the owner: decide when the first real asset arrives)
