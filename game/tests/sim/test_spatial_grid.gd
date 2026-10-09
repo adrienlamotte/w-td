@@ -1,5 +1,6 @@
 extends GutTest
 
+const SWARMER := "enemy_swarmer_01"  # catalog sorted by id: type 0 is not the swarmer
 const CELL: float = 1.4
 
 var rng: RandomNumberGenerator
@@ -131,8 +132,8 @@ func test_empty_grid() -> void:
 
 func test_sim_world_grid_matches_enemies() -> void:
 	var world := SimWorld.new(7)
-	assert_almost_eq(world.grid.cell_size, 4.0 * world.catalog.radius[0], 1e-6)
-	world.spawn_ring(0, 500, 30.0)
+	assert_almost_eq(world.grid.cell_size, 2.0 * world.catalog.max_radius, 1e-6)
+	world.spawn_ring(world.catalog.type_of(SWARMER), 500, 30.0)
 	for t in 60:
 		world.step()
 	xs = world.enemies.pos_x
@@ -156,3 +157,26 @@ func test_print_timings() -> void:
 	gut.p("SpatialGrid: 100 rebuilds of %d = %.1f ms; 300 nearest(8) = %.2f ms (%d found)"
 		% [xs.size(), (t1 - t0) / 1000.0, (t2 - t1) / 1000.0, found])
 	assert_gt(found, 0)
+
+
+## Many equal distances: the lowest index must win whatever order the cells are scanned in.
+func test_nearest_ties_on_lattice() -> void:
+	for gz in range(-6, 7):
+		for gx in range(-6, 7):
+			xs.append(gx)
+			zs.append(gz)
+	# Reverse duplicates so the lowest index is not always the first in its cell.
+	for i in range(xs.size() - 1, -1, -3):
+		xs.append(xs[i])
+		zs.append(zs[i])
+	for cell: float in [CELL, 0.8]:
+		grid = SpatialGrid.new(cell)
+		grid.rebuild(xs, zs)
+		var bad := 0
+		for q in 200:
+			var x := rng.randi_range(-14, 14) * 0.5
+			var z := rng.randi_range(-14, 14) * 0.5
+			var r := float(rng.randi_range(1, 8))
+			if grid.nearest(x, z, r, xs, zs) != _brute_nearest(x, z, r):
+				bad += 1
+		assert_eq(bad, 0, "cell %.1f" % cell)

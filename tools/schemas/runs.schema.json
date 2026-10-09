@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Run",
+  "description": "Run timeline and economy (D-042, D-047, D-093, D-096, D-097, D-099). All numbers are placeholders, not balance decisions. The last wave entry repeats once the list runs out.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "placeholder", "guardian", "towers", "starting_gold", "build_radius", "grid_step", "spawn_ring_min", "spawn_ring_max", "first_wave_sec", "wave_sec", "break_sec", "waves", "bosses", "final_boss"],
+  "$defs": {
+    "enemy_id": {"type": "string", "pattern": "^enemy_[a-z0-9_]+$"},
+    "boss": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["at_sec", "enemy"],
+      "properties": {
+        "at_sec": {"type": "number", "minimum": 0},
+        "enemy": {"$ref": "#/$defs/enemy_id"}
+      }
+    }
+  },
+  "properties": {
+    "schema_version": {"const": 1},
+    "id": {"type": "string", "pattern": "^run_[a-z0-9_]+$"},
+    "placeholder": {"type": "boolean", "description": "true while the numbers are placeholders"},
+    "guardian": {"type": "string", "pattern": "^guardian_[a-z0-9_]+$"},
+    "towers": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "pattern": "^tower_[a-z0-9_]+$"}},
+    "starting_gold": {"type": "integer", "minimum": 0},
+    "build_radius": {"type": "number", "exclusiveMinimum": 0},
+    "grid_step": {"type": "number", "exclusiveMinimum": 0},
+    "spawn_ring_min": {"type": "number", "exclusiveMinimum": 0},
+    "spawn_ring_max": {"type": "number", "exclusiveMinimum": 0},
+    "first_wave_sec": {"type": "number", "minimum": 0},
+    "wave_sec": {"type": "number", "exclusiveMinimum": 0},
+    "break_sec": {"type": "number", "minimum": 0},
+    "waves": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["count", "mix"],
+        "properties": {
+          "count": {"type": "integer", "minimum": 0},
+          "mix": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["enemy", "weight"],
+              "properties": {
+                "enemy": {"$ref": "#/$defs/enemy_id"},
+                "weight": {"type": "number", "exclusiveMinimum": 0}
+              }
+            }
+          }
+        }
+      }
+    },
+    "bosses": {"type": "array", "items": {"$ref": "#/$defs/boss"}},
+    "final_boss": {"$ref": "#/$defs/boss"}
+  }
+}

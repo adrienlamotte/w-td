@@ -135,15 +135,15 @@ Reading:
 - **GPU:** 3.7-4.9 ms of 25 ms even with `k_gpu` ~ 61. The GPU is not the risk. The Deck would normally run vsynced at 60 Hz (or 40 Hz in the Deck's frame limiter), so the "other frames" are not a concern.
 - Uncertainty: single-thread benchmarks are not GDScript, the Deck's sustained clocks under a 15 W shared budget are not modelled, and Proton is assumed to add nothing measurable. The pessimistic and sensitivity columns cover part of this, not all of it.
 
-## 5. Optimisations already logged (none implemented here)
+## 5. Optimisations already logged (none implemented here; status after task 025 in the last column)
 
-| Optimisation | Source | Target phase | Expected gain (rough) | Changes a decision or a rule? |
-|---|---|---|---|---|
-| Grid cell size `2 * max_radius` | 004 review log | separation | ~40% fewer pair candidates; maybe -1 to -2 ms per tick at 3000 | Yes: changes D-082 (cell size); no game rule |
-| Hoist `catalog.max_radius` and `cell_coord` out of the inner loop | 004 review log | separation, grid | a few % of separation | No |
-| Precompute each tower's cell and clamped ring bounds at `add` (towers do not move) | 005 review log | targeting | some of 1.1-1.4 ms at 300 towers | No |
-| Tighter per-cell distance bound instead of `(k - 1) * cell_size` | 005 review log | targeting | skips packed far cells; most useful in dense cases (piled) | No (same result: nearest in range, lowest index on ties) |
-| Inline the scan in `retarget` (drop 300 calls per tick) | 005 review log | targeting | call overhead, ~10-20% of targeting | No |
+| Optimisation | Source | Target phase | Expected gain (rough) | Changes a decision or a rule? | Task 025 |
+|---|---|---|---|---|---|
+| Grid cell size `2 * max_radius` | 004 review log | separation | ~40% fewer pair candidates; maybe -1 to -2 ms per tick at 3000 | Yes: changes D-082 (cell size); no game rule | Done (D-108): release `pc_stress` step 6.2 -> 5.3 ms |
+| Hoist `catalog.max_radius` and `cell_coord` out of the inner loop | 004 review log | separation, grid | a few % of separation | No | Done (inlined `cell_coord`); with the `nearest` row ranges, release `pc_stress` step 7.6 -> 6.2 ms |
+| Precompute each tower's cell and clamped ring bounds at `add` (towers do not move) | 005 review log | targeting | some of 1.1-1.4 ms at 300 towers | No | Dropped: 300 calls are not the cost |
+| Tighter per-cell distance bound instead of `(k - 1) * cell_size` | 005 review log | targeting | skips packed far cells; most useful in dense cases (piled) | No (same result: nearest in range, lowest index on ties) | Not done; `nearest` now scans each ring's edge rows as one range instead |
+| Inline the scan in `retarget` (drop 300 calls per tick) | 005 review log | targeting | call overhead, ~10-20% of targeting | No | Dropped: not the cost |
 
 **Needed now?** No. The rule was: needed only if a PC typical/stress budget fails or the pessimistic Deck tick frame is over 25 ms. Neither happens (PC typical/stress pass; pessimistic Deck worst 19.2 ms). The only miss is `pc_piled` (+8%), a placeholder-shaped worst case. **Recommendation:** one M2 task that measures these wins when combat adds per-tick work (damage, deaths, projectiles). It should start with the cell size, since separation is most of the step.
 

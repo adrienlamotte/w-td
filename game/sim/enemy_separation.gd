@@ -3,56 +3,112 @@ extends RefCounted
 ## Soft separation (D-079, D-084): each overlapping pair pushes both enemies apart,
 ## each by 0.5 * overlap * separation_strength of its own type. Jacobi style:
 ## pushes are computed from the positions at the start of the phase, then applied
-## in one pass. Every pair is visited once (j > i) in fixed grid order, so the
-## result is deterministic.
+## in one pass. Every pair is visited once, in grid cell order with a half box (D-123),
+## so the result is deterministic. The horde loop skips bosses: their radius is outside
+## the horde scan reach (D-099), so a boss pass handles every pair with a boss (D-106).
 
 const COINCIDENT_EPS: float = 1e-6
 
 var _push_x: PackedFloat32Array = PackedFloat32Array()
 var _push_z: PackedFloat32Array = PackedFloat32Array()
+## Boss indices of the current apply(), ascending.
+var _bosses: PackedInt32Array = PackedInt32Array()
+## Queue flag (D-107), per enemy, refilled by apply(): 1 when the enemy overlaps a
+## stopped one (state != MOVING last tick) that is closer to the Guardian (smaller _key).
+## Read by EnemyMovement.advance() in the same tick.
+var blocked: PackedByteArray = PackedByteArray()
+## Queue key per enemy, filled at the start of apply() (D-115): without a field the squared
+## distance to the Guardian (014); with one, the path cost (see _fill_keys).
+var _key: PackedFloat64Array = PackedFloat64Array()
+## Positions and radii in grid cell order (cell_items order), refilled by apply() (D-123).
+var _sx: PackedFloat32Array = PackedFloat32Array()
+var _sz: PackedFloat32Array = PackedFloat32Array()
+var _sr: PackedFloat32Array = PackedFloat32Array()
 
 
 ## grid must match the enemy positions (02_TECH_ARCHITECTURE.md 3a, tick order).
 ## Iterates grid.cell_start / cell_items directly: query_radius per enemy cost
 ## about 73 ms per tick at 3000 piled enemies (task 004).
-func apply(enemies: SimEnemies, grid: SpatialGrid, catalog: EnemyCatalog) -> void:
+func apply(enemies: SimEnemies, grid: SpatialGrid, catalog: EnemyCatalog,
+		field: FlowField = null) -> void:
+	_fill_keys(enemies, field)
+	var key := _key
 	var xs := enemies.pos_x
 	var zs := enemies.pos_z
 	var types := enemies.type_id
+	var st := enemies.state
 	var radius := catalog.radius
 	var strength := catalog.separation_strength
+	var is_boss := catalog.is_boss
 	var cell_start := grid.cell_start
 	var cell_items := grid.cell_items
 	var dim := grid.dim
+	# Hoisted for the inlined grid.cell_coord() below (same expression, bit-identical).
+	var max_r := catalog.max_radius
+	var he := grid.half_extent
+	var cs := grid.cell_size
+	var dmax := dim - 1
 	var n := xs.size()
 	_push_x.resize(n)
 	_push_z.resize(n)
 	_push_x.fill(0.0)
 	_push_z.fill(0.0)
-	for i in n:
+	blocked.resize(n)
+	blocked.fill(0)
+	_bosses.clear()
+	# Cell-ordered copies (D-123): the inner loop reads only these three arrays.
+	var sx := _sx
+	var sz := _sz
+	var sr := _sr
+	sx.resize(n)
+	sz.resize(n)
+	sr.resize(n)
+	for p in n:
+		var i := cell_items[p]
+		sx[p] = xs[i]
+		sz[p] = zs[i]
+		sr[p] = radius[types[i]]
+	# Visit in cell order with a half box (D-123): rows below the visitor's row are skipped
+	# and its own row starts after it, so each overlapping pair is seen exactly once.
+	for p in n:
+		var i := cell_items[p]
 		var ti := types[i]
-		var ri := radius[ti]
+		if is_boss[ti]:
+			_bosses.append(i)
+			continue
+		var ri := sr[p]
 		var ki := 0.5 * strength[ti]
-		var x := xs[i]
-		var z := zs[i]
-		var reach := ri + catalog.max_radius
-		var x0 := grid.cell_coord(x - reach)
-		var x1 := grid.cell_coord(x + reach)
-		for gz in range(grid.cell_coord(z - reach), grid.cell_coord(z + reach) + 1):
+		var x := sx[p]
+		var z := sz[p]
+		var di := key[i]
+		var reach := ri + max_r
+		var x0 := clampi(floori((x - reach + he) / cs), 0, dmax)
+		var x1 := clampi(floori((x + reach + he) / cs), 0, dmax)
+		var z1 := clampi(floori((z + reach + he) / cs), 0, dmax)
+		var gz0 := clampi(floori((z + he) / cs), 0, dmax)  # own row, as SpatialGrid.rebuild
+		for gz in range(gz0, z1 + 1):
 			var row := gz * dim
-			for k in range(cell_start[row + x0], cell_start[row + x1 + 1]):
-				var j := cell_items[k]
-				if j <= i:
-					continue
-				var dx := x - xs[j]
-				var dz := z - zs[j]
-				var tj := types[j]
-				var rr := ri + radius[tj]
+			var q0 := p + 1 if gz == gz0 else cell_start[row + x0]
+			for q in range(q0, cell_start[row + x1 + 1]):
+				var dx := x - sx[q]
+				var dz := z - sz[q]
+				var rr := ri + sr[q]
 				var d2 := dx * dx + dz * dz
 				if d2 >= rr * rr:
 					continue
+				var j := cell_items[q]
+				var tj := types[j]
+				if is_boss[tj]:  # boss pairs: _apply_bosses
+					continue
+				# Same rule as with i < j: on a key tie the lower index is the one behind.
+				var kj := key[j]
+				if kj > di or (kj == di and j < i):
+					if st[i] != SimEnemies.State.MOVING:
+						blocked[j] = 1
+				elif st[j] != SimEnemies.State.MOVING:
+					blocked[i] = 1
 				var d := sqrt(d2)
-				var ux := -1.0  # coincident: i (lower index) goes -x, j goes +x
+				var ux := -1.0 if i < j else 1.0  # coincident: the lower index goes -x
 				var uz := 0.0
 				if d >= COINCIDENT_EPS:
 					ux = dx / d
@@ -64,6 +120,8 @@ func apply(enemies: SimEnemies, grid: SpatialGrid, catalog: EnemyCatalog) -> voi
 				_push_z[i] += pi * uz
 				_push_x[j] -= pj * ux
 				_push_z[j] -= pj * uz
+	_bosses.sort()
+	_apply_bosses(xs, zs, types, st, grid, catalog)
 	for i in n:
 		var px := _push_x[i]
 		var pz := _push_z[i]
@@ -76,3 +134,90 @@ func apply(enemies: SimEnemies, grid: SpatialGrid, catalog: EnemyCatalog) -> voi
 			pz *= r / len
 		xs[i] += px
 		zs[i] += pz
+
+
+# Every boss-horde pair from the grid, then every boss-boss pair directly (bosses are few).
+func _apply_bosses(xs: PackedFloat32Array, zs: PackedFloat32Array, types: PackedInt32Array,
+		st: PackedInt32Array, grid: SpatialGrid, catalog: EnemyCatalog) -> void:
+	for b in _bosses.size():
+		var i := _bosses[b]
+		var x := xs[i]
+		var z := zs[i]
+		var reach := catalog.radius[types[i]] + catalog.max_radius
+		var x0 := grid.cell_coord(x - reach)
+		var x1 := grid.cell_coord(x + reach)
+		for gz in range(grid.cell_coord(z - reach), grid.cell_coord(z + reach) + 1):
+			var row := gz * grid.dim
+			for k in range(grid.cell_start[row + x0], grid.cell_start[row + x1 + 1]):
+				var j := grid.cell_items[k]
+				if not catalog.is_boss[types[j]]:
+					_push_pair(mini(i, j), maxi(i, j), xs, zs, types, st, catalog)
+		for c in range(b + 1, _bosses.size()):
+			_push_pair(i, _bosses[c], xs, zs, types, st, catalog)
+
+
+# Same pair rule as the horde loop; i < j (coincident: i goes -x).
+func _push_pair(i: int, j: int, xs: PackedFloat32Array, zs: PackedFloat32Array,
+		types: PackedInt32Array, st: PackedInt32Array, catalog: EnemyCatalog) -> void:
+	var dx := xs[i] - xs[j]
+	var dz := zs[i] - zs[j]
+	var rr := catalog.radius[types[i]] + catalog.radius[types[j]]
+	var d2 := dx * dx + dz * dz
+	if d2 >= rr * rr:
+		return
+	if _key[j] > _key[i]:
+		if st[i] != SimEnemies.State.MOVING:
+			blocked[j] = 1
+	elif st[j] != SimEnemies.State.MOVING:
+		blocked[i] = 1
+	var d := sqrt(d2)
+	var ux := -1.0
+	var uz := 0.0
+	if d >= COINCIDENT_EPS:
+		ux = dx / d
+		uz = dz / d
+	var overlap := rr - d
+	var pi := 0.5 * catalog.separation_strength[types[i]] * overlap
+	var pj := 0.5 * catalog.separation_strength[types[j]] * overlap
+	_push_x[i] += pi * ux
+	_push_z[i] += pi * uz
+	_push_x[j] -= pj * ux
+	_push_z[j] -= pj * uz
+
+
+# Queue key in path cost units (D-115). No field: x*x + z*z, exactly 014's compare.
+# Outside the grid or clear line: straight distance in cost units (2 per step), so the open
+# field orders as 014. Walled in (INF): 1e6 + d, behind every enemy with a path. Else the
+# cell's path cost plus a small radial tie-break inside one cell.
+func _fill_keys(enemies: SimEnemies, field: FlowField) -> void:
+	var xs := enemies.pos_x
+	var zs := enemies.pos_z
+	var n := xs.size()
+	_key.resize(n)
+	if field == null:
+		for i in n:
+			_key[i] = xs[i] * xs[i] + zs[i] * zs[i]
+		return
+	var size := field.size
+	var half := size / 2.0
+	var fstep := field.step
+	var per_unit := 2.0 / fstep
+	var fdist := field.dist
+	var fhit := field.hit
+	var fesc := field.escape
+	for i in n:
+		var x := xs[i]
+		var z := zs[i]
+		var d := sqrt(x * x + z * z)
+		var ci := floori(x / fstep + half)
+		var cj := floori(z / fstep + half)
+		if ci < 0 or cj < 0 or ci >= size or cj >= size:
+			_key[i] = d * per_unit
+			continue
+		var c := fesc[cj * size + ci]
+		if fhit[c] < 0:
+			_key[i] = d * per_unit
+		elif fdist[c] == FlowField.INF:
+			_key[i] = 1e6 + d
+		else:
+			_key[i] = fdist[c] + 1e-3 * d

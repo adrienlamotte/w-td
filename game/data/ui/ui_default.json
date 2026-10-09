@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "id": "ui_default",
+  "ghost_valid_color": [0.3, 0.95, 0.4, 0.45],
+  "ghost_invalid_color": [0.95, 0.25, 0.25, 0.45],
+  "ghost_height": 0.3,
+  "range_ring_width": 0.15,
+  "radial_radius_px": 260,
+  "radial_deadzone": 0.4,
+  "cursor_label_offset_px": [40, 24],
+  "slow_time_scale": 0.5
+}

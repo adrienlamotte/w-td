@@ -1,6 +1,9 @@
 extends GutTest
 ## Soft separation (D-079, D-084).
 
+const SWARMER := "enemy_swarmer_01"  # catalog sorted by id: type 0 is not the swarmer
+const BOSS := "enemy_boss_01"
+const MINIBOSS := "enemy_miniboss_01"
 const CX: float = 10.0
 
 var _catalog: EnemyCatalog
@@ -17,14 +20,14 @@ func _f32(v: float) -> float:
 
 func _pair(x0: float, x1: float) -> SimEnemies:
 	var enemies := SimEnemies.new()
-	enemies.add(0, x0, 0.0, 1.0)
-	enemies.add(0, x1, 0.0, 1.0)
+	enemies.add(_catalog.type_of(SWARMER), x0, 0.0, 1.0)
+	enemies.add(_catalog.type_of(SWARMER), x1, 0.0, 1.0)
 	return enemies
 
 
 ## Runs `ticks` separation passes, rebuilding the grid before each like step() does.
 func _run(enemies: SimEnemies, ticks: int) -> void:
-	var grid := SpatialGrid.new(4.0 * _catalog.max_radius)
+	var grid := SpatialGrid.new(2.0 * _catalog.max_radius)  # as SimWorld (D-108)
 	var sep := EnemySeparation.new()
 	for n in ticks:
 		grid.rebuild(enemies.pos_x, enemies.pos_z)
@@ -37,7 +40,7 @@ func _dist(e: SimEnemies) -> float:
 
 func test_overlapping_pair_drifts_apart_symmetrically() -> void:
 	var e := _pair(CX - 0.1, CX + 0.1)
-	var min_d := 2.0 * _catalog.radius[0]
+	var min_d := 2.0 * _catalog.radius[_catalog.type_of(SWARMER)]
 	var ticks := 0
 	while _dist(e) < min_d - 1e-4 and ticks < 30:
 		_run(e, 1)
@@ -72,7 +75,7 @@ func test_coincident_pair_separates_along_x() -> void:
 
 
 func test_strength_zero_leaves_overlap() -> void:
-	_catalog.separation_strength[0] = 0.0
+	_catalog.separation_strength[_catalog.type_of(SWARMER)] = 0.0
 	var e := _pair(CX - 0.1, CX + 0.1)
 	_run(e, 5)
 	assert_eq(e.pos_x[0], _f32(CX - 0.1))
@@ -80,8 +83,20 @@ func test_strength_zero_leaves_overlap() -> void:
 
 
 func test_crowd_stays_soft_not_collapsed() -> void:
+	_check_crowd(SimWorld.new(7))
+
+
+## Same check during a run: Guardian contact radius from run_m2, Guardian unkillable.
+func test_crowd_stays_soft_during_run() -> void:
 	var world := SimWorld.new(7)
-	world.spawn_ring(0, 200, 10.0)
+	world.queue(SimCommand.start_run(0, 7, "run_m2"))
+	world.step()
+	world.guardian_hp = 1e12
+	_check_crowd(world)
+
+
+func _check_crowd(world: SimWorld) -> void:
+	world.spawn_ring(world.catalog.type_of(SWARMER), 200, 10.0)
 	for n in 300:
 		world.step()
 	var min_d := INF
@@ -90,15 +105,34 @@ func test_crowd_stays_soft_not_collapsed() -> void:
 	for i in xs.size():
 		for j in range(i + 1, xs.size()):
 			min_d = minf(min_d, Vector2(xs[i] - xs[j], zs[i] - zs[j]).length())
-	gut.p("crowd of 200 after 300 ticks: min pair distance %.4f (2r = %.2f)" % [min_d, 2.0 * world.catalog.radius[0]])
+	gut.p("crowd of 200 after 300 ticks: min pair distance %.4f (2r = %.2f)" % [min_d, 2.0 * world.catalog.radius[world.catalog.type_of(SWARMER)]])
 	# Plan bound was 0.5 * 2r; strength 0.5 measured 0.164 (0.23 * 2r) and strength 1.0
 	# measured 0.32 (task 004 PR). Bound lowered openly to "not collapsed" until balance.
-	assert_true(min_d >= 0.2 * 2.0 * world.catalog.radius[0])
+	assert_true(min_d >= 0.2 * 2.0 * world.catalog.radius[world.catalog.type_of(SWARMER)])
+
+
+func test_boss_pushes_swarmer_beyond_horde_reach() -> void:
+	var e := SimEnemies.new()
+	e.add(_catalog.type_of(BOSS), 0.0, 0.0, 1.0)
+	e.add(_catalog.type_of(SWARMER), 1.2, 0.0, 1.0)
+	assert_lt(_catalog.radius[_catalog.type_of(SWARMER)] + _catalog.max_radius, 1.2, "outside the horde scan")
+	_run(e, 1)
+	assert_lt(e.pos_x[0], 0.0, "boss pushed -x")
+	assert_gt(e.pos_x[1], _f32(1.2), "swarmer pushed +x")
+
+
+func test_overlapping_bosses_push_apart() -> void:
+	var e := SimEnemies.new()
+	e.add(_catalog.type_of(BOSS), CX, 0.0, 1.0)
+	e.add(_catalog.type_of(MINIBOSS), CX + 1.0, 0.0, 1.0)
+	_run(e, 1)
+	assert_lt(e.pos_x[0], _f32(CX))
+	assert_gt(e.pos_x[1], _f32(CX + 1.0))
 
 
 func test_separation_cost_3000_piled() -> void:
 	var world := SimWorld.new(3)
-	world.spawn_ring(0, 3000, 10.0)
+	world.spawn_ring(world.catalog.type_of(SWARMER), 3000, 10.0)
 	for n in 150:  # pile up at the Guardian
 		world.step()
 	var total := 0
@@ -108,3 +142,69 @@ func test_separation_cost_3000_piled() -> void:
 		total += world.phase_usec[SimWorld.Phase.SEPARATE]
 	gut.p("separation, 3000 enemies piled: %.2f ms/tick" % (total / 1000.0 / ticks))
 	assert_eq(world.enemies.count(), 3000)
+
+
+## O(n^2) reference of the D-084 rule: every pair i < j once, pushes from the start
+## positions (Jacobi), coincident pair i -x / j +x, total push capped at the own radius.
+func _reference_apply(e: SimEnemies) -> void:
+	var n := e.count()
+	var px := PackedFloat64Array()
+	var pz := PackedFloat64Array()
+	px.resize(n)
+	pz.resize(n)
+	for i in n:
+		for j in range(i + 1, n):
+			var ti := e.type_id[i]
+			var tj := e.type_id[j]
+			var dx := e.pos_x[i] - e.pos_x[j]
+			var dz := e.pos_z[i] - e.pos_z[j]
+			var rr := _catalog.radius[ti] + _catalog.radius[tj]
+			var d2 := dx * dx + dz * dz
+			if d2 >= rr * rr:
+				continue
+			var d := sqrt(d2)
+			var ux := -1.0
+			var uz := 0.0
+			if d >= EnemySeparation.COINCIDENT_EPS:
+				ux = dx / d
+				uz = dz / d
+			var overlap := rr - d
+			px[i] += 0.5 * _catalog.separation_strength[ti] * overlap * ux
+			pz[i] += 0.5 * _catalog.separation_strength[ti] * overlap * uz
+			px[j] -= 0.5 * _catalog.separation_strength[tj] * overlap * ux
+			pz[j] -= 0.5 * _catalog.separation_strength[tj] * overlap * uz
+	for i in n:
+		var r := _catalog.radius[e.type_id[i]]
+		var len := sqrt(px[i] * px[i] + pz[i] * pz[i])
+		var s := r / len if len > r else 1.0
+		e.pos_x[i] += px[i] * s
+		e.pos_z[i] += pz[i] * s
+
+
+func _reference_layout() -> SimEnemies:
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 2025
+	var kinds := [_catalog.type_of(SWARMER), _catalog.type_of("enemy_brute_01"),
+		_catalog.type_of("enemy_ranged_01")]
+	var e := SimEnemies.new()
+	e.add(_catalog.type_of(BOSS), CX + 5.0, 5.0, 1.0)
+	e.add(kinds[0], CX + 2.0, 2.0, 1.0)  # coincident pair
+	e.add(kinds[0], CX + 2.0, 2.0, 1.0)
+	for i in 397:
+		e.add(kinds[i % 3], CX + rng.randf_range(0.0, 10.0), rng.randf_range(0.0, 10.0), 1.0)
+	return e
+
+
+func test_matches_reference() -> void:
+	for cell: float in [4.0 * _catalog.max_radius, 2.0 * _catalog.max_radius]:
+		var a := _reference_layout()
+		var b := _reference_layout()
+		var grid := SpatialGrid.new(cell)
+		grid.rebuild(a.pos_x, a.pos_z)
+		EnemySeparation.new().apply(a, grid, _catalog)
+		_reference_apply(b)
+		var bad := 0
+		for i in a.count():
+			if absf(a.pos_x[i] - b.pos_x[i]) > 1e-4 or absf(a.pos_z[i] - b.pos_z[i]) > 1e-4:
+				bad += 1
+		assert_eq(bad, 0, "cell %.2f: positions off the O(n^2) reference" % cell)

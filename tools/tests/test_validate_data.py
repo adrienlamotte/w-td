@@ -1,4 +1,5 @@
 import json
+import shutil
 import sys
 import tempfile
 import unittest
@@ -10,7 +11,7 @@ from validate_data import ROOT, validate  # noqa: E402
 EXAMPLE = ROOT / "game" / "data" / "enemies" / "enemy_swarmer_01.json"
 CAMERA = ROOT / "game" / "data" / "camera" / "camera_default.json"
 RENDER = ROOT / "game" / "data" / "render" / "render_default.json"
-BENCH = ROOT / "game" / "data" / "bench" / "bench_m1.json"
+DATA = ROOT / "game" / "data"
 
 
 class ValidateDataTest(unittest.TestCase):
@@ -48,10 +49,47 @@ class ValidateDataTest(unittest.TestCase):
         self.assertTrue(any("surprise" in e for e in self.check(doc, "render_default", "render")))
 
     def test_bench_rejects_extra_scenario_field(self):
-        doc = json.loads(BENCH.read_text(encoding="utf-8"))
-        self.assertEqual(self.check(doc, "bench_m1", "bench"), [])
-        doc["scenarios"][0]["surprise"] = 1
-        self.assertTrue(any("surprise" in e for e in self.check(doc, "bench_m1", "bench")))
+        # bench_m1 references an enemy, so it is checked within a copy of the repo data.
+        errors = self.check_repo_with("bench", "bench_m1", lambda d: d["scenarios"][0].update(surprise=1))
+        self.assertTrue(any("surprise" in e for e in errors))
+
+    def check_repo_with(self, kind: str, name: str, edit) -> list[str]:
+        """Validates a copy of the repo data where one document was changed by edit(doc)."""
+        with tempfile.TemporaryDirectory() as tmp:
+            shutil.copytree(DATA, tmp, dirs_exist_ok=True)
+            path = Path(tmp) / kind / f"{name}.json"
+            doc = json.loads(path.read_text(encoding="utf-8"))
+            edit(doc)
+            path.write_text(json.dumps(doc), encoding="utf-8")
+            return validate(Path(tmp))
+
+    def test_rejects_dangling_reference(self):
+        errors = self.check_repo_with("runs", "run_m2", lambda d: d["waves"][0]["mix"][0].update(enemy="enemy_nope"))
+        self.assertTrue(any("enemy_nope" in e for e in errors))
+
+    def test_rejects_boss_that_is_not_a_boss_enemy(self):
+        errors = self.check_repo_with("runs", "run_m2", lambda d: d["final_boss"].update(enemy="enemy_swarmer_01"))
+        self.assertTrue(any("not a miniboss/boss" in e for e in errors))
+
+    def test_rejects_inverted_spawn_ring(self):
+        errors = self.check_repo_with("runs", "run_m2", lambda d: d.update(spawn_ring_min=50))
+        self.assertTrue(any("spawn_ring_min" in e for e in errors))
+
+    def test_splash_tower_needs_splash_radius(self):
+        errors = self.check_repo_with("towers", "tower_splash_01", lambda d: d.pop("splash_radius"))
+        self.assertTrue(any("splash_radius" in e for e in errors))
+
+    def test_shield_skill_needs_absorb(self):
+        errors = self.check_repo_with("skills", "skill_shield", lambda d: d.pop("absorb"))
+        self.assertTrue(any("absorb" in e for e in errors))
+
+    def test_rejects_enemy_v2(self):
+        doc = json.loads(EXAMPLE.read_text(encoding="utf-8")) | {"schema_version": 2}
+        self.assertTrue(any("schema_version" in e for e in self.check(doc)))
+
+    def test_missing_loc_key_is_reported(self):
+        errors = self.check_repo_with("towers", "tower_slow_01", lambda d: d.update(name_key="tower.nope.name"))
+        self.assertTrue(any("tower.nope.name" in e and "strings.csv" in e for e in errors))
 
 
 if __name__ == "__main__":

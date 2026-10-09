@@ -16,8 +16,8 @@ Tone: cute and comedic fantasy. **[D]** All characters are clearly adult with ad
 
 ## 3. Run structure **[D unless noted]**
 - Length: **15-20 minutes** per run.
-- Map: **open field, 360° swarm**, no lanes. Enemies path straight toward the Guardian; they attack whatever tower blocks their straight path, otherwise the Guardian. Enemies softly push each other apart so the horde spreads into a crowd (D-079). Towers have HP; a dead tower leaves a husk that can be rebuilt for a fraction of the cost; no repair in M2 (D-043). **[D]**
-- Escalation: continuous spawn curve with waves; a **mini-boss every ~5 minutes** **[P]** and a **final boss at the end**.
+- Map: **open field, 360° swarm**, no lanes. **Maze-style (D-101):** towers are solid obstacles on the build grid and enemies path around them to the Guardian. Full walls are allowed (D-102); walled-in enemies fall back to the straight path and attack the tower that blocks it until a gap opens (D-103), otherwise enemies only attack the Guardian. Enemies softly push each other apart so the horde spreads into a crowd (D-079). Towers have HP; a dead tower leaves a walkable husk (D-104) that can be rebuilt for a fraction of the cost; no repair in M2 (D-043). **[D]**
+- Escalation: continuous spawn curve with **60 s waves** (D-093); **mini-bosses at 5:00 and 10:00** (D-097, regular enemies) and a **final boss at the end**; the horde keeps coming while the final boss is alive (D-096). **[D]**
 - **Between waves:** a short break of 15-20 s with no new spawns; leftover enemies keep attacking, the clock keeps running, and building is allowed at any time (D-032). **[D]**
 - Win: kill the final boss, who spawns at a data-defined time (15:00 in M2, tuned toward 15-20 min later; D-047). Lose: Guardian HP = 0. **[D]**
 - **Loss:** keeps a reduced hearts reward (30-50% depending on time survived); the player picks a Guardian again from the offered locked waifus (D-048). **[D]**
@@ -39,7 +39,7 @@ Agents must not guess these; each has options and a recommended default in `OPEN
 - **Towers = waifus.** Each tower is a waifu character placed around the Guardian, with her own attack, role and personality.
 - **Guardian active skills:** the Guardian stays at the center and has active skills the player triggers (cooldown-based). The Guardian does not move and has no auto-attack. **[D]** M2 skills: Area blast (~12 s cooldown) and Shield (~25 s cooldown); Heal comes later as an upgrade (D-044). Numbers are placeholders in data.
 - **M2 tower types:** ranged single-target damage, area (splash) damage, crowd control (slow) (D-045). **[D]**
-- **Build radius and costs:** the buildable area starts at about 20 world units around the Guardian and grows via meta upgrades or cards; each extra copy of a tower costs more, which is the soft limit (D-042). **[D]**
+- **Build radius and costs:** the buildable area starts at about 20 world units around the Guardian and grows via meta upgrades or cards; each extra copy of a tower costs more, which is the soft limit (D-042). **[D]** The cost grows linearly per copy (`cost + cost_per_copy * copies`, placeholder, D-099).
 - **Level-ups:** killing enemies grants XP; on level-up the game pauses and offers a choice of **3 cards**. **[P]** Card types: new tower waifu, tower upgrade, Guardian skill upgrade, global perk. **Rules (D-051) [D]:** cards never give a tower for free; a "new tower waifu" card unlocks the right to build that tower this run and gold pays each placement; tower upgrade levels are bought with gold; no reroll, banish or skip in M3.
 
 ## 5. Waifu towers **[P]**
@@ -55,7 +55,7 @@ Each waifu has: role (damage / crowd control / support / tank / economy), attack
 - Visual rule: stays within `05_STEAM_AND_COMPLIANCE.md`.
 
 ## 6. Enemies **[P]**
-- Horde types in archetypes: swarmer (fast, weak), brute (slow, strong), ranged, flyer, elite, boss.
+- Horde types in archetypes: swarmer (fast, weak), brute (slow, strong), ranged, flyer, elite, boss. M2 has swarmer, brute and ranged plus the bosses (D-095). Shots (towers and ranged enemies) hit instantly; the effect is visual only (D-098).
 - Regular bosses are enemies only. **Only special named rival bosses ("rivals") are recruitable** as waifus after being defeated (no story involved, see D-028). **[D]** **2 rivals at launch**, appearing as the ~10:00 mini-boss on higher difficulty tiers; beating one for the first time unlocks her; they count toward the 8-10 roster (D-055). **[D]**
 - Counts target: see performance budgets in `02_TECH_ARCHITECTURE.md`.
 
@@ -64,13 +64,13 @@ Each waifu has: role (damage / crowd control / support / tank / economy), attack
 - Unlocks: new waifus (via victory), outfits (via bond), starting perks.
 
 ## 8. Economy **[P]**
-- In-run: **gold** (drops, for building/upgrading towers) and **XP** (level-up cards).
+- In-run: **gold** (drops, for building/upgrading towers; collected automatically when an enemy dies, coins fly to the Guardian as a visual, D-094) and **XP** (level-up cards).
 - Meta: **hearts** (earned at run end, used in the hub) are the single meta currency and buy flat permanent upgrades from a data-defined tree (D-052). **[D]** **Bond** is tracked per waifu and only gates outfits. **[D]**
 
 ## 9. Controls and platforms **[D]**
 - Windows PC (mouse + keyboard) and **Steam Deck** (gamepad). Gamepad must be a first-class input from the start; no feature may require a mouse only.
 - **Camera (D-041):** PC uses WASD/arrows, edge scroll and mouse-wheel zoom; gamepad pans with the right stick, zooms with the bumpers and recentres on the Guardian with a button. The camera is limited to the buildable radius plus a margin and has 3 zoom levels. **[D]**
-- **Gamepad building (D-046):** hold a button to open a radial tower menu, release to select; the placement cursor is at the screen centre (the world moves under it, snapped to the grid); A places, B cancels, skills are on the triggers. A slow-time-while-placing toggle is an accessibility option. Exact mapping goes in a controls spec. **[D]**
+- **Gamepad building (D-046):** hold a button to open a radial tower menu, release to select; the placement cursor is at the screen centre (the world moves under it, snapped to the grid); A places, B cancels, skills are on the triggers. A slow-time-while-placing toggle is an accessibility option. Exact mapping: `09_CONTROLS.md` (PROPOSED, CP-M2). **[D]**
 
 ## 10. Art direction **[P]**
 - Adult-proportioned stylized waifus (no chibi, D-030), 2.5D: 3D isometric camera, billboarded 2D art. Base resolution 2560x1440 (D-039). Details in `03_ART_PIPELINE.md`.

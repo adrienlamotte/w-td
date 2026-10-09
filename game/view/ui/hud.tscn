@@ -1,0 +1,108 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://view/ui/hud.gd" id="1_hud"]
+[ext_resource type="Script" path="res://view/ui/build_bar.gd" id="2_bar"]
+[ext_resource type="Script" path="res://view/ui/radial_menu.gd" id="3_radial"]
+
+[node name="Hud" type="CanvasLayer"]
+script = ExtResource("1_hud")
+
+[node name="Root" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="TopLeft" type="VBoxContainer" parent="Root"]
+layout_mode = 0
+offset_left = 48.0
+offset_top = 48.0
+mouse_filter = 2
+
+[node name="HpBar" type="ProgressBar" parent="Root/TopLeft"]
+custom_minimum_size = Vector2(560, 40)
+layout_mode = 2
+mouse_filter = 2
+max_value = 1.0
+show_percentage = false
+
+[node name="Hp" type="Label" parent="Root/TopLeft"]
+layout_mode = 2
+
+[node name="TopCentre" type="VBoxContainer" parent="Root"]
+layout_mode = 1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_top = 48.0
+grow_horizontal = 2
+mouse_filter = 2
+
+[node name="Clock" type="Label" parent="Root/TopCentre"]
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="Wave" type="Label" parent="Root/TopCentre"]
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="TopRight" type="VBoxContainer" parent="Root"]
+layout_mode = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -48.0
+offset_top = 48.0
+offset_right = -48.0
+grow_horizontal = 0
+mouse_filter = 2
+
+[node name="Gold" type="Label" parent="Root/TopRight"]
+layout_mode = 2
+horizontal_alignment = 2
+
+[node name="Skills" type="HBoxContainer" parent="Root"]
+layout_mode = 1
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -48.0
+offset_top = -48.0
+offset_right = -48.0
+offset_bottom = -48.0
+grow_horizontal = 0
+grow_vertical = 0
+mouse_filter = 2
+theme_override_constants/separation = 24
+
+[node name="BuildBar" type="HBoxContainer" parent="Root"]
+layout_mode = 1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_top = -48.0
+offset_bottom = -48.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+theme_override_constants/separation = 16
+script = ExtResource("2_bar")
+
+[node name="Radial" type="Control" parent="Root"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("3_radial")
+
+[node name="Cursor" type="Label" parent="Root"]
+visible = false
+layout_mode = 0
+mouse_filter = 2

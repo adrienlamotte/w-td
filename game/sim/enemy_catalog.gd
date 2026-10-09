@@ -4,35 +4,51 @@ extends RefCounted
 ## so the order is deterministic (02_TECH_ARCHITECTURE.md 3a, D-081).
 
 var ids: PackedStringArray = PackedStringArray()
+var name_key: PackedStringArray = PackedStringArray()
+## Data archetype (swarmer, brute, ranged, miniboss, boss); the view picks looks by it (D-120).
+var archetype: PackedStringArray = PackedStringArray()
 var speed: PackedFloat32Array = PackedFloat32Array()
 var radius: PackedFloat32Array = PackedFloat32Array()
 var hp: PackedFloat32Array = PackedFloat32Array()
 var separation_strength: PackedFloat32Array = PackedFloat32Array()
-## Largest radius over all types, computed at load.
+## Damage per hit, melee or ranged.
+var damage: PackedFloat32Array = PackedFloat32Array()
+## 0 = melee (attacks at contact).
+var attack_range: PackedFloat32Array = PackedFloat32Array()
+## In ticks.
+var attack_cooldown: PackedInt32Array = PackedInt32Array()
+## Gold dropped on death (amount) and its chance, from the first drops entry
+## (gold is the only drop type, D-094).
+var gold: PackedInt32Array = PackedInt32Array()
+var gold_chance: PackedFloat32Array = PackedFloat32Array()
+## 1 for archetype miniboss or boss.
+var is_boss: PackedByteArray = PackedByteArray()
+## Largest radius over the horde (non-boss) types only: it sizes the spatial grid
+## cell and the separation scan, so a boss must not grow it (D-099; bosses get
+## their own separation pass in task 013).
 var max_radius: float = 0.0
 
 
 static func load_dir(path: String = "res://data/enemies") -> EnemyCatalog:
-	var files: Array[Dictionary] = []
-	for file_name in DirAccess.get_files_at(path):
-		if not file_name.ends_with(".json"):
-			continue
-		var full := path.path_join(file_name)
-		var data: Variant = JSON.parse_string(FileAccess.get_file_as_string(full))
-		if not data is Dictionary:
-			push_error("EnemyCatalog: cannot read %s" % full)
-			assert(false, "EnemyCatalog: cannot read %s" % full)
-			continue
-		files.append(data)
-	files.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return a.id < b.id)
 	var catalog := EnemyCatalog.new()
-	for data in files:
+	for data in DataFiles.read_dir(path):
+		var boss: bool = data.archetype in ["miniboss", "boss"]
+		var drop: Dictionary = data.drops[0] if data.drops.size() > 0 else {"amount": 0, "chance": 0.0}
 		catalog.ids.append(data.id)
+		catalog.name_key.append(data.name_key)
+		catalog.archetype.append(data.archetype)
 		catalog.speed.append(data.speed)
 		catalog.radius.append(data.radius)
 		catalog.hp.append(data.hp)
 		catalog.separation_strength.append(data.separation_strength)
-		catalog.max_radius = maxf(catalog.max_radius, data.radius)
+		catalog.damage.append(data.damage)
+		catalog.attack_range.append(data.attack_range)
+		catalog.attack_cooldown.append(DataFiles.ticks(data.attack_cooldown_sec))
+		catalog.gold.append(int(drop.amount))
+		catalog.gold_chance.append(drop.chance)
+		catalog.is_boss.append(1 if boss else 0)
+		if not boss:
+			catalog.max_radius = maxf(catalog.max_radius, data.radius)
 	return catalog
 
 

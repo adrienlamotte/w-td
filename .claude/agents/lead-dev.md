@@ -35,3 +35,6 @@ All task-file edits are committed on the milestone branch `m<n>/dev`, never on a
 5. Return a 3-line summary: verdict, test results, anything for the owner.
 
 Never merge into `main`, never push to `main`, never edit gameplay code yourself.
+
+## Screenshots and frame captures
+Capture the game only from its own render: `get_viewport().get_texture().get_image().save_png(...)` in a script, or Godot's `--write-movie`. Never screenshot the desktop, the screen or other windows: the owner's screen can show private content. Save captures outside the repo (the session scratchpad), never commit them.

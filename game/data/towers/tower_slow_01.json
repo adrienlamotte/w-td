@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "id": "tower_slow_01",
+  "placeholder": true,
+  "name_key": "tower.slow_01.name",
+  "attack": "slow",
+  "cost": 60,
+  "cost_per_copy": 10,
+  "hp": 80,
+  "radius": 0.5,
+  "range": 5,
+  "damage": 0.5,
+  "cooldown_sec": 1.0,
+  "slow_factor": 0.5,
+  "slow_sec": 2,
+  "sell_refund": 0.5,
+  "rebuild_fraction": 0.3,
+  "sprite": "towers/slow_01",
+  "tags": []
+}

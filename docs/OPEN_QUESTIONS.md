@@ -15,6 +15,23 @@ Last reviewed: 2026-10-08 (daily docs review; owner answers recorded the same da
 | Q-02 Data format | JSON + JSON Schema | D-034 |
 | Q-03 Where builds, tests and nightly runs execute | Everything on the owner's PC | D-035 (scheduling: Q-35) |
 | Q-04 Godot version | Pin at M0 start | D-036 |
+| Q-59 Maze tick budget | Accept within noise for M2, track worst case | D-124 |
+| Q-57 Slow stacking | No stacking, strongest applies, refresh | D-117 |
+| Q-58 Ranged enemies and the maze | Towers block line of sight | D-118 |
+| Q-54 Narrow gaps for big enemies | Every enemy is a point for pathing | D-111 |
+| Q-55 Placing on enemies | Allowed, enemies pushed out | D-112 |
+| Q-56 Husk economy | Counts as a copy, no refund, rebuild fraction | D-113 |
+| Q-49 Building while paused | No | D-105 |
+| Q-50 Path blocking | Maze: enemies path around towers | D-101 |
+| Q-51 Full walls | Allowed | D-102 |
+| Q-52 When enemies attack towers | Only when walled in | D-103 |
+| Q-53 Husks block the path | No, walkable | D-104 |
+| Q-43 Wave length | 60 s waves | D-093 |
+| Q-44 Gold collection | Automatic on death | D-094 |
+| Q-45 M2 enemy types | Swarmer, brute, ranged + bosses | D-095 |
+| Q-46 After the final boss spawns | Horde continues | D-096 |
+| Q-47 Mini-bosses in M2 | At 5:00 and 10:00 | D-097 |
+| Q-48 Shots | Instant hit, visual effect only | D-098 |
 | Q-41 Enemy crowding | Soft separation | D-079 |
 | Q-42 Steam Deck for the M1 benchmark | No Deck: estimate from PC | D-080 |
 | Q-38 Steam Deck build | Windows build through Proton first | D-075 |

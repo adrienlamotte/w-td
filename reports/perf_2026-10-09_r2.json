@@ -1,0 +1,742 @@
+{
+  "bench": "bench_m1",
+  "machine": {
+    "commit": "8940257",
+    "cpu": "13th Gen Intel(R) Core(TM) i7-13700K",
+    "cpu_threads": 24,
+    "datetime": "2026-10-09T16:03:30",
+    "godot": "4.7.2-stable (official)",
+    "gpu": "NVIDIA GeForce RTX 5070 Ti",
+    "gpu_api": "1.4.351",
+    "gpu_vendor": "NVIDIA",
+    "max_fps": 0,
+    "os": "Windows 10.0.26200",
+    "release": true,
+    "rendering_method": "forward_plus",
+    "vsync_mode": 0,
+    "window_size": [
+      2560,
+      1440
+    ]
+  },
+  "scenarios": [
+    {
+      "cpu_gpu": {
+        "gpu_ms_avg": 0.183875697553158,
+        "process_ms_avg": 0.955204651162791,
+        "render_cpu_ms_avg": 0.0446120931032699
+      },
+      "enemies": 3000,
+      "frame": {
+        "avg_fps": 429.948965057848,
+        "frame_ms_avg": 2.32585744186047,
+        "frame_ms_max": 10.816,
+        "frame_ms_p99": 6.315,
+        "frames": 8600,
+        "low1_fps": 140.850837325472
+      },
+      "mean_speed": 3.48790120784148,
+      "name": "pc_typical",
+      "piled": false,
+      "render_scale": 1.0,
+      "render_size": [
+        2560,
+        1440
+      ],
+      "sim": {
+        "phase_ms_avg": {
+          "attacks": 0.000188333333333333,
+          "commands": 0.00401166666666667,
+          "deaths": 0.032765,
+          "grid": 0.721875,
+          "movement": 0.55908,
+          "path": 0.00180166666666667,
+          "separation": 2.98128833333333,
+          "spawn": 0.000283333333333333,
+          "targeting": 0.142243333333333
+        },
+        "step_ms_avg": 4.44353666666667,
+        "ticks": 600,
+        "ticks_per_sec": 29.9964394226405
+      },
+      "towers": 50,
+      "view": {
+        "fill_ms_avg": 0.645190465116279
+      },
+      "warmup_sec": 5.0,
+      "zoom": 1
+    },
+    {
+      "cpu_gpu": {
+        "gpu_ms_avg": 0.163981531000542,
+        "process_ms_avg": 1.22944911367299,
+        "render_cpu_ms_avg": 0.0716548904162849
+      },
+      "enemies": 3000,
+      "frame": {
+        "avg_fps": 403.264649037031,
+        "frame_ms_avg": 2.47976112557332,
+        "frame_ms_max": 15.114,
+        "frame_ms_p99": 8.862,
+        "frames": 8067,
+        "low1_fps": 100.348208282741
+      },
+      "mean_speed": 3.48790120784148,
+      "name": "pc_stress",
+      "piled": false,
+      "render_scale": 1.0,
+      "render_size": [
+        2560,
+        1440
+      ],
+      "sim": {
+        "phase_ms_avg": {
+          "attacks": 0.000501666666666667,
+          "commands": 0.00506333333333333,
+          "deaths": 0.0359516666666667,
+          "grid": 0.783071666666667,
+          "movement": 0.619813333333333,
+          "path": 0.00286833333333333,
+          "separation": 3.23928666666667,
+          "spawn": 0.00026,
+          "targeting": 0.895428333333333
+        },
+        "step_ms_avg": 5.582245,
+        "ticks": 600,
+        "ticks_per_sec": 29.9936518435873
+      },
+      "towers": 300,
+      "view": {
+        "fill_ms_avg": 0.814257964546919
+      },
+      "warmup_sec": 5.0,
+      "zoom": 2
+    },
+    {
+      "cpu_gpu": {
+        "gpu_ms_avg": 0.0681938766531435,
+        "process_ms_avg": 0.415380647024841,
+        "render_cpu_ms_avg": 0.0396159445895996
+      },
+      "enemies": 1500,
+      "frame": {
+        "avg_fps": 865.3874563613,
+        "frame_ms_avg": 1.15555176198729,
+        "frame_ms_max": 12.458,
+        "frame_ms_p99": 4.782,
+        "frames": 17310,
+        "low1_fps": 202.965406716864
+      },
+      "mean_speed": 3.02550882473962,
+      "name": "deck_typical",
+      "piled": false,
+      "render_scale": 0.5,
+      "render_size": [
+        1280,
+        720
+      ],
+      "sim": {
+        "phase_ms_avg": {
+          "attacks": 0.000211666666666667,
+          "commands": 0.0028,
+          "deaths": 0.0167416666666667,
+          "grid": 0.586566666666667,
+          "movement": 0.287191666666667,
+          "path": 0.00169,
+          "separation": 1.11519666666667,
+          "spawn": 0.000201666666666667,
+          "targeting": 0.16096
+        },
+        "step_ms_avg": 2.17156,
+        "ticks": 600,
+        "ticks_per_sec": 29.9960990073241
+      },
+      "towers": 50,
+      "view": {
+        "fill_ms_avg": 0.340109936452917
+      },
+      "warmup_sec": 5.0,
+      "zoom": 1
+    },
+    {
+      "cpu_gpu": {
+        "gpu_ms_avg": 0.0647806773192045,
+        "process_ms_avg": 0.458214948729164,
+        "render_cpu_ms_avg": 0.0379546581804477
+      },
+      "enemies": 1500,
+      "frame": {
+        "avg_fps": 1028.71724403966,
+        "frame_ms_avg": 0.972084414637702,
+        "frame_ms_max": 10.61,
+        "frame_ms_p99": 4.737,
+        "frames": 20577,
+        "low1_fps": 206.850275716282
+      },
+      "mean_speed": 3.02550882473962,
+      "name": "deck_stress",
+      "piled": false,
+      "render_scale": 0.5,
+      "render_size": [
+        1280,
+        720
+      ],
+      "sim": {
+        "phase_ms_avg": {
+          "attacks": 0.000235,
+          "commands": 0.00254166666666667,
+          "deaths": 0.0170383333333333,
+          "grid": 0.589703333333333,
+          "movement": 0.287646666666667,
+          "path": 0.0018,
+          "separation": 1.11754833333333,
+          "spawn": 0.000188333333333333,
+          "targeting": 0.460546666666667
+        },
+        "step_ms_avg": 2.47724833333333,
+        "ticks": 600,
+        "ticks_per_sec": 29.9961289995526
+      },
+      "towers": 150,
+      "view": {
+        "fill_ms_avg": 0.385981435583418
+      },
+      "warmup_sec": 5.0,
+      "zoom": 2
+    },
+    {
+      "cpu_gpu": {
+        "gpu_ms_avg": 0.247784127676945,
+        "process_ms_avg": 1.17140155623674,
+        "render_cpu_ms_avg": 0.0666323981470297
+      },
+      "enemies": 3000,
+      "frame": {
+        "avg_fps": 424.096204338971,
+        "frame_ms_avg": 2.35795555293563,
+        "frame_ms_max": 10.114,
+        "frame_ms_p99": 7.519,
+        "frames": 8482,
+        "low1_fps": 120.693296780506
+      },
+      "mean_speed": 0.0295119813806014,
+      "name": "pc_piled",
+      "piled": true,
+      "render_scale": 1.0,
+      "render_size": [
+        2560,
+        1440
+      ],
+      "sim": {
+        "phase_ms_avg": {
+          "attacks": 0.000344425956738769,
+          "commands": 0.00494509151414309,
+          "deaths": 0.0353926788685524,
+          "grid": 0.773369384359401,
+          "movement": 0.393963394342762,
+          "path": 0.00276539101497504,
+          "separation": 3.47799667221298,
+          "spawn": 0.000254575707154742,
+          "targeting": 0.604261231281198
+        },
+        "step_ms_avg": 5.2932928452579,
+        "ticks": 601,
+        "ticks_per_sec": 30.0497310549071
+      },
+      "towers": 300,
+      "view": {
+        "fill_ms_avg": 0.796340367837774
+      },
+      "warmup_sec": 20.0,
+      "zoom": 1
+    },
+    {
+      "cpu_gpu": {
+        "gpu_ms_avg": 0.0778066279824964,
+        "process_ms_avg": 0.444198852024177,
+        "render_cpu_ms_avg": 0.0363375657879669
+      },
+      "enemies": 1500,
+      "frame": {
+        "avg_fps": 1149.68099689346,
+        "frame_ms_avg": 0.869806496499543,
+        "frame_ms_max": 5.036,
+        "frame_ms_p99": 4.7,
+        "frames": 22997,
+        "low1_fps": 208.678663107891
+      },
+      "mean_speed": 0.00735665493225497,
+      "name": "deck_piled",
+      "piled": true,
+      "render_scale": 0.5,
+      "render_size": [
+        1280,
+        720
+      ],
+      "sim": {
+        "phase_ms_avg": {
+          "attacks": 0.000206666666666667,
+          "commands": 0.00247,
+          "deaths": 0.0167016666666667,
+          "grid": 0.583948333333333,
+          "movement": 0.185543333333333,
+          "path": 0.00161833333333333,
+          "separation": 1.45092833333333,
+          "spawn": 0.000195,
+          "targeting": 0.481733333333333
+        },
+        "step_ms_avg": 2.723345,
+        "ticks": 600,
+        "ticks_per_sec": 29.9955906481747
+      },
+      "towers": 150,
+      "view": {
+        "fill_ms_avg": 0.373145801626299
+      },
+      "warmup_sec": 20.0,
+      "zoom": 1
+    },
+    {
+      "cpu_gpu": {
+        "gpu_ms_avg": 0.215229796090161,
+        "process_ms_avg": 1.35277531262606,
+        "render_cpu_ms_avg": 0.0530782574688806
+      },
+      "enemies": 3000,
+      "frame": {
+        "avg_fps": 371.786628969092,
+        "frame_ms_avg": 2.6897148043566,
+        "frame_ms_max": 13.31,
+        "frame_ms_p99": 9.737,
+        "frames": 7437,
+        "low1_fps": 95.1059017067654
+      },
+      "maze": true,
+      "maze_towers": 219,
+      "mean_speed": 2.92634012180849,
+      "name": "pc_maze",
+      "piled": false,
+      "render_scale": 1.0,
+      "render_size": [
+        2560,
+        1440
+      ],
+      "sim": {
+        "phase_ms_avg": {
+          "attacks": 0.000286666666666667,
+          "commands": 0.00318666666666667,
+          "deaths": 0.0338733333333333,
+          "grid": 0.747463333333333,
+          "movement": 1.31788166666667,
+          "path": 0.00932166666666667,
+          "separation": 4.760535,
+          "spawn": 0.000245,
+          "targeting": 0.678178333333333
+        },
+        "step_ms_avg": 7.55097166666667,
+        "ticks": 600,
+        "ticks_per_sec": 29.9948873714475
+      },
+      "towers": 0,
+      "view": {
+        "fill_ms_avg": 0.743580341535565
+      },
+      "warmup_sec": 5.0,
+      "zoom": 1
+    },
+    {
+      "cpu_gpu": {
+        "gpu_ms_avg": 0.082331495812268,
+        "process_ms_avg": 0.595689302325581,
+        "render_cpu_ms_avg": 0.0501706313122794
+      },
+      "enemies": 1500,
+      "frame": {
+        "avg_fps": 752.342459488983,
+        "frame_ms_avg": 1.3291819269103,
+        "frame_ms_max": 8.524,
+        "frame_ms_p99": 5.701,
+        "frames": 15050,
+        "low1_fps": 154.620684536695
+      },
+      "maze": true,
+      "maze_towers": 219,
+      "mean_speed": 2.93954477923983,
+      "name": "deck_maze",
+      "piled": false,
+      "render_scale": 0.5,
+      "render_size": [
+        1280,
+        720
+      ],
+      "sim": {
+        "phase_ms_avg": {
+          "attacks": 0.000405,
+          "commands": 0.00473333333333333,
+          "deaths": 0.0184066666666667,
+          "grid": 0.616346666666667,
+          "movement": 0.699125,
+          "path": 0.011195,
+          "separation": 2.10235166666667,
+          "spawn": 0.000238333333333333,
+          "targeting": 0.871508333333333
+        },
+        "step_ms_avg": 4.32431,
+        "ticks": 600,
+        "ticks_per_sec": 29.9937193151754
+      },
+      "towers": 0,
+      "view": {
+        "fill_ms_avg": 0.423291561461794
+      },
+      "warmup_sec": 5.0,
+      "zoom": 1
+    },
+    {
+      "churn": true,
+      "cpu_gpu": {
+        "gpu_ms_avg": 0.237773202482726,
+        "process_ms_avg": 1.27973761339846,
+        "render_cpu_ms_avg": 0.0449004420910094
+      },
+      "enemies": 3000,
+      "frame": {
+        "avg_fps": 429.792208114205,
+        "frame_ms_avg": 2.32670574552221,
+        "frame_ms_max": 14.1,
+        "frame_ms_p99": 10.238,
+        "frames": 8598,
+        "low1_fps": 90.5880121153473
+      },
+      "maze": true,
+      "maze_towers": 219,
+      "mean_speed": 2.8873182739876,
+      "name": "pc_maze_churn",
+      "piled": false,
+      "render_scale": 1.0,
+      "render_size": [
+        2560,
+        1440
+      ],
+      "sim": {
+        "phase_ms_avg": {
+          "attacks": 0.000253333333333333,
+          "commands": 0.00259833333333333,
+          "deaths": 0.0332366666666667,
+          "grid": 0.726235,
+          "movement": 1.27985166666667,
+          "path": 0.763846666666667,
+          "separation": 4.65198833333333,
+          "spawn": 0.000243333333333333,
+          "targeting": 0.663676666666667
+        },
+        "step_ms_avg": 8.12193,
+        "ticks": 600,
+        "ticks_per_sec": 29.9924778865461
+      },
+      "towers": 0,
+      "view": {
+        "fill_ms_avg": 0.71295952547104
+      },
+      "warmup_sec": 5.0,
+      "zoom": 1
+    },
+    {
+      "combat": true,
+      "cpu_gpu": {
+        "gpu_ms_avg": 0.190287517208868,
+        "process_ms_avg": 0.945024286774844,
+        "render_cpu_ms_avg": 0.0705340971068134
+      },
+      "deaths_per_sec": 25.5998502408761,
+      "enemies": 3000,
+      "frame": {
+        "avg_fps": 471.447242033634,
+        "frame_ms_avg": 2.12112811538869,
+        "frame_ms_max": 8.849,
+        "frame_ms_p99": 6.815,
+        "frames": 9429,
+        "low1_fps": 138.493951939652
+      },
+      "mean_speed": 3.0782584131642,
+      "name": "pc_combat",
+      "piled": false,
+      "render_scale": 1.0,
+      "render_size": [
+        2560,
+        1440
+      ],
+      "sim": {
+        "phase_ms_avg": {
+          "attacks": 0.141486666666667,
+          "commands": 0.00241833333333333,
+          "deaths": 0.03488,
+          "grid": 0.72493,
+          "movement": 1.12808333333333,
+          "path": 0.005565,
+          "separation": 2.64479333333333,
+          "spawn": 0.00277,
+          "targeting": 0.113341666666667
+        },
+        "step_ms_avg": 4.79826833333333,
+        "ticks": 600,
+        "ticks_per_sec": 29.9998245010267
+      },
+      "towers": 50,
+      "towers_built": 50,
+      "view": {
+        "fill_ms_avg": 0.639693816947714
+      },
+      "warmup_sec": 5.0,
+      "zoom": 1
+    },
+    {
+      "combat": true,
+      "cpu_gpu": {
+        "gpu_ms_avg": 0.167945529292997,
+        "process_ms_avg": 1.24252187070151,
+        "render_cpu_ms_avg": 0.114797249186318
+      },
+      "deaths_per_sec": 268.390914967528,
+      "enemies": 3000,
+      "frame": {
+        "avg_fps": 363.487695941492,
+        "frame_ms_avg": 2.75112475928473,
+        "frame_ms_max": 12.53,
+        "frame_ms_p99": 9.553,
+        "frames": 7270,
+        "low1_fps": 95.7716803141311
+      },
+      "mean_speed": 3.05905665035825,
+      "name": "pc_combat_stress",
+      "piled": false,
+      "render_scale": 1.0,
+      "render_size": [
+        2560,
+        1440
+      ],
+      "sim": {
+        "phase_ms_avg": {
+          "attacks": 0.222903333333333,
+          "commands": 0.00487833333333333,
+          "deaths": 0.0506483333333333,
+          "grid": 0.788375,
+          "movement": 1.24679166666667,
+          "path": 0.0134633333333333,
+          "separation": 2.20000166666667,
+          "spawn": 0.00487166666666667,
+          "targeting": 0.755948333333333
+        },
+        "step_ms_avg": 5.28788166666667,
+        "ticks": 600,
+        "ticks_per_sec": 29.9989845343735
+      },
+      "towers": 300,
+      "towers_built": 300,
+      "view": {
+        "fill_ms_avg": 0.806107977991747
+      },
+      "warmup_sec": 5.0,
+      "zoom": 2
+    },
+    {
+      "combat": true,
+      "cpu_gpu": {
+        "gpu_ms_avg": 0.0766114407005665,
+        "process_ms_avg": 0.428217630343464,
+        "render_cpu_ms_avg": 0.0665097605240972
+      },
+      "deaths_per_sec": 24.0994107694067,
+      "enemies": 1500,
+      "frame": {
+        "avg_fps": 809.38021065385,
+        "frame_ms_avg": 1.23551328144304,
+        "frame_ms_max": 6.761,
+        "frame_ms_p99": 4.768,
+        "frames": 16188,
+        "low1_fps": 206.032002784631
+      },
+      "mean_speed": 3.12639954570295,
+      "name": "deck_combat",
+      "piled": false,
+      "render_scale": 0.5,
+      "render_size": [
+        1280,
+        720
+      ],
+      "sim": {
+        "phase_ms_avg": {
+          "attacks": 0.0795058430717863,
+          "commands": 0.00261936560934891,
+          "deaths": 0.0190584307178631,
+          "grid": 0.588442404006678,
+          "movement": 0.574063439065108,
+          "path": 0.00602337228714524,
+          "separation": 1.06343405676127,
+          "spawn": 0.00266110183639399,
+          "targeting": 0.120929883138564
+        },
+        "step_ms_avg": 2.45673789649416,
+        "ticks": 599,
+        "ticks_per_sec": 29.9492677404037
+      },
+      "towers": 50,
+      "towers_built": 50,
+      "view": {
+        "fill_ms_avg": 0.337311650605387
+      },
+      "warmup_sec": 5.0,
+      "zoom": 1
+    },
+    {
+      "combat": true,
+      "cpu_gpu": {
+        "gpu_ms_avg": 0.0736538374425192,
+        "process_ms_avg": 0.464973644490886,
+        "render_cpu_ms_avg": 0.0643283991523941
+      },
+      "deaths_per_sec": 96.5355003678447,
+      "enemies": 1500,
+      "frame": {
+        "avg_fps": 861.170652168044,
+        "frame_ms_avg": 1.16121003134796,
+        "frame_ms_max": 7.02,
+        "frame_ms_p99": 4.763,
+        "frames": 17226,
+        "low1_fps": 204.079453351827
+      },
+      "mean_speed": 3.05252082533053,
+      "name": "deck_combat_stress",
+      "piled": false,
+      "render_scale": 0.5,
+      "render_size": [
+        1280,
+        720
+      ],
+      "sim": {
+        "phase_ms_avg": {
+          "attacks": 0.0997587354409318,
+          "commands": 0.00249084858569052,
+          "deaths": 0.0221430948419301,
+          "grid": 0.576973377703827,
+          "movement": 0.574198003327787,
+          "path": 0.00737104825291181,
+          "separation": 0.942946755407654,
+          "spawn": 0.00246921797004992,
+          "targeting": 0.347500831946755
+        },
+        "step_ms_avg": 2.57585191347754,
+        "ticks": 601,
+        "ticks_per_sec": 30.0454871678274
+      },
+      "towers": 150,
+      "towers_built": 150,
+      "view": {
+        "fill_ms_avg": 0.375104435156159
+      },
+      "warmup_sec": 5.0,
+      "zoom": 2
+    },
+    {
+      "combat": true,
+      "cpu_gpu": {
+        "gpu_ms_avg": 0.206106243292371,
+        "process_ms_avg": 1.31671176975945,
+        "render_cpu_ms_avg": 0.0925488260751729
+      },
+      "deaths_per_sec": 170.219768969031,
+      "enemies": 3000,
+      "frame": {
+        "avg_fps": 349.137993092427,
+        "frame_ms_avg": 2.86419702176403,
+        "frame_ms_max": 15.179,
+        "frame_ms_p99": 10.54,
+        "frames": 6984,
+        "low1_fps": 87.800446128064
+      },
+      "maze": true,
+      "maze_towers": 219,
+      "mean_speed": 2.99328026953153,
+      "name": "pc_maze_combat",
+      "piled": false,
+      "render_scale": 1.0,
+      "render_size": [
+        2560,
+        1440
+      ],
+      "sim": {
+        "phase_ms_avg": {
+          "attacks": 0.177061666666667,
+          "commands": 0.00361666666666667,
+          "deaths": 0.044205,
+          "grid": 0.763051666666667,
+          "movement": 1.245225,
+          "path": 0.0102466666666667,
+          "separation": 3.574675,
+          "spawn": 0.003685,
+          "targeting": 1.21339
+        },
+        "step_ms_avg": 7.03515666666667,
+        "ticks": 600,
+        "ticks_per_sec": 29.9946729460848
+      },
+      "towers": 0,
+      "towers_built": 219,
+      "view": {
+        "fill_ms_avg": 0.712316867124857
+      },
+      "warmup_sec": 5.0,
+      "zoom": 1
+    },
+    {
+      "combat": true,
+      "cpu_gpu": {
+        "gpu_ms_avg": 0.203065795607716,
+        "process_ms_avg": 1.114333155023,
+        "render_cpu_ms_avg": 0.0851939661978138
+      },
+      "deaths_per_sec": 48.2993769380375,
+      "enemies": 3000,
+      "frame": {
+        "avg_fps": 467.343971262771,
+        "frame_ms_avg": 2.13975157804643,
+        "frame_ms_max": 16.284,
+        "frame_ms_p99": 9.76,
+        "frames": 9347,
+        "low1_fps": 92.7030720601912
+      },
+      "mean_speed": 0.648525376763432,
+      "name": "pc_walled",
+      "piled": true,
+      "render_scale": 1.0,
+      "render_size": [
+        2560,
+        1440
+      ],
+      "sim": {
+        "phase_ms_avg": {
+          "attacks": 0.145621035058431,
+          "commands": 0.00378464106844741,
+          "deaths": 0.0399348914858097,
+          "grid": 0.7460183639399,
+          "movement": 2.9246878130217,
+          "path": 0.00773455759599332,
+          "separation": 2.7774674457429,
+          "spawn": 0.00400667779632721,
+          "targeting": 0.106622704507513
+        },
+        "step_ms_avg": 6.75587813021703,
+        "ticks": 599,
+        "ticks_per_sec": 29.9496136499839
+      },
+      "towers": 0,
+      "towers_built": 48,
+      "view": {
+        "fill_ms_avg": 0.681384508398417
+      },
+      "walled": true,
+      "warmup_sec": 5.0,
+      "zoom": 1
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+keys,en
+hud.hp,{hp} / {max}
+hud.gold,Gold {value}
+hud.wave,Wave {n}
+hud.break,Break {time}
+hud.ready,Ready
+hud.seconds,{value}s
+hud.hint.skill_1,Q / LT
+hud.hint.skill_2,E / RT
+hud.paused,Paused
+enemy.boss_01.name,Boss
+enemy.brute_01.name,Brute
+enemy.miniboss_01.name,Mini-boss A
+enemy.miniboss_02.name,Mini-boss B
+enemy.ranged_01.name,Archer
+enemy.swarmer_01.name,Swarmer
+guardian.placeholder_01.name,Guardian
+skill.area_blast.name,Blast
+skill.shield.name,Shield
+tower.single_01.name,Arrow Tower
+tower.slow_01.name,Frost Tower
+tower.splash_01.name,Bomb Tower
+build.slot,[{n}] {name}
+build.gold,{gold} gold
+build.cost,Build: {gold} gold
+build.reason.occupied,Occupied
+build.reason.out_of_radius,Too far from the Guardian
+build.reason.too_close,Too close to the Guardian
+build.reason.no_gold,Not enough gold ({gold})
+build.reason.not_offered,Not in this run
+build.hint.sell,{key}: sell (+{gold})
+build.hint.rebuild,{key}: rebuild ({gold})
+input.kbm.build_place,Left click
+input.pad.build_place,A
+input.kbm.tower_sell,X
+input.pad.tower_sell,X
+flow.title,Waifu Tower Defense
+flow.start,Start run
+flow.quit,Quit game
+flow.resume,Resume
+flow.restart,Restart
+flow.main_menu,Main menu
+flow.slow_time,Slow time while placing
+flow.won,Victory!
+flow.lost,Defeat
+flow.time_survived,Time survived: {time}

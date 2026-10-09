@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Tower",
+  "description": "M2 tower type (D-042, D-043, D-045, D-099). All numbers are placeholders, not balance decisions.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "placeholder", "name_key", "attack", "cost", "cost_per_copy", "hp", "radius", "range", "damage", "cooldown_sec", "sell_refund", "rebuild_fraction", "sprite", "tags"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "id": {"type": "string", "pattern": "^tower_[a-z0-9_]+$"},
+    "placeholder": {"type": "boolean", "description": "true while the numbers are placeholders"},
+    "name_key": {"type": "string", "pattern": "^[a-z0-9_.]+$"},
+    "attack": {"enum": ["single", "splash", "slow"]},
+    "cost": {"type": "integer", "minimum": 0},
+    "cost_per_copy": {"type": "integer", "minimum": 0, "description": "gold added per copy of this type already on the field (linear, D-099)"},
+    "hp": {"type": "number", "exclusiveMinimum": 0},
+    "radius": {"type": "number", "exclusiveMinimum": 0, "description": "footprint used for blocking"},
+    "range": {"type": "number", "exclusiveMinimum": 0},
+    "damage": {"type": "number", "minimum": 0},
+    "cooldown_sec": {"type": "number", "exclusiveMinimum": 0},
+    "splash_radius": {"type": "number", "exclusiveMinimum": 0},
+    "slow_factor": {"type": "number", "exclusiveMinimum": 0, "exclusiveMaximum": 1, "description": "speed multiplier"},
+    "slow_sec": {"type": "number", "exclusiveMinimum": 0},
+    "sell_refund": {"type": "number", "minimum": 0, "maximum": 1},
+    "rebuild_fraction": {"type": "number", "minimum": 0, "maximum": 1},
+    "sprite": {"type": "string"},
+    "tags": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+  },
+  "allOf": [
+    {"if": {"properties": {"attack": {"const": "splash"}}}, "then": {"required": ["splash_radius"]}},
+    {"if": {"properties": {"attack": {"const": "slow"}}}, "then": {"required": ["slow_factor", "slow_sec"]}}
+  ]
+}
