@@ -1,5 +1,5 @@
 # 014 — Sim: enemy HP and death, Guardian HP, gold, win and lose
-- Status: planned
+- Status: blocked
 - Milestone: M2
 - Depends on: 011, 012, 013, 025
 - PR: -
@@ -58,5 +58,20 @@ Movement becomes two passes (steer, advance) instead of one, and the piled crowd
 Size: about 170 lines of code, about 220 of tests. One PR.
 
 ## Questions
+**Q1 (blocking): the non-sticky ATTACKING state makes a piled crowd collapse.** Implemented as planned on `task/014-sim-combat-core` (WIP commit pushed, no PR). With the state re-evaluated each tick, every enemy behind the front row keeps walking inward forever (in M1 they latched `AT_GUARDIAN` one by one and the crowd relaxed). Measured:
+- `test_crowd_stays_soft_not_collapsed` fails: min pair distance 0.014 (bound 0.14, was 0.164); D-079 says "overlap slightly".
+- Separation cost explodes with the density: headless debug `test_separation_cost_3000_piled` 79.9 ms/tick (was 25-38); release bench `pc_piled` step 54.9 ms (separation 50.8 ms, 4.5 FPS; was about 6 ms), `deck_piled` 15.2 ms. `pc_typical` 4.87 ms and `pc_stress` 5.72 ms are fine (movement 0.47, deaths 0.03 ms).
+- Tried a walk-back threshold (an ATTACKING enemy only walks back if pushed out by more than its radius): no help (min distance 0.027, 64.5 ms debug).
+- Other phases are cheap: 3000 piled during a run, move 0.60, deaths 0.05, attacks 0.20 ms/tick (headless debug).
+
+Options:
+- A ★ Queue behind the front: an enemy also stops (stays `MOVING`, does not attack) when it overlaps a neighbour that is closer to the Guardian and already stopped. The separation pass already visits every overlapping pair, so it can set a per-enemy `blocked` flag that `advance()` reads next tick. Keeps the D-079 soft crowd and the M1 cost; 024's flow field keeps the same rule. About +20 lines, one new test.
+- B Back to the M1 latch: once ATTACKING an enemy never moves by itself (pushed-out attackers keep attacking from where they are). Smallest change; the "walks back in" acceptance point is dropped; whether the back rows still pile at a contact ring of 1.35 is unmeasured.
+- C Keep the plan, lower the crowd test bound and leave the cost to 023 (cap the pushes per enemy). `pc_piled` stays at about 55 ms per tick until then.
+
+Notes on the WIP (no decision needed, for the reviewer):
+- Attack cooldown: the plan's literal order (decrement, else hit) gives one hit every `attack_cooldown + 1` ticks; the WIP decrements first, then hits at 0, so hits land on arrival and then exactly every `attack_cooldown` ticks.
+- Determinism-with-combat test: `damage_enemy(0, 5)` every 10th tick kills wave 0 faster than it spawns (nobody reaches the Guardian); the WIP uses 1 damage.
+- Since 025 the code the plan relies on did not move (cell size change only); no adaptation needed.
 
 ## Review log
