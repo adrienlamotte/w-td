@@ -185,7 +185,8 @@ func _assert_no_building(why: String) -> void:
 	input.handle(_pad(JOY_BUTTON_RIGHT_SHOULDER))
 	assert_eq(cam.zoom_index, 0, why + ": camera works")
 	input.handle(_key(KEY_P))
-	assert_eq(_queued().size(), 1, why + ": pause works")
+	var running := world.run_state == SimWorld.RunState.RUNNING
+	assert_eq(_queued().size(), 1 if running else 0, why + ": pause only in a run (D-125)")
 
 
 func test_no_building_while_paused() -> void:
