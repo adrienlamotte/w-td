@@ -15,7 +15,7 @@ Last updated: 2026-10-08 (daily docs review; open questions restructured with st
 - `07_ROSTER.md` — launch roster proposal (PROPOSED, task 001): waifus, roles, relationships, offer order.
 - `08_FIRST_CHARACTER_BRIEF.md` — exact deliverables for the first (test) character the owner generates externally.
 - `09_CONTROLS.md` — keyboard/mouse and gamepad mapping, cursor and device-mode rules.
-- `10_M3_CONTENT.md` — M3 content proposal (PROPOSED, task 028): XP, cards, tower kinds and upgrades, Guardian skills, synergies, meta tree, saves.
+- `10_M3_CONTENT.md` — M3 content (DECIDED D-133 to D-138, task 028; Guardian signature skills PROPOSED): XP, cards, tower kinds and upgrades, Guardian skills, synergies, meta tree, saves.
 - `DECISIONS.md` — decision log (append-only).
 - `OPEN_QUESTIONS.md` — unresolved questions.
 

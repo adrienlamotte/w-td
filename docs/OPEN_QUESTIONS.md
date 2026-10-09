@@ -15,6 +15,11 @@ Last reviewed: 2026-10-08 (daily docs review; owner answers recorded the same da
 | Q-02 Data format | JSON + JSON Schema | D-034 |
 | Q-03 Where builds, tests and nightly runs execute | Everything on the owner's PC | D-035 (scheduling: Q-35) |
 | Q-04 Godot version | Pin at M0 start | D-036 |
+| Q-62 Guardian skills | Own signature skill in place of Area blast; Shield shared | D-133 |
+| Q-63 Upgrade cards vs gold levels | Levels 2-3 gold; level 4 also needs the signature card | D-134 |
+| Q-64 Poppy's repair | Towers, else heals the Guardian in range for less | D-135 |
+| Q-65 Rival distance | Only 2-6 units apart (across a corridor) | D-136 |
+| Q-66 Upgrades per tower or per type | Per placed tower | D-137 |
 | Q-60 When higher tiers and rivals open | After all 6 rescues; Vexa Hard, Gilda Nightmare | D-131 |
 | Q-61 Guardian in relationship bonuses | She counts like a placed waifu | D-132 |
 | Q-59 Maze tick budget | Accept within noise for M2, track worst case | D-124 |
@@ -70,38 +75,6 @@ Last reviewed: 2026-10-08 (daily docs review; owner answers recorded the same da
 | Q-31 Name, price, Early Access, DLC | Keep WTD until M5; EUR 7.99-9.99 in Early Access; no DLC before launch | D-064 |
 | Q-33 Camera controls | Pan + zoom, cursor at screen centre | D-041 |
 | Q-34 Build radius and performance with no cap | Growable radius, rising costs, 300/150 stress target | D-042 |
-
----
-
-## M3 (content proposal, task 028)
-
-### Q-62 Guardian skills: shared kit or her own?
-D-044 gives the M2 kit (Area blast, Shield, Heal later); it does not say whether each Guardian brings her own skills. Blocks: Guardian data and skill cards in `10_M3_CONTENT.md` 2.3 and 4.
-- A) Every Guardian has the shared kit (Area blast, Shield; Heal as a Shield upgrade card), with her own name and look; her identity comes from her relationships (D-132) ★
-- B) Each Guardian replaces Area blast with her own signature skill; Shield shared (6 new skills to design and balance).
-- C) Shared kit in M3, own signature skills added in M5 with the content pass.
-
-### Q-63 How do tower upgrade cards relate to gold-bought levels?
-D-051: upgrade levels are bought with gold, and "tower upgrade" is a card type; how the two combine is not decided. Blocks: card pool and upgrade UI (`10_M3_CONTENT.md` 2.2, 3.2).
-- A) Levels 2-3 are bought with gold at any time; the level 4 signature also costs gold but needs that waifu's signature card this run ★
-- B) Every level needs a card first (each card unlocks the next level for that waifu), gold pays per tower.
-- C) All levels are gold-only; upgrade cards are run-wide stat buffs for one waifu instead.
-
-### Q-64 What does Poppy (repair) do, given towers only take damage when walled in?
-Enemies attack towers only when no path exists (D-103), so a tower-only repair is idle in most mazes. Blocks: the `repair` kind (`10_M3_CONTENT.md` 3.1).
-- A) Repairs the most damaged tower in range; when no tower needs it and the Guardian is in range, heals the Guardian a smaller amount ★
-- B) Towers only (strong only in walled-in layouts).
-- C) Towers only, and she also slowly rebuilds husks in range for free.
-
-### Q-65 Where do rivals get their bonus?
-Rivals "compete" (`07_ROSTER.md` 2); the distance rule is not decided. Blocks: synergy data (`10_M3_CONTENT.md` 5).
-- A) Only when 2 to 6 units apart, so across a corridor, never side by side (rewards maze corridors, D-128) ★
-- B) Same rule as the other relationships (within 2.5 units).
-
-### Q-66 Are tower upgrades per placed tower or per waifu type?
-Blocks: the upgrade command and UI (`10_M3_CONTENT.md` 3.2).
-- A) Per placed tower: you upgrade the towers on your key corridor; gold paid counts toward sell and rebuild ★
-- B) Per waifu type: one purchase upgrades every copy, current and future.
 
 ---
 

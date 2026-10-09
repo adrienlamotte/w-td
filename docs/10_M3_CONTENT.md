@@ -1,6 +1,6 @@
 # 10 — M3 content proposal: cards, upgrades, synergies, meta tree
 
-Status: **PROPOSED** (task 028, awaiting owner approval). Nothing here is decided until the owner approves it; no row is added to `DECISIONS.md` by this proposal. Every number is a placeholder (data files carry `"placeholder": true`) and is tuned by the M3 balance runner. Names are placeholders (D-064). Open points are in `OPEN_QUESTIONS.md` Q-62 to Q-66; where this document depends on one, it uses the ★ option and says so.
+Status: **DECIDED** (approved by the owner on 2026-10-09: D-133 to D-138), **except section 4.1 (the 6 Guardian signature skills) and the skill cards in section 2.3, which are PROPOSED** and await the owner's approval. Every number is a placeholder (data files carry `"placeholder": true`) and is tuned by the M3 balance runner. Names are placeholders (D-064). Owner answers: Q-62 (D-133), Q-63 (D-134), Q-64 (D-135), Q-65 (D-136), Q-66 (D-137); the rest is D-138.
 
 Sources: `01_GAME_DESIGN.md` 4, 5, 7, 8; `07_ROSTER.md` (D-130); `02_TECH_ARCHITECTURE.md` 3a; D-023, D-031, D-044, D-048, D-050 to D-058, D-099, D-101 to D-118, D-124, D-128, D-131, D-132.
 
@@ -31,14 +31,14 @@ Data: `data/cards/card_<id>.json` with `id`, `type` (`new_tower`, `signature`, `
 Interaction with the roster (D-031, D-051): the 2 starters (Pip, Mallow) are buildable from the start of every run and have no new-tower card. A rescued Guardian (D-023) becomes eligible as a new-tower card in later runs; the card only grants the right to build her, and gold pays each placement with the usual rising price (D-099). The current Guardian is still locked, so her card is never eligible in her own run. The first run (nothing rescued) therefore has no new-tower card at all; its drafts are signatures, skills and perks, and the run plays with Pip and Mallow only (both M2 kinds, `07_ROSTER.md` 4).
 
 ### 2.2 Tower upgrade: signature (8)
-One per M3 waifu: `card_sig_pip`, `card_sig_mallow`, `card_sig_cinder`, `card_sig_bastia`, `card_sig_clover`, `card_sig_hymn`, `card_sig_tansy`, `card_sig_poppy`. Effect: unlocks level 4 (her signature, section 3.2) for every copy of that waifu this run; each copy still buys the level with gold. Eligible when that waifu is buildable this run. `max_picks` 1. Uses Q-63 ★ (levels 2-3 with gold only, level 4 needs the card).
+One per M3 waifu: `card_sig_pip`, `card_sig_mallow`, `card_sig_cinder`, `card_sig_bastia`, `card_sig_clover`, `card_sig_hymn`, `card_sig_tansy`, `card_sig_poppy`. Effect: unlocks level 4 (her signature, section 3.2) for every copy of that waifu this run; each copy still buys the level with gold. Eligible when that waifu is buildable this run. `max_picks` 1. Per D-134 (levels 2-3 with gold only, level 4 needs the card).
 
-### 2.3 Guardian skill upgrade (4)
-Uses Q-62 ★ (every Guardian has the shared M2 kit: Area blast, Shield).
-| Card | Effect (M2 values: blast 30 dmg, radius 4, 12 s; shield 50 absorb, 5 s, 25 s) | Max |
+### 2.3 Guardian skill upgrade (4) — PROPOSED
+Every Guardian has her own signature skill plus the shared Shield (D-133, section 4). The two signature cards work on whichever signature skill the Guardian has: each skill file lists its `power_stats` (section 4.1), so one card covers all six.
+| Card | Effect (Shield: 50 absorb, 5 s, 25 s cooldown) | Max |
 |---|---|---|
-| `card_skill_blast_power` | Area blast damage +50% and radius +1 | 1 |
-| `card_skill_blast_quick` | Area blast cooldown -25% (12 s to 9 s) | 1 |
+| `card_skill_sig_power` | Signature skill power +50% (multiplies her `power_stats`, section 4.1) | 1 |
+| `card_skill_sig_quick` | Signature skill cooldown -25% | 1 |
 | `card_skill_shield_plus` | Shield absorb x2 and duration +2 s | 1 |
 | `card_skill_mending` | Heal (D-044): casting Shield also restores 40 Guardian HP (capped at max HP). An upgrade of an existing skill, so no third skill button | 1 |
 
@@ -56,7 +56,7 @@ Uses Q-62 ★ (every Guardian has the shared M2 kit: Area blast, Shield).
 `perk_maze` is the most direct maze payoff (D-128): enemies walking a corridor take more damage than enemies on a straight run. `perk_expand` needs the build grid to be allocated at StartRun for the largest reachable radius (base + meta + 2 perks); placement still checks the current radius (note for the implementer: a bigger grid lengthens a flow-field computation, not the per-tick cost, which is capped by `CELLS_PER_TICK`).
 
 ### 2.5 Effect vocabulary (data)
-`{"stat": <name>, "op": "add" | "mult", "value": <number>, "target": <scope>}` with targets `all_towers`, `tower:<id>`, `guardian`, `skill:<id>`, `run`. Stats: `damage`, `cooldown`, `range`, `hp`, `kill_gold`, `xp`, `build_radius`, `rebuild_price`, `detour_damage`, `skill_damage`, `skill_radius`, `skill_cooldown`, `shield_absorb`, `shield_duration`, `shield_heal`, `gold` (instant), plus `unlock_tower` and `unlock_level` for new-tower and signature cards. Multipliers of the same stat add up (two `perk_sharp` = +20%, not 1.1 x 1.1); final cooldowns are clamped to at least 50% of the level value and at least 1 tick.
+`{"stat": <name>, "op": "add" | "mult", "value": <number>, "target": <scope>}` with targets `all_towers`, `tower:<id>`, `guardian`, `skill:<id>`, `run`. Stats: `damage`, `cooldown`, `range`, `hp`, `kill_gold`, `xp`, `build_radius`, `rebuild_price`, `detour_damage`, `skill_power` (multiplies the signature skill's `power_stats`), `skill_cooldown`, `shield_absorb`, `shield_duration`, `shield_heal`, `gold` (instant), plus `unlock_tower` and `unlock_level` for new-tower and signature cards. Multipliers of the same stat add up (two `perk_sharp` = +20%, not 1.1 x 1.1); final cooldowns are clamped to at least 50% of the level value and at least 1 tick.
 
 ## 3. Tower waifus
 ### 3.1 Attack kinds
@@ -70,12 +70,12 @@ M2 kinds are unchanged (D-114). New kinds, each defined so the sim cost stays fl
 | `slow_area` | Tansy | Like `splash` (same query), but every enemy hit is also slowed (`slow_factor`, `slow_sec`, D-117 rule) |
 | `wall` | Bastia | Never targets or fires. Cheap, high HP. **Thorns:** when a walled-in enemy hits her (D-116 path), the attacker takes `thorns` damage through `damage_enemy`. Her job is to be the maze wall |
 | `aura` | Hymn | Never targets or fires. Every other live tower whose centre is within `aura_radius` of hers gets `aura_damage` (damage +x%) and `aura_cooldown` (cooldown -x%). Auras do not stack: the strongest Hymn in reach applies (like slows, D-117) |
-| `repair` | Poppy | Every `cooldown`, heals `heal` HP to the live tower in range with the lowest HP fraction (below 100%; husks excluded). Uses Q-64 ★: if no tower needs it and the Guardian's body is in range, heals the Guardian for `guardian_heal` instead. L4 heals the 2 lowest |
+| `repair` | Poppy | Every `cooldown`, heals `heal` HP to the live tower in range with the lowest HP fraction (below 100%; husks excluded). Per D-135: if no tower needs it and the Guardian's body is in range, heals the Guardian for `guardian_heal` instead. L4 heals the 2 lowest |
 | `mark` | Clover | Shoots the nearest enemy for `damage` and marks it for `mark_sec`: if a marked enemy dies (any source), it drops `mark_gold` extra gold. Marks do not stack: the higher `mark_gold` applies and the longer expiry wins |
 | `tax` | Gilda | Like `single`, and each hit adds `gold_per_hit` gold at once |
 
 ### 3.2 Stats and upgrade levels
-Pattern for every waifu: **4 levels**, level 1 when placed; levels 2 and 3 are bought with gold on a placed tower at any time (no card); level 4 is the **signature** and needs her signature card this run (Q-63 ★). Upgrades are per placed tower (Q-66 ★) through a new `UPGRADE_TOWER{tower_uid}` command (RUNNING, not paused or drafting; refused on a husk or without gold). The upgrade price does not grow with copies. Upgrade gold adds to `paid`, so selling refunds `sell_refund` of everything paid and a rebuild costs `rebuild_fraction` of it and keeps the level (D-113). Level values are absolute (no compounding). Shared by all unless listed: `radius` 0.5 (2 x 2 cells), `sell_refund` 0.5, `rebuild_fraction` 0.3.
+Pattern for every waifu: **4 levels**, level 1 when placed; levels 2 and 3 are bought with gold on a placed tower at any time (no card); level 4 is the **signature** and needs her signature card this run (D-134). Upgrades are per placed tower (D-137) through a new `UPGRADE_TOWER{tower_uid}` command (RUNNING, not paused or drafting; refused on a husk or without gold). The upgrade price does not grow with copies. Upgrade gold adds to `paid`, so selling refunds `sell_refund` of everything paid and a rebuild costs `rebuild_fraction` of it and keeps the level (D-113). Level values are absolute (no compounding). Shared by all unless listed: `radius` 0.5 (2 x 2 cells), `sell_refund` 0.5, `rebuild_fraction` 0.3.
 
 Level columns: cost to buy that level, then only the stats that change.
 
@@ -107,11 +107,23 @@ Data shape (extends the M2 tower file, D-099): the level 1 stats stay where they
 - `perk_maze`: one cell lookup (`hit[c]`) per tower hit, only when the perk is held.
 
 ## 4. Guardian skills
-**Proposed (Q-62 ★): every Guardian brings the same M2 kit**, Area blast and Shield (D-044), with her own name, portrait and look for the skill effects; the 4 skill cards (section 2.3) upgrade the kit, Heal included. Her identity in her run comes from her relationships instead: she counts like a placed waifu for synergies (D-132), so the towers you build around her change with the Guardian you protect (section 5). One kit keeps the balance runner and the skill UI to a single case in M3.
+Decided (D-133): each Guardian has her **own signature skill in place of Area blast**; **Shield is shared**. Her identity also comes from her relationships (D-132, section 5). Cooldowns run on the run clock and both skills are ready at the start (D-110). The 2 starters and the 2 rivals become Guardians only once everything is unlocked (D-058: tier, endless and challenge runs), so **their signature skills are deferred to M5**.
 
-Alternative (Q-62 B): each Guardian replaces Area blast with her own signature skill (for example Bastia: taunt, Clover: gold burst, Hymn: tower buff, Tansy: area root, Cinder: fire ring, Poppy: heal), Shield shared. More identity, but 6 skills, 6 sets of skill cards and 6 balance cases.
+### 4.1 The 6 signature skills — PROPOSED
+Cost rules: a cast does its work once, in the COMMANDS phase (a linear scan over enemies or towers is allowed only inside the cast, like Area blast, D-110). A timed effect stores an absolute `until` clock tick that an existing code path checks where it already runs (no per-tick loop, zero cost when idle). `power_stats` are what `card_skill_sig_power` and the rivals' Guardian bonus multiply.
 
-Data: one `data/guardians/guardian_<waifu>.json` per Guardian (hp 400, contact radius 1.0, skills `skill_area_blast`, `skill_shield`, same as M2). The run's Guardian comes from `StartRun` (a new `guardian_id` field) instead of the run file.
+| Guardian | Skill (kind) | Effect | Cooldown | `power_stats` | Cost |
+|---|---|---|---|---|---|
+| Cinder | **Big Finish** (`area_blast`, the M2 kind with her numbers) | Every enemy whose body touches the disk of radius 6 around her takes 40 damage | 14 s | `damage` | One linear scan per cast (as Area blast) |
+| Bastia | **Stand Firm** (`guard`) | For 6 s, every tower and the Guardian take 50% less damage | 25 s | `duration_sec` | `damage_tower` and `_hit_guardian` check `clock < guard_until` |
+| Clover | **Clearance Sale** (`bounty`) | For 8 s, every enemy that dies drops 4 extra gold | 30 s | `gold_per_kill` | DEATHS checks `clock < bounty_until` |
+| Hymn | **Crescendo** (`haste`) | For 6 s, each tower's cooldown after a shot is 60% of its value | 25 s | `duration_sec` | The tower-attack cooldown reset checks `clock < haste_until` |
+| Tansy | **Tangle** (`snare`) | Every enemy within radius 7 of her is slowed to 0.15 for 3 s (the D-117 slow rule; bosses too, like tower slows) | 18 s | `duration_sec` | One linear scan per cast, then the existing slow arrays |
+| Poppy | **Emergency Rebuild** (`rebuild`) | Rebuilds every husk for free (full HP, cells solid again) and heals the Guardian 40 HP | 40 s | `guardian_heal` | One loop over towers per cast |
+
+Maze fit: Big Finish clears the crowd queued at the Guardian's end of the corridors; Stand Firm holds a full wall (D-102) while walled-in enemies hit it; Clearance Sale pays for the maze during a wave peak; Crescendo multiplies a dense kill zone; Tangle freezes the crowd inside the corridors near her; Emergency Rebuild closes the gaps husks opened (D-104) in one cast. Placeholder rules: the power card rounds integer stats down (Clearance Sale 4 to 6 gold); Tangle's slow factor is not multiplied, only its duration.
+
+Data: one `data/skills/skill_<id>.json` per signature skill (`kind` in `area_blast, guard, bounty, haste, snare, rebuild`, `cooldown_sec`, the effect fields above, `power_stats`); one `data/guardians/guardian_<waifu>.json` per Guardian (hp 400, contact radius 1.0, skills `[skill_<her signature>, skill_shield]`). The run's Guardian comes from `StartRun` (a new `guardian_id` field) instead of the run file. `skill_area_blast` stays for the M2 placeholder Guardian and the tests.
 
 ## 5. Synergies (relationship rules)
 ### 5.1 Rule format
@@ -135,27 +147,27 @@ One file per relationship: `data/synergies/syn_<tag>.json`.
 ```
 - **Active for a tower** when at least one live partner (a live tower of the other waifu, or the current Guardian if she is the other waifu, D-132) has its centre within `[min_distance, max_distance]` of the tower's centre. For the Guardian the distance is measured from her body edge (`d - guardian contact_radius`), since she is larger than a tower. Husks and bare towers never count.
 - **No stacking per partner:** one partner is enough; two Mallows near one Pip still give Pip +20% once. Different relationships on the same tower add up (Pip next to Mallow and Bastia gets both).
-- **Guardian side:** when the Guardian is a member and at least one partner tower is in reach, she gets `guardian_bonus` once per relationship. Per kind: best friends `shield_absorb` +25%, mentor/student `skill_cooldown` -10%, rivals `skill_damage` +25%.
-- **Why the maze pays off (D-128):** best friends and mentor/student need `max_distance` 2.5 (centre to centre; touching towers are 1.0 apart), so pairs sit in the same wall segment, which is how maze walls are built. Rivals need `min_distance` 2 and `max_distance` 6 (Q-65 ★): rivals refuse to stand together, so their bonus only fires across a corridor, from the two walls lining it. Combined with slows (longer time in range), Bastia's cheap walls, Hymn's aura over a wall cluster and `perk_maze`, a corridor layout gets bonuses a ring of spread towers does not.
+- **Guardian side:** when the Guardian is a member and at least one partner tower is in reach, she gets `guardian_bonus` once per relationship. Per kind: best friends `shield_absorb` +25%, mentor/student `skill_cooldown` -10%, rivals `skill_power` +25%.
+- **Why the maze pays off (D-128):** best friends and mentor/student need `max_distance` 2.5 (centre to centre; touching towers are 1.0 apart), so pairs sit in the same wall segment, which is how maze walls are built. Rivals need `min_distance` 2 and `max_distance` 6 (D-136): rivals refuse to stand together, so their bonus only fires across a corridor, from the two walls lining it. Combined with slows (longer time in range), Bastia's cheap walls, Hymn's aura over a wall cluster and `perk_maze`, a corridor layout gets bonuses a ring of spread towers does not.
 - Cost: evaluated in the derived-stats recompute (section 3.3), never per tick.
 
 ### 5.2 Initial relationship bonuses
 | Tag | Distance | Tower bonuses | Guardian bonus |
 |---|---|---|---|
 | `bff_pip_mallow` | 0-2.5 | Pip damage +20%; Mallow slow +1 s | shield absorb +25% |
-| `rivals_mallow_cinder` | 2-6 | Mallow cooldown -20%; Cinder damage +25% | skill damage +25% |
+| `rivals_mallow_cinder` | 2-6 | Mallow cooldown -20%; Cinder damage +25% | skill power +25% |
 | `mentor_bastia_pip` | 0-2.5 | Bastia hp +30%; Pip damage +25% | skill cooldown -10% |
 | `bff_bastia_clover` | 0-2.5 | Bastia thorns +3; Clover mark gold +1 | shield absorb +25% |
-| `rivals_gilda_clover` | 2-6 | Gilda gold per hit +1; Clover mark gold +1 | skill damage +25% |
+| `rivals_gilda_clover` | 2-6 | Gilda gold per hit +1; Clover mark gold +1 | skill power +25% |
 | `mentor_hymn_poppy` | 0-2.5 | Hymn aura radius +1; Poppy heal +50% | skill cooldown -10% |
 | `bff_hymn_tansy` | 0-2.5 | Hymn aura radius +1; Tansy slow +1 s | shield absorb +25% |
 | `bff_cinder_tansy` | 0-2.5 | Cinder range +1; Tansy cooldown -20% | shield absorb +25% |
-| `rivals_vexa_pip` | 2-6 | Vexa damage +20%; Pip cooldown -20% | skill damage +25% |
+| `rivals_vexa_pip` | 2-6 | Vexa damage +20%; Pip cooldown -20% | skill power +25% |
 | `bff_vexa_gilda` | 0-2.5 | Vexa range +1; Gilda gold per hit +1 | shield absorb +25% |
 
 Rival rows (Vexa, Gilda) ship with the rivals (M5); the data format supports them now. Trait tags (`steel`, `arcane`, `holy`, `nature`, `coin`) get no rule in M3: no card or rule needs them yet, and they stay reserved (`07_ROSTER.md` 1).
 
-Guardian examples: with Cinder as Guardian, a Mallow 2-6 units from her edge gets -20% cooldown and Cinder gets +25% blast damage; a Tansy right next to her gets -20% cooldown and Cinder +25% shield absorb.
+Guardian examples: with Cinder as Guardian, a Mallow 2-6 units from her edge gets -20% cooldown and Cinder gets +25% skill power (Big Finish damage); a Tansy right next to her gets -20% cooldown and Cinder +25% shield absorb.
 
 ## 6. Meta-progression
 ### 6.1 Hearts per run (D-048)
@@ -191,4 +203,4 @@ Data: `data/meta/meta_<id>.json` with `id`, `name_key`, `desc_key`, `cost`, `req
 - New data folders: `cards`, `synergies`, `meta`, `waifus`; new tower and guardian files per waifu; run file gains `xp_base`, `xp_step`, the hearts fields and drops `guardian` (now a StartRun field).
 - New commands: `PICK_CARD{slot}`, `UPGRADE_TOWER{tower_uid}`; `START_RUN` gains `guardian_id` and the profile modifiers (unlocked waifus, meta effects) so the run stays a pure function of `(seed, start data, commands)`.
 - New events: `LEVEL_UP` (a = level), `CARD_PICKED` (a = card index), `TOWER_UPGRADED` (a = uid, value = level), `TOWER_REPAIRED` (a = uid or -1 for the Guardian, value = HP); thorns damage is a normal `ENEMY_HIT` (no new kind).
-- New world state (hashed): XP, level, draft cards and `drafting`, picked-card counts, per-tower `level`, enemy `mark_gold` and `mark_until`.
+- New world state (hashed): `guard_until`, `bounty_until`, `haste_until`, XP, level, draft cards and `drafting`, picked-card counts, per-tower `level`, enemy `mark_gold` and `mark_until`.
