@@ -1,5 +1,5 @@
 # 033 — Sim: XP, level-up draft and card effects
-- Status: review
+- Status: done
 - Milestone: M3
 - Depends on: 030
 - PR: #43
@@ -62,3 +62,4 @@ Per death: one multiply-add (XP) and one compare; per level-up: one draw over at
 ## Questions
 
 ## Review log
+- 2026-10-10 lead-dev: approved and merged PR #43 (squash). test.ps1 308/308 + tools green, validate.ps1 OK. Matches plan and D-147; stopgap slot-0 picks in game view (until 037), bot and bench as planned. Owner: balance report numbers shift when regenerated; draft freezes from the tick after it opens.
