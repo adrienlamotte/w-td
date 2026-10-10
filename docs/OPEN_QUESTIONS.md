@@ -90,6 +90,17 @@ Last reviewed: 2026-10-08 (daily docs review; owner answers recorded the same da
 ---
 
 
+## M3 (not blocking implementation)
+
+### Q-80 If data tuning cannot make the maze pay off, which rule changes? (task 042 fallback)
+D-143 wants the maze bot to win 20+ points more seeds than the spread bot. Task 042 tunes numbers only. Today the only maze-specific rules are relationship distances, slows (a longer path keeps enemies slowed in range longer) and `perk_maze` (+20 % damage to detouring enemies, a card the player may never draw). If 042 hits its stop condition, the rule picked here becomes a new sim task, then 042 resumes. Answer needed only then; safe to leave open until 042 reports.
+- A) **Detour bonus becomes a base rule: every tower deals +X % to an enemy whose cell has no clear line to the Guardian (run data `detour_damage`, placeholder 25 %); `perk_maze` adds on top. Reuses the existing per-hit lookup, no new per-tick cost** ★
+- B) Walls slow: an enemy within 1 unit of a `wall` tower is slowed (D-117, no stacking). Stronger maze feel; adds a per-enemy check (perf cost).
+- C) Keep the rules, lower the target (for example maze >= spread + 10 points, or the 20-point lead on `full` only).
+- D) Keep rules and target; first improve the maze bot (tools task: spending, ring sizes), then retune.
+
+---
+
 ## A. Deferred until the first real asset arrives
 
 ### Q-37 Where are large art files stored? (DEFERRED by the owner: decide when the first real asset arrives)
