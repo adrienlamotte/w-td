@@ -1,9 +1,9 @@
 # 039 — UI: hub screen and M3 run flow
-- Status: planned
+- Status: review
 - Milestone: M3
 - Depends on: 035
 - Labels: needs-human:playtest
-- PR:
+- PR: #48
 
 ## Goal
 Between runs the player sees her hearts, buys meta nodes, sees the roster and picks the Guardian to rescue from the offer; the end screen shows the hearts earned and returns to the hub.
