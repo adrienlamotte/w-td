@@ -64,3 +64,26 @@ func test_skips_corpses_and_flags_flash() -> void:
 	assert_eq(buf[14], 1.0, "hit at tick 10: flashing")
 	assert_almost_eq(buf[S + 3], 3.0, 1e-5)
 	assert_eq(buf[S + 14], 0.0, "hit at tick 2: not flashing")
+
+
+func test_mark_flag_tints_only_active_marks() -> void:
+	var b := HordeBatcher.new(1, 4)
+	var xs := PackedFloat32Array([1, 2, 3])
+	var zs := PackedFloat32Array([0, 0, 0])
+	b.fill(xs, zs, xs, zs, 0.0, PackedInt32Array([0, 0, 0]), cull,
+		PackedFloat32Array([5, 5, 5]), PackedInt32Array([0, 0, 0]), 8,
+		PackedInt32Array([50, 40, 0]), 40)
+	var buf := b.buffers[0]
+	assert_eq([buf[15], buf[S + 15], buf[2 * S + 15]], [1.0, 0.0, 0.0], "marked, expired, never marked")
+
+
+func test_tint_all_flags_every_tower() -> void:
+	var b := HordeBatcher.new(1, 1)
+	var xs := PackedFloat32Array([1, 2])
+	var zs := PackedFloat32Array([0, 0])
+	var types := PackedInt32Array([0, 0])
+	b.fill(xs, zs, xs, zs, 0.0, types, cull, PackedFloat32Array(), PackedInt32Array(), 0,
+		PackedInt32Array(), 0, true)
+	assert_eq([b.buffers[0][15], b.buffers[0][S + 15]], [1.0, 1.0])
+	b.fill(xs, zs, xs, zs, 0.0, types, cull)
+	assert_eq([b.buffers[0][15], b.buffers[0][S + 15]], [0.0, 0.0], "cleared when Crescendo ends")

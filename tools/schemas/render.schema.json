@@ -24,14 +24,14 @@
       "additionalProperties": false,
       "required": ["shape", "color", "height_scale"],
       "properties": {
-        "shape": {"enum": ["single", "splash", "slow", "husk", "bare"]},
+        "shape": {"enum": ["single", "splash", "slow", "husk", "bare", "wall", "aura", "repair", "mark", "slow_area"]},
         "color": {"$ref": "#/$defs/rgb"},
         "height_scale": {"type": "number", "exclusiveMinimum": 0}
       }
     }
   },
   "properties": {
-    "schema_version": {"const": 2},
+    "schema_version": {"const": 3},
     "id": {"type": "string", "pattern": "^render_[a-z0-9_]+$"},
     "enemy_sprite_height": {"type": "number", "exclusiveMinimum": 0},
     "tower_sprite_height": {"type": "number", "exclusiveMinimum": 0},
@@ -72,7 +72,7 @@
       "description": "Combat effects; lifetimes in view seconds, sizes in world units.",
       "type": "object",
       "additionalProperties": false,
-      "required": ["flash_sec", "death_sec", "death_size", "coin_sec", "coin_size", "coin_color", "shot_sec", "shot_width", "spark_sec", "spark_size", "spark_color", "ring_sec", "ring_width", "ring_color", "max_effects", "shield_radius", "shield_color"],
+      "required": ["flash_sec", "death_sec", "death_size", "coin_sec", "coin_size", "coin_color", "shot_sec", "shot_width", "spark_sec", "spark_size", "spark_color", "ring_sec", "ring_width", "ring_color", "max_effects", "shield_radius", "shield_color", "link_color", "link_size", "link_height", "aura_color", "aura_width", "beam_sec", "beam_width", "beam_color", "snare_color", "rebuild_color", "rebuild_radius", "guard_radius", "guard_color", "bounty_radius", "bounty_width", "bounty_color", "mark_tint", "haste_tint"],
       "properties": {
         "flash_sec": {"$ref": "#/$defs/pos_sec"},
         "death_sec": {"$ref": "#/$defs/pos_sec"},
@@ -90,7 +90,25 @@
         "ring_color": {"$ref": "#/$defs/rgb"},
         "max_effects": {"type": "integer", "minimum": 1, "maximum": 4096},
         "shield_radius": {"type": "number", "exclusiveMinimum": 0},
-        "shield_color": {"$ref": "#/$defs/rgba"}
+        "shield_color": {"$ref": "#/$defs/rgba"},
+        "link_color": {"$ref": "#/$defs/rgb", "description": "Relationship marker above a tower with an active synergy (D-163)."},
+        "link_size": {"type": "number", "exclusiveMinimum": 0},
+        "link_height": {"type": "number", "minimum": 0},
+        "aura_color": {"$ref": "#/$defs/rgb"},
+        "aura_width": {"type": "number", "exclusiveMinimum": 0},
+        "beam_sec": {"$ref": "#/$defs/pos_sec"},
+        "beam_width": {"type": "number", "exclusiveMinimum": 0},
+        "beam_color": {"$ref": "#/$defs/rgb"},
+        "snare_color": {"$ref": "#/$defs/rgb"},
+        "rebuild_color": {"$ref": "#/$defs/rgb"},
+        "rebuild_radius": {"type": "number", "exclusiveMinimum": 0},
+        "guard_radius": {"type": "number", "exclusiveMinimum": 0},
+        "guard_color": {"$ref": "#/$defs/rgba"},
+        "bounty_radius": {"type": "number", "exclusiveMinimum": 0},
+        "bounty_width": {"type": "number", "exclusiveMinimum": 0},
+        "bounty_color": {"$ref": "#/$defs/rgb"},
+        "mark_tint": {"$ref": "#/$defs/rgba", "description": "rgb = tint colour, a = mix amount (D-163)."},
+        "haste_tint": {"$ref": "#/$defs/rgba", "description": "rgb = tint colour, a = mix amount (D-163)."}
       }
     }
   }

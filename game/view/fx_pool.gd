@@ -2,9 +2,9 @@ class_name FxPool
 extends RefCounted
 ## Combat effects as SoA, spawned from sim events, aged in view seconds (D-120). No Node,
 ## testable headless; FxLayer draws them. Capped at fx.max_effects: new ones are dropped when full.
-## The Guardian stands at the origin (D-107).
+## The Guardian stands at the origin (D-107). State overlays live in FxOverlays (D-163).
 
-enum Kind { PUFF, COIN, SHOT, SPARK, RING }
+enum Kind { PUFF, COIN, SHOT, SPARK, RING, BEAM }
 
 ## Effect start (x0, z0) and end (x1, z1); a RING keeps its radius in x1.
 var kind: PackedInt32Array = PackedInt32Array()
@@ -27,6 +27,9 @@ var _tower_color: PackedColorArray = PackedColorArray()
 var _coin_color: Color
 var _spark_color: Color
 var _ring_color: Color
+var _beam_color: Color
+var _snare_color: Color
+var _rebuild_color: Color
 
 
 func _init(cfg: Dictionary, world: SimWorld) -> void:
@@ -41,6 +44,9 @@ func _init(cfg: Dictionary, world: SimWorld) -> void:
 	_coin_color = HordeRenderer.rgb(fx.coin_color)
 	_spark_color = HordeRenderer.rgb(fx.spark_color)
 	_ring_color = HordeRenderer.rgb(fx.ring_color)
+	_beam_color = HordeRenderer.rgb(fx.beam_color)
+	_snare_color = HordeRenderer.rgb(fx.snare_color)
+	_rebuild_color = HordeRenderer.rgb(fx.rebuild_color)
 
 
 func count() -> int:
@@ -69,9 +75,26 @@ func read_events(world: SimWorld) -> void:
 			if world.catalog.attack_range[a] > 0.0:
 				add(Kind.SHOT, x, z, 0.0, 0.0, float(fx.shot_sec), _enemy_color[a], float(fx.shot_width))
 		elif k == SimEvents.Kind.SKILL_USED:
-			if world.run.skill_kind[a] == RunData.Skill.AREA_BLAST:
+			var skill := world.run.skill_kind[a]
+			if skill == RunData.Skill.AREA_BLAST:
 				add(Kind.RING, 0.0, 0.0, world.run.skill_radius[a], 0.0, float(fx.ring_sec),
 					_ring_color, float(fx.ring_width))
+			elif skill == RunData.Skill.SNARE:
+				add(Kind.RING, 0.0, 0.0, world.run.skill_radius[a], 0.0, float(fx.ring_sec),
+					_snare_color, float(fx.ring_width))
+			elif skill == RunData.Skill.REBUILD:
+				add(Kind.RING, 0.0, 0.0, float(fx.rebuild_radius), 0.0, float(fx.ring_sec),
+					_rebuild_color, float(fx.ring_width))
+		elif k == SimEvents.Kind.TOWER_REPAIRED:  # x, z = the repairer (D-163)
+			var hx := 0.0
+			var hz := 0.0
+			if a >= 0:
+				var t := world.towers.uid.find(a)
+				if t < 0:
+					continue
+				hx = world.towers.pos_x[t]
+				hz = world.towers.pos_z[t]
+			add(Kind.BEAM, x, z, hx, hz, float(fx.beam_sec), _beam_color, float(fx.beam_width))
 		elif k == SimEvents.Kind.TOWER_HIT:
 			var t := world.towers.uid.find(a)
 			if t >= 0:
