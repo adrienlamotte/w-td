@@ -1,8 +1,8 @@
 # 045 — Sim: run-scope card effects (build radius, rebuild price, detour damage)
-- Status: planned
+- Status: review
 - Milestone: M3
 - Depends on: 033
-- PR:
+- PR: #45
 
 ## Goal
 The three card effects that change existing sim rules work: `perk_expand` grows the build radius, `perk_masonry` halves the rebuild price, `perk_maze` adds damage to enemies that are detouring. Split out of 033 to keep both PRs reviewable; 033 already puts these entries in the modifier store.
