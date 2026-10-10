@@ -20,7 +20,7 @@ Reason: stay clearly out of adult-only territory to keep store access and paymen
 
 ## 3. AI content disclosure (Steam) **[D to comply]**
 - Steam asks developers to disclose generative AI used for content that ships to players, including art, sound, narrative, and store/marketing assets; the disclosure is shown on the store page.
-- Two categories exist: content generated during development (pre-generated) and content generated while the game runs (live-generated). **This project uses only pre-generated AI content. No live-generated AI in the game.** **[D]**
+- Two categories exist: content generated during development (pre-generated) and content generated while the game runs (live-generated). **This project uses only pre-generated AI content. No live-generated AI in the game.** **[P]** (D-022 is still PROPOSED in `DECISIONS.md`; confirmation asked in Q-75; the project follows it meanwhile.)
 - Development-only uses that do not ship (code assistants, ideation concept art that is never shipped) are treated differently by Steam's current guidance; confirm the current wording on the Steam developer docs before submission.
 - Obligation: the content must not be illegal or infringing, and the store page promises must match the game.
 - The asset manifest (`03_ART_PIPELINE.md`) is the source of truth for the disclosure text.

@@ -2,9 +2,9 @@
 
 Agents: do not implement items here without an owner answer. The design assistant converts these into forms for the owner.
 
-Format: each question has a stable ID (`Q-nn`, never reused), a milestone it blocks, 2-4 options and a **recommended default** (marked ★). Until the owner answers, agents use the ★ default only where the item says "safe to assume" and flag it in their report; otherwise they do not implement. The list is ordered by priority: blockers for the current milestone (M0) first, then M1, M2, M3 and later, then compliance-critical and long-term items.
+Format: each question has a stable ID (`Q-nn`, never reused), a milestone it blocks, 2-4 options and a **recommended default** (marked ★). Until the owner answers, agents use the ★ default only where the item says "safe to assume" and flag it in their report; otherwise they do not implement. The list is ordered by priority: blockers for the current milestone first (M3 at the time of this review), then later milestones, then compliance-critical and long-term items.
 
-Last reviewed: 2026-10-08 (daily docs review; owner answers recorded the same day).
+Last reviewed: 2026-10-10 (daily docs review). Q-59 to Q-69 are answered on `m3/dev` (D-130 to D-143) and reach `main` at CP-M3; new IDs below continue after Q-69.
 
 ---
 
@@ -71,6 +71,47 @@ Last reviewed: 2026-10-08 (daily docs review; owner answers recorded the same da
 
 ---
 
+## Open, ordered by priority
+
+### M3 blockers (found while reading `docs/10_M3_CONTENT.md` on `m3/dev`; proposals only, nothing is decided)
+
+### Q-70 Do settings survive a restart? (blocks task 039 hub, small)
+`01_GAME_DESIGN.md` 9 and D-046 make "slow time while placing" an accessibility option, but D-125 keeps settings session-only and `10_M3_CONTENT.md` 7 does not save them. Steam Deck players would re-enable it on every launch.
+- A) **Small separate `user://settings.json` (toggles only, no gameplay data), written on change** ★
+- B) Store settings inside `profile.json`.
+- C) Keep session-only until the M6 settings screen.
+
+### Q-71 What does "Resume" give back after the app is closed mid-wave? (blocks task 036)
+D-053 / `10_M3_CONTENT.md` 7: suspend saves exist only at card and wave boundaries, so closing the game mid-wave rewinds the run to the wave start (up to ~60 s lost, and the player can replay the wave differently). D-053 also says a run "cannot be resumed after the app is closed", which reads as contradicting the Resume button.
+- A) **Accept the rewind; Resume restores the last boundary; reword D-053's sentence in the docs after the owner confirms** ★
+- B) Add an extra suspend save every 15 s of wave time (more files written, nearly no rewind).
+- C) Closing mid-wave counts as abandon (loss hearts), no Resume except after a Steam Deck sleep.
+
+### Q-72 What happens to the "Main menu" button in the pause menu? (blocks task 039)
+`06.1` says Main menu abandons the run and grants loss hearts, but the flow in task 039 is start screen -> hub -> run, so "main menu" is ambiguous, and one mis-click would forfeit a 14-minute run.
+- A) **A confirm dialog ("Abandon run? You keep N hearts"), default button = Cancel, then go to the hub** ★
+- B) Same, but go to the start screen.
+- C) No confirm dialog.
+
+### Q-73 What if `profile.json` cannot be read? (task 035)
+Spec keeps the bad file as `profile.bad.json` but not what the player sees.
+- A) **Show a one-screen notice, start with a fresh profile, keep `profile.bad.json` untouched** ★
+- B) Block the game with an error screen and a retry button until the file is fixed or removed.
+- C) Silently start fresh (not recommended: players lose progress without knowing).
+
+### Q-74 Is there anything to spend hearts on after the 12-node tree is bought? (not blocking M3; needed by M5)
+The tree totals 1240 hearts (about 12 wins); after that every win gives hearts that buy nothing until outfits/bond exist (bond is not hearts, D-052).
+- A) **Nothing in M3; decide with outfits and tiers in M5, accept dead hearts meanwhile** ★
+- B) Add 2-3 repeatable, capped nodes (e.g. +1% gold per level).
+- C) Hearts also buy outfits (conflicts with D-052 "bond only gates outfits", would need a new decision).
+
+### Q-75 Confirm D-022 (no live-generated AI content)? (compliance, before M6)
+D-022 is still PROPOSED in `DECISIONS.md`, but `05_STEAM_AND_COMPLIANCE.md` 3 states it as [D]. The store disclosure text depends on it.
+- A) **Confirm: only pre-generated AI content, ever** ★
+- B) Keep proposed until the Steam disclosure review in M6.
+
+---
+
 ## A. Deferred until the first real asset arrives
 
 ### Q-37 Where are large art files stored? (DEFERRED by the owner: decide when the first real asset arrives)
@@ -95,3 +136,5 @@ Estimated in `reports/perf_m1.md` (D-080); real Deck run pending, by M6.
 - `DECISIONS.md` D-013 note ("Whether unlocked waifus can be Guardians later is OPEN") is partly overtaken by D-027; see Q-28. Not edited here because decision rows are owner-only.
 - D-021 (chibi) is superseded by D-030.
 - D-024 still says "special story bosses"; D-028 already clarifies that this means named rival bosses. `01_GAME_DESIGN.md` wording was aligned.
+- Status drift in `DECISIONS.md` (owner-only rows, not edited): D-019 is PROPOSED but D-091 made it DECIDED; D-066 and D-069 are PROPOSED but D-076 confirmed them; D-022 see Q-75.
+- After the CP-M3 merge, `01_GAME_DESIGN.md` 3 still says the offer order and starter pair are open (Q-23), but D-130 answers them; `06_ROADMAP.md` M5 still cites Q-13/Q-22 (answered). Fix when `m3/dev` lands, since D-130 is not on `main` yet.

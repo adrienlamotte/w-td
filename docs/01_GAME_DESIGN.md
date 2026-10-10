@@ -28,10 +28,8 @@ Tone: cute and comedic fantasy. **[D]** All characters are clearly adult with ad
 - **Roster target at Early Access launch: 8-10 waifus.** **[D]**
 - **Starter roster:** 2 waifus are unlocked from the start as towers and count toward the 8-10; Guardians are picked among the remaining locked waifus (D-031). **[D]** Which two: **[O]** (Q-23).
 
-### Known rule gaps (implementation blockers) **[O]**
-Agents must not guess these; each has options and a recommended default in `OPEN_QUESTIONS.md`.
-| Gap | Question |
-|---|---|
+### Known rule gaps (implementation blockers)
+None are listed here; open rule questions live only in `OPEN_QUESTIONS.md` (each with options and a recommended default). Agents must not guess them.
 
 ## 4. Player actions **[D]**
 - **Build:** both real-time during action (spending resources dropped by kills) **and** during the short breaks between waves (D-032).
