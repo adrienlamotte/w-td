@@ -38,14 +38,19 @@ static func load_profile(cat: MetaCatalog, dir := "user://") -> MetaProfile:
 	return MetaProfile.fresh(cat)
 
 
-## Atomic save: write the temp file, then rename it over the profile.
+## Atomic save of the profile.
 static func save_profile(p: MetaProfile, dir := "user://") -> Error:
-	var tmp := dir.path_join(TMP)
-	var path := dir.path_join(FILE)
+	return write_atomic(dir.path_join(FILE), JSON.stringify(p.to_dict(), "	") + "
+")
+
+
+## Atomic write: `path`.tmp first, then renamed over `path` (also the suspend save, D-167).
+static func write_atomic(path: String, text: String) -> Error:
+	var tmp := path + ".tmp"
 	var f := FileAccess.open(tmp, FileAccess.WRITE)
 	if f == null:
 		return FileAccess.get_open_error()
-	f.store_string(JSON.stringify(p.to_dict(), "\t") + "\n")
+	f.store_string(text)
 	f.close()
 	if DirAccess.rename_absolute(tmp, path) == OK:
 		return OK
@@ -55,10 +60,12 @@ static func save_profile(p: MetaProfile, dir := "user://") -> Error:
 
 ## Run end (D-152 rule 5): load, record, save once. Returns {"hearts": earned,
 ## "unlocked": the waifu this run rescued, "" if none}. A RUNNING run is recorded as a loss.
+## Every run end comes here, so it also deletes the suspend save (D-167 rule 3).
 static func record_run_end(world: SimWorld, dir := "user://") -> Dictionary:
 	var cat := world.meta if world.meta else MetaCatalog.load_dir()
 	var p := load_profile(cat, dir)
 	var before := p.unlocked.size()
 	var earned := p.record_run(cat, world.run, world.run_state == SimWorld.RunState.WON, world.clock)
 	save_profile(p, dir)
+	SuspendStore.delete(dir)
 	return {"hearts": earned, "unlocked": p.unlocked[before] if p.unlocked.size() > before else ""}

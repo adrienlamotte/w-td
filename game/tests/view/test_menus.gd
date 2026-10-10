@@ -6,7 +6,8 @@ const PAUSE := preload("res://view/ui/pause_menu.tscn")
 const END := preload("res://view/ui/end_screen.tscn")
 const KEYS := ["flow.title", "flow.play", "flow.quit", "flow.resume", "flow.restart",
 	"flow.abandon", "flow.abandon_confirm", "flow.cancel", "flow.continue", "flow.hearts_earned",
-	"flow.unlocked", "flow.slow_time", "flow.won", "flow.lost", "flow.time_survived", "hud.paused"]
+	"flow.unlocked", "flow.slow_time", "flow.won", "flow.lost", "flow.time_survived", "hud.paused",
+	"flow.suspend_failed"]
 const DIR := "user://test_menus/"
 
 var world: SimWorld
@@ -43,6 +44,7 @@ func after_each() -> void:
 	RunFlow.slow_time_placing = false
 	RunFlow.screen = RunFlow.Screen.START
 	RunFlow.restart_waifu = ""
+	SuspendStore.last_error = ""
 	for f in DirAccess.get_files_at(DIR):
 		DirAccess.remove_absolute(DIR + f)
 	DirAccess.remove_absolute(DIR)
@@ -238,6 +240,56 @@ func test_start_screen_toggle_and_signals() -> void:
 	(start.get_node("Panel/Box/Quit") as Button).pressed.emit()
 	assert_signal_emitted(start, "start_pressed")
 	assert_signal_emitted(start, "quit_pressed")
+
+
+# A suspend save of a run_m3 run with Cinder's Guardian at run clock `clock` (D-167).
+func _suspend(clock: int) -> void:
+	var w := SimWorld.new(1)
+	w.queue(SimCommand.start_run(0, 7, "run_m3", "guardian_cinder"))
+	w.step()
+	w.clock = clock
+	assert_eq(SuspendStore.save(w, DIR), OK)
+
+
+func test_start_screen_abandon_suspended_run() -> void:
+	_suspend(13500)
+	var start: StartScreen = START.instantiate()
+	add_child_autofree(start)
+	assert_false(start.get_node("Panel/Box/Start").visible, "Play replaced (D-167 rule 4)")
+	assert_true(start.get_node("Panel/Box/Abandon").visible)
+	assert_true(start.get_node("Panel/Box/Resume").has_focus())
+	watch_signals(start)
+	(start.get_node("Panel/Box/Resume") as Button).pressed.emit()
+	assert_signal_emitted(start, "resume_pressed")
+	(start.get_node("Panel/Box/Abandon") as Button).pressed.emit()
+	assert_true(start.get_node("Panel/Confirm/Cancel").has_focus(), "Cancel by default (D-155)")
+	assert_eq((start.get_node("Panel/Confirm/Text") as Label).text, tr("flow.abandon_confirm").format({"n": 40}))
+	start._unhandled_input(_cancel())
+	assert_false(start.get_node("Panel/Confirm").visible, "ui_cancel = Cancel")
+	assert_true(SuspendStore.exists(DIR))
+	(start.get_node("Panel/Box/Abandon") as Button).pressed.emit()
+	(start.get_node("Panel/Confirm/Abandon") as Button).pressed.emit()
+	var p := _profile()
+	assert_eq([p.hearts, p.runs, p.losses], [40, 1, 1])
+	assert_false(SuspendStore.exists(DIR))
+	assert_true(start.get_node("Panel/Box/Start").visible, "Play is back")
+	assert_false(start.get_node("Notice").visible)
+
+
+func test_start_screen_failed_restore_notice() -> void:
+	var f := FileAccess.open(DIR + SuspendStore.FILE, FileAccess.WRITE)
+	f.store_string("garbage")
+	f.close()
+	SuspendStore.abandon(DIR)
+	assert_eq(_profile().runs, 0, "no readable header: nothing recorded")
+	var start: StartScreen = START.instantiate()
+	add_child_autofree(start)
+	assert_true(start.get_node("Notice").visible)
+	assert_true(start.get_node("Notice/Box/OK").has_focus())
+	(start.get_node("Notice/Box/OK") as Button).pressed.emit()
+	assert_false(start.get_node("Notice").visible)
+	assert_eq(SuspendStore.last_error, "")
+	assert_true(start.get_node("Panel/Box/Start").has_focus())
 
 
 func test_pause_slow_time_toggle_saves() -> void:

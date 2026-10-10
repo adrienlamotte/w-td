@@ -17,6 +17,8 @@ var tick: int = 0
 var clock: int = 0
 var run_state: RunState = RunState.IDLE
 var paused: bool = false
+## Seed of the last StartRun (suspend-save header and repro logs, D-167); not hashed.
+var run_seed: int = 0
 ## Loaded by StartRun; null before.
 var run: RunData = null
 var catalog: EnemyCatalog
@@ -85,29 +87,31 @@ var recycle_radius: float = 0.0
 var _grid_count: int = -1
 var _t: int = 0
 # One RNG per concern, each seeded from the run seed (3a). Others add theirs the same way.
+# SimSnapshot (D-167) reads and restores their states and _queue (it is their only friend).
 var _spawn_rng: RandomNumberGenerator = RandomNumberGenerator.new()
 var _loot_rng: RandomNumberGenerator = RandomNumberGenerator.new()
 # Sorted by tick, then enqueue order.
 var _queue: Array[SimCommand] = []
 
 
-func _init(run_seed: int, p_catalog: EnemyCatalog = null) -> void:
+func _init(p_seed: int, p_catalog: EnemyCatalog = null) -> void:
 	catalog = p_catalog if p_catalog else EnemyCatalog.load_dir()
 	tower_catalog = TowerCatalog.load_dir()
 	cards = CardCatalog.load_dir(tower_catalog)
 	synergies = SynergyCatalog.load_dir(tower_catalog)
 	phase_usec.resize(Phase.size())
 	phase_usec_sum.resize(Phase.size())
-	_seed_rngs(run_seed)
+	run_seed = p_seed
+	_seed_rngs(p_seed)
 	movement.set_stop(catalog, 0.0)  # IDLE: no Guardian body, stop at own radius (M1)
 	# Cell size = largest horde collision diameter (3a, D-108).
 	grid = SpatialGrid.new(2.0 * catalog.max_radius)
 
 
-func _seed_rngs(run_seed: int) -> void:
-	_spawn_rng.seed = hash([run_seed, "spawns"])
-	_loot_rng.seed = hash([run_seed, "loot"])
-	draft.rng.seed = hash([run_seed, "cards"])
+func _seed_rngs(p_seed: int) -> void:
+	_spawn_rng.seed = hash([p_seed, "spawns"])
+	_loot_rng.seed = hash([p_seed, "loot"])
+	draft.rng.seed = hash([p_seed, "cards"])
 
 
 ## Queues a command. A late command (tick already passed) is stamped to the current
@@ -196,7 +200,8 @@ func _apply(cmd: SimCommand) -> void:
 		SimCommand.Type.START_RUN:
 			if run_state != RunState.IDLE:
 				return
-			_seed_rngs(cmd.run_seed)
+			run_seed = cmd.run_seed
+			_seed_rngs(run_seed)
 			run = RunData.load_id(cmd.run_id, catalog, tower_catalog, cmd.guardian_id)
 			movement.set_stop(catalog, run.guardian_contact_radius)
 			guardian_max_hp = run.guardian_hp

@@ -23,6 +23,7 @@ func _ready() -> void:
 		SettingsStore.load_into_run_flow(RunFlow.save_dir)  # every load: the file is the one truth (D-157)
 		$StartScreen.start_pressed.connect(open_hub)
 		$StartScreen.quit_pressed.connect(get_tree().quit)
+		$StartScreen.resume_pressed.connect(resume)
 		$Hub.setup(world)
 		$Hub.back_pressed.connect(open_start)
 		$PauseMenu.setup(world, $PlayerInput)
@@ -35,6 +36,11 @@ func _ready() -> void:
 	$HordeRenderer.setup(driver, $CameraRig/Camera3D)
 	$FxLayer.setup(driver, $Guardian)
 	driver.on_step = $FxLayer.on_step
+	if demo:  # card and wave boundary saves (D-167); never in the bench or the balance bot
+		var saver := SuspendSaver.new(RunFlow.save_dir)
+		driver.on_step = func() -> void:
+			$FxLayer.on_step()
+			saver.on_step(world)
 	$PlacementGhost.setup(world, $PlayerInput)
 	$Hud.setup(world, $PlayerInput, $PlacementGhost)
 
@@ -61,6 +67,18 @@ func open_hub() -> void:
 func open_start() -> void:
 	$Hub.visible = false
 	$StartScreen.visible = true
+
+
+## Resume the suspend save (D-167 rule 5); the views poll the world. A failed restore counts
+## as an abandon when the header was readable, then the start screen shows the notice (rule 6).
+func resume() -> void:
+	if SuspendStore.load_into(world, RunFlow.save_dir):
+		$StartScreen.visible = false
+		return
+	if world.run != null:
+		ProfileStore.record_run_end(world, RunFlow.save_dir)
+	RunFlow.screen = RunFlow.Screen.START
+	reload()
 
 
 ## Leaving a run reloads the scene: a fresh SimWorld and fresh views (D-125).

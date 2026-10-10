@@ -61,7 +61,7 @@ func test_record_run_loss_and_placeholder() -> void:
 	assert_eq(p.unlocked.size(), 0, "the placeholder Guardian unlocks nothing")
 
 
-func test_record_run_before_the_first_wave() -> void:
+func test_record_run_before_hearts_min_sec() -> void:
 	run.guardian_id = "guardian_cinder"
 	assert_eq(p.record_run(cat, run, false, 0), 0)
 	assert_eq([p.hearts, p.runs, p.losses], [0, 1, 1], "still counted (D-165 is hearts only, D-166)")
