@@ -5,7 +5,7 @@ extends GutTest
 const ACTIONS: Array[String] = ["cam_pan_up", "cam_pan_down", "cam_pan_left", "cam_pan_right",
 	"menu_up", "menu_down", "menu_left", "menu_right", "cam_zoom_in", "cam_zoom_out",
 	"cam_recentre", "build_menu", "build_slot_1", "build_slot_2", "build_slot_3", "build_place",
-	"build_cancel", "tower_sell", "skill_1", "skill_2", "pause"]
+	"build_cancel", "tower_sell", "tower_upgrade", "skill_1", "skill_2", "pause"]
 ## Gamepad only: keyboard/mouse pans with WASD and builds with the slot keys instead.
 const PAD_ONLY: Array[String] = ["menu_up", "menu_down", "menu_left", "menu_right", "build_menu"]
 ## Keyboard only: the gamepad picks a tower with the radial menu (build_menu) instead.
@@ -118,6 +118,32 @@ func test_pad_rebuild_and_sell() -> void:
 	assert_eq(_queued().size(), 1)
 	assert_eq(_queued()[0].type, SimCommand.Type.REBUILD_TOWER)
 	assert_eq(_queued()[0].tower_uid, uid)
+
+
+func test_upgrade() -> void:
+	var uid := TowerBuilding.add_built(world, world.tower_catalog.type_of("tower_pip"), 3.0, 4.0, 50)
+	input.cursor = Vector2(3.2, 4.1)
+	input.handle(_key(KEY_R))
+	cam.position = Vector3(3.2, 0.0, 4.1)
+	input.handle(_pad(JOY_BUTTON_DPAD_UP))
+	assert_true(input.gamepad, "d-pad: cursor = focus")
+	var q := _queued()
+	assert_eq(q.size(), 2)
+	for c in q:
+		assert_eq(c.type, SimCommand.Type.UPGRADE_TOWER)
+		assert_eq(c.tower_uid, uid)
+	world._queue.clear()
+	cam.position = Vector3(-5.0, 0.0, -5.0)
+	input.handle(_pad(JOY_BUTTON_DPAD_UP))
+	assert_eq(_queued().size(), 0, "nothing under the cursor")
+	cam.position = Vector3(3.0, 0.0, 4.0)
+	world.paused = true
+	input.handle(_pad(JOY_BUTTON_DPAD_UP))
+	assert_eq(_queued().size(), 0, "paused")
+	world = SimWorld.new(1)
+	input.world = world
+	input.handle(_key(KEY_R))
+	assert_eq(_queued().size(), 0, "idle")
 
 
 func test_pad_skills_fire_once_per_pull() -> void:

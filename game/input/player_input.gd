@@ -121,6 +121,10 @@ func _build(event: InputEvent) -> void:
 		var uid := tower_uid_at(world, cursor)
 		if uid >= 0:
 			world.queue(SimCommand.sell_tower(world.tick, uid))
+	elif _pressed(event, &"tower_upgrade"):
+		var uid := tower_uid_at(world, cursor)
+		if uid >= 0:  # the sim refuses a husk, max level, locked or no gold (D-151)
+			world.queue(SimCommand.upgrade_tower(world.tick, uid))
 
 
 func _process(delta: float) -> void:

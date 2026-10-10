@@ -1,7 +1,8 @@
 class_name PlacementGhost
 extends Node3D
 ## Placement ghost and cursor hints (D-122). Verdict, snapped centre and price come only from
-## TowerBuilding.check_place; sell and rebuild numbers from sell_refund and rebuild_price.
+## TowerBuilding.check_place; sell and rebuild numbers from sell_refund and rebuild_price,
+## upgrade line from TowerUpgrade.check (D-151).
 ## One check_place per frame; the HUD cursor label shows `hints`.
 
 const CONFIG_PATH := "res://data/ui/ui_default.json"
@@ -11,6 +12,13 @@ const REASON_KEYS := {
 	TowerBuilding.Reason.OUT_OF_RADIUS: "build.reason.out_of_radius",
 	TowerBuilding.Reason.TOO_CLOSE: "build.reason.too_close",
 	TowerBuilding.Reason.NO_GOLD: "build.reason.no_gold",
+}
+## Upgrade line per TowerUpgrade.check verdict (D-151); HUSK and NO_TOWER show no line.
+const UPGRADE_KEYS := {
+	TowerUpgrade.Reason.OK: "upgrade.hint",
+	TowerUpgrade.Reason.NO_GOLD: "upgrade.reason.no_gold",
+	TowerUpgrade.Reason.LOCKED: "upgrade.reason.locked",
+	TowerUpgrade.Reason.MAX_LEVEL: "upgrade.reason.max_level",
 }
 
 var world: SimWorld
@@ -49,6 +57,10 @@ static func hint(w: SimWorld, p_input: PlayerInput, c: TowerBuilding.Check = nul
 	if w.towers.husk[t]:
 		out.append({"key": "build.hint.rebuild",
 			"values": {"key": glyph + "build_place", "gold": TowerBuilding.rebuild_price(w, t)}})
+	elif w.tower_catalog.max_level[w.towers.type_id[t]] > 1:
+		var u := TowerUpgrade.check(w, uid)
+		out.append({"key": UPGRADE_KEYS[u.reason],
+			"values": {"key": glyph + "tower_upgrade", "gold": u.price, "level": u.level}})
 	out.append({"key": "build.hint.sell",
 		"values": {"key": glyph + "tower_sell", "gold": TowerBuilding.sell_refund(w, t)}})
 	return out
