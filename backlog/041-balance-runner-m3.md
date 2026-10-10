@@ -1,5 +1,5 @@
 # 041 — Balance: M3 headless runner and first balance report
-- Status: changes
+- Status: review
 - Milestone: M3
 - Depends on: 032, 033, 034, 035, 045
 - Labels: needs-human:balance
