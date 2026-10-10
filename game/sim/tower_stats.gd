@@ -4,8 +4,10 @@ extends RefCounted
 ## SimTowers derived arrays on add_built (apply) and, when `stats_dirty`, once at the end of
 ## the PATH phase (recompute); never per tick otherwise. Bare towers (type -1) are skipped.
 
-## Stats the modifier store can change, in the order of the cached sums.
-const MODDED: PackedStringArray = ["range", "damage", "cooldown", "hp"]
+## Stats the modifier store and the synergies can change, in the order of the cached sums
+## (TowerLinks indexes them).
+const MODDED: PackedStringArray = ["range", "damage", "cooldown", "hp", "slow_sec", "thorns",
+		"mark_gold", "aura_radius", "heal", "guardian_heal"]
 ## Kinds that never shoot enemies: range 0, so they skip targeting (D-145).
 const _NO_TARGET: Array[int] = [TowerCatalog.Attack.WALL, TowerCatalog.Attack.AURA, TowerCatalog.Attack.REPAIR]
 
@@ -16,20 +18,31 @@ static func apply(w: SimWorld, t: int) -> void:
 	w.towers.hp[t] = w.towers.max_hp[t]
 
 
-## Every built tower, with the modifier sums cached per type. A live tower whose max HP rises
-## gains the difference, a fall clamps `hp`; husks keep 0. Clears `stats_dirty`.
+## Every built tower, with the modifier sums cached per type plus each tower's links (synergies,
+## aura; TowerLinks, D-150). A live tower whose max HP rises gains the difference, a fall clamps
+## `hp`; husks keep 0. Clears `stats_dirty`.
 static func recompute(w: SimWorld) -> void:
 	var towers := w.towers
 	var cache: Array = []
 	cache.resize(w.tower_catalog.ids.size())
 	for t in towers.count():
 		var type := towers.type_id[t]
+		if type >= 0 and cache[type] == null:
+			cache[type] = _sums(w, type)
+	w.links.compute(w, cache)
+	var extra := w.links.extra
+	var n := MODDED.size()
+	for t in towers.count():
+		var type := towers.type_id[t]
 		if type < 0:
 			continue
-		if cache[type] == null:
-			cache[type] = _sums(w, type)
+		var s: PackedVector2Array = cache[type]
+		if not extra.is_empty():
+			s = s.duplicate()
+			for k in n:
+				s[k] += extra[t * n + k]
 		var old_max := towers.max_hp[t]
-		_derive(w, t, cache[type])
+		_derive(w, t, s)
 		if towers.husk[t]:
 			continue
 		var new_max := towers.max_hp[t]
@@ -73,7 +86,11 @@ static func _derive(w: SimWorld, t: int, s: PackedVector2Array) -> void:
 	towers.max_hp[t] = value(lv.hp, s[3])
 	towers.splash_radius[t] = lv.splash_radius
 	towers.slow_factor[t] = lv.slow_factor
-	towers.slow_ticks[t] = DataFiles.ticks(lv.slow_sec)
-	towers.thorns[t] = lv.thorns
-	towers.mark_gold[t] = int(lv.mark_gold)
+	towers.slow_ticks[t] = DataFiles.ticks(value(lv.slow_sec, s[4]))
+	towers.thorns[t] = value(lv.thorns, s[5])
+	towers.mark_gold[t] = roundi(value(lv.mark_gold, s[6]))
 	towers.mark_ticks[t] = DataFiles.ticks(lv.mark_sec)
+	towers.reach[t] = value(lv.aura_radius, s[7]) if kind == TowerCatalog.Attack.AURA 			else value(lv.range, s[0]) if kind == TowerCatalog.Attack.REPAIR else 0.0
+	towers.heal[t] = value(lv.heal, s[8])
+	towers.guardian_heal[t] = value(lv.guardian_heal, s[9])
+	towers.heal_targets[t] = int(lv.heal_targets)

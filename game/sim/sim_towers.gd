@@ -42,6 +42,14 @@ var thorns: PackedFloat32Array = PackedFloat32Array()
 ## Mark shot (D-145): extra gold of a marked enemy's death, mark duration in ticks.
 var mark_gold: PackedInt32Array = PackedInt32Array()
 var mark_ticks: PackedInt32Array = PackedInt32Array()
+## Aura radius (aura) or heal range (repair), 0 for other kinds (D-150).
+var reach: PackedFloat32Array = PackedFloat32Array()
+## Repair (D-150): HP per tower heal, HP per Guardian heal, towers healed per pulse.
+var heal: PackedFloat32Array = PackedFloat32Array()
+var guardian_heal: PackedFloat32Array = PackedFloat32Array()
+var heal_targets: PackedInt32Array = PackedInt32Array()
+## Active relationship rules, bit = SynergyCatalog rule index (D-150).
+var syn_mask: PackedInt32Array = PackedInt32Array()
 ## Set by every layout, level or modifier change; TowerStats.recompute clears it in the PATH phase.
 var stats_dirty: bool = false
 
@@ -75,6 +83,11 @@ func add(x: float, z: float, p_range: float) -> int:
 	thorns.append(0.0)
 	mark_gold.append(0)
 	mark_ticks.append(0)
+	reach.append(0.0)
+	heal.append(0.0)
+	guardian_heal.append(0.0)
+	heal_targets.append(0)
+	syn_mask.append(0)
 	return pos_x.size() - 1
 
 
@@ -104,6 +117,11 @@ func remove(t: int) -> void:
 	thorns[t] = thorns[last]
 	mark_gold[t] = mark_gold[last]
 	mark_ticks[t] = mark_ticks[last]
+	reach[t] = reach[last]
+	heal[t] = heal[last]
+	guardian_heal[t] = guardian_heal[last]
+	heal_targets[t] = heal_targets[last]
+	syn_mask[t] = syn_mask[last]
 	pos_x.resize(last)
 	pos_z.resize(last)
 	attack_range.resize(last)
@@ -127,6 +145,11 @@ func remove(t: int) -> void:
 	thorns.resize(last)
 	mark_gold.resize(last)
 	mark_ticks.resize(last)
+	reach.resize(last)
+	heal.resize(last)
+	guardian_heal.resize(last)
+	heal_targets.resize(last)
+	syn_mask.resize(last)
 
 
 ## Towers of this catalog type on the field, husks included (D-113).

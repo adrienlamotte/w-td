@@ -42,7 +42,9 @@ var level_stats: Array = []
 
 ## Level 1 values of the stats a kind may lack.
 const _LEVEL_DEFAULTS := {"range": 0.0, "damage": 0.0, "cooldown_sec": 0.0, "splash_radius": 0.0,
-		"slow_factor": 1.0, "slow_sec": 0.0, "thorns": 0.0, "mark_sec": 0.0, "mark_gold": 0}
+		"slow_factor": 1.0, "slow_sec": 0.0, "thorns": 0.0, "mark_sec": 0.0, "mark_gold": 0,
+		"aura_radius": 0.0, "aura_damage": 0.0, "aura_cooldown": 0.0, "heal": 0.0, "guardian_heal": 0.0,
+		"heal_targets": 1}
 
 
 static func load_dir(path: String = "res://data/towers") -> TowerCatalog:

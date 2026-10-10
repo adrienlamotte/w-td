@@ -36,6 +36,8 @@ var xp_step: float = 0.0
 ## Draft type weights in CardCatalog.Type order (new_tower, signature, skill, perk).
 var card_type_weights: PackedFloat32Array = PackedFloat32Array()
 
+## The Guardian file of this run (StartRun's choice, else the run file's).
+var guardian_id: String = ""
 var guardian_hp: float = 0.0
 var guardian_contact_radius: float = 0.0
 ## Skills, indexed by skill slot. Fields a kind does not use are 0.
@@ -60,7 +62,7 @@ var signature_slot: int = -1
 
 
 ## An empty `guardian_id` keeps the run file's Guardian (D-146).
-static func load_id(run_id: String, enemies: EnemyCatalog, towers: TowerCatalog, guardian_id := "") -> RunData:
+static func load_id(run_id: String, enemies: EnemyCatalog, towers: TowerCatalog, p_guardian_id := "") -> RunData:
 	var d := DataFiles.read_id(DIR + "/runs", run_id)
 	var run := RunData.new()
 	run.id = run_id
@@ -92,12 +94,13 @@ static func load_id(run_id: String, enemies: EnemyCatalog, towers: TowerCatalog,
 	run.xp_step = d.xp_step
 	for k in CardCatalog.Type.FILLER:
 		run.card_type_weights.append(d.card_type_weights[CardCatalog.TYPE_NAMES[k]])
-	run._load_guardian(guardian_id if guardian_id != "" else String(d.guardian))
+	run._load_guardian(p_guardian_id if p_guardian_id != "" else String(d.guardian))
 	return run
 
 
-func _load_guardian(guardian_id: String) -> void:
-	var g := DataFiles.read_id(DIR + "/guardians", guardian_id)
+func _load_guardian(p_id: String) -> void:
+	guardian_id = p_id
+	var g := DataFiles.read_id(DIR + "/guardians", p_id)
 	guardian_hp = g.hp
 	guardian_contact_radius = g.contact_radius
 	for skill_id: String in g.skills:
