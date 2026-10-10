@@ -32,6 +32,9 @@ func _init(p_strategy: String) -> void:
 func act(w: SimWorld) -> void:
 	if w.run_state != SimWorld.RunState.RUNNING or w.paused:
 		return
+	if w.draft.drafting:  # always the first card (D-147), so runs stay comparable
+		w.queue(SimCommand.pick_card(w.tick, 0))
+		return
 	for slot in w.run.skill_ids.size():
 		if w.skills.ready_at[slot] <= w.clock:
 			w.queue(SimCommand.use_skill(w.tick, w.run.skill_ids[slot]))

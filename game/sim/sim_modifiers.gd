@@ -36,16 +36,18 @@ func sums(p_stat: String, tower_id: String) -> Vector2:
 func skill_sums(p_stat: String, skill_id: String, is_signature: bool) -> Vector2:
 	var out := Vector2.ZERO
 	for e in stat.size():
-		if stat[e] == p_stat and (target[e] == "guardian" or target[e] == "skill:" + skill_id 				or (is_signature and target[e] == "signature")):
+		if stat[e] == p_stat and (target[e] == "guardian" or target[e] == "skill:" + skill_id \
+				or (is_signature and target[e] == "signature")):
 			out += Vector2(value[e], 0.0) if op[e] == Op.ADD else Vector2(0.0, value[e])
 	return out
 
 
-## (sum of add, sum of mult) over the entries targeting `guardian` (her max HP).
-func guardian_sums(p_stat: String) -> Vector2:
+## (sum of add, sum of mult) over the entries whose target is exactly `p_target`
+## (`guardian`: her max HP; `run`: the run-scope stats, D-147).
+func target_sums(p_stat: String, p_target: String) -> Vector2:
 	var out := Vector2.ZERO
 	for e in stat.size():
-		if stat[e] == p_stat and target[e] == "guardian":
+		if stat[e] == p_stat and target[e] == p_target:
 			out += Vector2(value[e], 0.0) if op[e] == Op.ADD else Vector2(0.0, value[e])
 	return out
 

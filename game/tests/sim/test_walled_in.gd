@@ -24,6 +24,7 @@ func _new_run(run_seed: int) -> SimWorld:
 	w.run.boss_ticks = PackedInt32Array()
 	w.guardian_hp = HP
 	w.gold = 1 << 30
+	w.draft.xp_next = INF  # no level-up drafts (D-147): these tests kill many enemies
 	return w
 
 

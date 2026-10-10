@@ -21,6 +21,8 @@ var attack_cooldown: PackedInt32Array = PackedInt32Array()
 ## (gold is the only drop type, D-094).
 var gold: PackedInt32Array = PackedInt32Array()
 var gold_chance: PackedFloat32Array = PackedFloat32Array()
+## XP given on death (D-147).
+var xp: PackedFloat32Array = PackedFloat32Array()
 ## 1 for archetype miniboss or boss.
 var is_boss: PackedByteArray = PackedByteArray()
 ## Largest radius over the horde (non-boss) types only: it sizes the spatial grid
@@ -46,6 +48,7 @@ static func load_dir(path: String = "res://data/enemies") -> EnemyCatalog:
 		catalog.attack_cooldown.append(DataFiles.ticks(data.attack_cooldown_sec))
 		catalog.gold.append(int(drop.amount))
 		catalog.gold_chance.append(drop.chance)
+		catalog.xp.append(data.xp)
 		catalog.is_boss.append(1 if boss else 0)
 		if not boss:
 			catalog.max_radius = maxf(catalog.max_radius, data.radius)

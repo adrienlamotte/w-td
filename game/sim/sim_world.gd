@@ -21,6 +21,16 @@ var paused: bool = false
 var run: RunData = null
 var catalog: EnemyCatalog
 var tower_catalog: TowerCatalog
+var cards: CardCatalog
+## XP, levels and the level-up draft (D-147); reset at StartRun.
+var draft: CardDraft = CardDraft.new()
+## Buildable tower types this run: run.tower_types at StartRun, plus card unlocks (D-147). Hashed.
+var tower_types: PackedInt32Array = PackedInt32Array()
+## Rescued waifu ids from StartRun (card eligibility, D-147). Hashed.
+var unlocked: PackedStringArray = PackedStringArray()
+## Run-scope multipliers (1 + sum of mult) of `xp` and `kill_gold`, cached with the tower stats.
+var xp_mult: float = 1.0
+var kill_gold_mult: float = 1.0
 ## Events of the last step(), cleared at its start.
 var events: SimEvents = SimEvents.new()
 var enemies: SimEnemies = SimEnemies.new()
@@ -68,6 +78,7 @@ var _queue: Array[SimCommand] = []
 func _init(run_seed: int, p_catalog: EnemyCatalog = null) -> void:
 	catalog = p_catalog if p_catalog else EnemyCatalog.load_dir()
 	tower_catalog = TowerCatalog.load_dir()
+	cards = CardCatalog.load_dir(tower_catalog)
 	phase_usec.resize(Phase.size())
 	phase_usec_sum.resize(Phase.size())
 	_seed_rngs(run_seed)
@@ -79,6 +90,7 @@ func _init(run_seed: int, p_catalog: EnemyCatalog = null) -> void:
 func _seed_rngs(run_seed: int) -> void:
 	_spawn_rng.seed = hash([run_seed, "spawns"])
 	_loot_rng.seed = hash([run_seed, "loot"])
+	draft.rng.seed = hash([run_seed, "cards"])
 
 
 ## Queues a command. A late command (tick already passed) is stamped to the current
@@ -111,12 +123,13 @@ func step() -> void:
 	while not _queue.is_empty() and _queue[0].tick <= tick:
 		_apply(_queue.pop_front())
 	_lap(Phase.COMMANDS)
-	if paused or run_state == RunState.WON or run_state == RunState.LOST:
+	if paused or draft.drafting or run_state == RunState.WON or run_state == RunState.LOST:
 		tick += 1
 		return
 	_path()
 	if towers.stats_dirty:  # once, after any layout, level or modifier change (D-144)
 		_recompute_guardian_max()
+		_recompute_run_mults()
 		TowerStats.recompute(self)
 	_lap(Phase.PATH)
 	if _grid_count != enemies.count():  # safety net: enemies added/removed outside step()
@@ -175,13 +188,18 @@ func _apply(cmd: SimCommand) -> void:
 			build = BuildGrid.new(run.build_radius, run.grid_step)
 			modifiers = SimModifiers.new()
 			skills.reset(run.skill_ids.size())
+			draft.reset(run.xp_base, cards.ids.size())
+			tower_types = run.tower_types.duplicate()
+			unlocked = cmd.unlocked.duplicate()
+			xp_mult = 1.0
+			kill_gold_mult = 1.0
 			clock = 0
 			run_state = RunState.RUNNING
 		SimCommand.Type.PAUSE:
 			paused = cmd.paused
 		SimCommand.Type.PLACE_TOWER, SimCommand.Type.SELL_TOWER, SimCommand.Type.REBUILD_TOWER, \
 				SimCommand.Type.UPGRADE_TOWER:
-			if run_state != RunState.RUNNING or paused:  # no building while paused (D-105)
+			if run_state != RunState.RUNNING or paused or draft.drafting:  # D-105, D-147
 				return
 			if cmd.type == SimCommand.Type.PLACE_TOWER:
 				TowerBuilding.place(self, cmd)
@@ -193,11 +211,14 @@ func _apply(cmd: SimCommand) -> void:
 				TowerBuilding.rebuild(self, cmd.tower_uid)
 		SimCommand.Type.USE_SKILL:
 			_use_skill(cmd.skill_id)
+		SimCommand.Type.PICK_CARD:
+			if run_state == RunState.RUNNING and not paused:
+				draft.pick(self, cmd.slot)
 
 
 # Only while RUNNING and not paused; unknown id or cooldown: ignored, no event (D-110).
 func _use_skill(skill_id: String) -> void:
-	if run_state != RunState.RUNNING or paused:
+	if run_state != RunState.RUNNING or paused or draft.drafting:
 		return
 	var slot := run.skill_ids.find(skill_id)
 	if slot < 0 or not skills.try_use(slot, clock, SignatureSkills.cooldown_ticks(self, slot)):
@@ -211,11 +232,17 @@ func _recompute_guardian_max() -> void:
 	if run == null:
 		return
 	var old_max := guardian_max_hp
-	guardian_max_hp = TowerStats.value(run.guardian_hp, modifiers.guardian_sums("hp"))
+	guardian_max_hp = TowerStats.value(run.guardian_hp, modifiers.target_sums("hp", "guardian"))
 	if guardian_max_hp > old_max:
 		guardian_hp += guardian_max_hp - old_max
 	elif guardian_max_hp < old_max:
 		guardian_hp = minf(guardian_hp, guardian_max_hp)
+
+
+# Run-scope `xp` and `kill_gold` multipliers (D-147): (1 + add) * (1 + mult), never summed per kill.
+func _recompute_run_mults() -> void:
+	xp_mult = TowerStats.value(1.0, modifiers.target_sums("xp", "run"))
+	kill_gold_mult = TowerStats.value(1.0, modifiers.target_sums("kill_gold", "run"))
 
 
 ## Stand Firm (D-146): damage to towers and the Guardian, reduced while guarded.
@@ -270,16 +297,20 @@ func _deaths() -> void:
 		var chance := catalog.gold_chance[t]
 		var gained := 0
 		if chance >= 1.0 or _loot_rng.randf() < chance:
-			gained = catalog.gold[t]
+			# perk_bounty, rounded down per kill (D-147); the epsilon absorbs float32 sums (5 x 1.2 stays 6)
+			gained = floori(catalog.gold[t] * kill_gold_mult + 1e-4)
 		if clock < enemies.mark_until[i]:  # D-145: after the base gold, not rolled
 			gained += enemies.mark_gold[i]
 		gained += bounty
 		gold += gained
+		draft.xp += catalog.xp[t] * xp_mult
 		enemies.remove(i)
 		events.push(SimEvents.Kind.ENEMY_DIED, t, x, z, gained)
 		if run and run_state == RunState.RUNNING and t == run.final_boss_type:
 			run_state = RunState.WON
 			events.push(SimEvents.Kind.RUN_ENDED, 1, 0.0, 0.0, 0.0)
+	if run_state == RunState.RUNNING:
+		draft.check_levels(self)
 
 
 # Instant hits (D-098): the first on arrival, then one every attack_cooldown ticks.
@@ -345,4 +376,5 @@ func state_hash() -> int:
 		towers.cooldown, towers.level, towers.damage, towers.reload, towers.max_hp, towers.splash_radius,
 		towers.slow_factor, towers.slow_ticks, towers.thorns, towers.mark_gold, towers.mark_ticks,
 		towers.stats_dirty, modifiers.hash_parts(), skills.ready_at, skills.shield_left, skills.shield_until,
-		skills.guard_until, skills.bounty_until, skills.bounty_gold, skills.haste_until])
+		skills.guard_until, skills.bounty_until, skills.bounty_gold, skills.haste_until,
+		draft.hash_parts(), tower_types, unlocked])

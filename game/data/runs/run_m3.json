@@ -1,0 +1,246 @@
+{
+  "schema_version": 1,
+  "id": "run_m3",
+  "placeholder": true,
+  "guardian": "guardian_placeholder_01",
+  "towers": [
+    "tower_pip",
+    "tower_mallow"
+  ],
+  "starting_gold": 200,
+  "build_radius": 20,
+  "grid_step": 0.5,
+  "spawn_ring_min": 30,
+  "spawn_ring_max": 44,
+  "first_wave_sec": 0,
+  "wave_sec": 60,
+  "break_sec": 15,
+  "waves": [
+    {
+      "count": 40,
+      "mix": [
+        {
+          "enemy": "enemy_swarmer_01",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "count": 70,
+      "mix": [
+        {
+          "enemy": "enemy_swarmer_01",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "count": 100,
+      "mix": [
+        {
+          "enemy": "enemy_swarmer_01",
+          "weight": 1
+        },
+        {
+          "enemy": "enemy_brute_01",
+          "weight": 0.2
+        }
+      ]
+    },
+    {
+      "count": 130,
+      "mix": [
+        {
+          "enemy": "enemy_swarmer_01",
+          "weight": 1
+        },
+        {
+          "enemy": "enemy_brute_01",
+          "weight": 0.2
+        },
+        {
+          "enemy": "enemy_ranged_01",
+          "weight": 0.2
+        }
+      ]
+    },
+    {
+      "count": 160,
+      "mix": [
+        {
+          "enemy": "enemy_swarmer_01",
+          "weight": 1
+        },
+        {
+          "enemy": "enemy_brute_01",
+          "weight": 0.2
+        },
+        {
+          "enemy": "enemy_ranged_01",
+          "weight": 0.2
+        }
+      ]
+    },
+    {
+      "count": 190,
+      "mix": [
+        {
+          "enemy": "enemy_swarmer_01",
+          "weight": 1
+        },
+        {
+          "enemy": "enemy_brute_01",
+          "weight": 0.2
+        },
+        {
+          "enemy": "enemy_ranged_01",
+          "weight": 0.2
+        }
+      ]
+    },
+    {
+      "count": 220,
+      "mix": [
+        {
+          "enemy": "enemy_swarmer_01",
+          "weight": 1
+        },
+        {
+          "enemy": "enemy_brute_01",
+          "weight": 0.2
+        },
+        {
+          "enemy": "enemy_ranged_01",
+          "weight": 0.2
+        }
+      ]
+    },
+    {
+      "count": 250,
+      "mix": [
+        {
+          "enemy": "enemy_swarmer_01",
+          "weight": 1
+        },
+        {
+          "enemy": "enemy_brute_01",
+          "weight": 0.2
+        },
+        {
+          "enemy": "enemy_ranged_01",
+          "weight": 0.2
+        }
+      ]
+    },
+    {
+      "count": 280,
+      "mix": [
+        {
+          "enemy": "enemy_swarmer_01",
+          "weight": 1
+        },
+        {
+          "enemy": "enemy_brute_01",
+          "weight": 0.2
+        },
+        {
+          "enemy": "enemy_ranged_01",
+          "weight": 0.2
+        }
+      ]
+    },
+    {
+      "count": 310,
+      "mix": [
+        {
+          "enemy": "enemy_swarmer_01",
+          "weight": 1
+        },
+        {
+          "enemy": "enemy_brute_01",
+          "weight": 0.2
+        },
+        {
+          "enemy": "enemy_ranged_01",
+          "weight": 0.2
+        }
+      ]
+    },
+    {
+      "count": 340,
+      "mix": [
+        {
+          "enemy": "enemy_swarmer_01",
+          "weight": 1
+        },
+        {
+          "enemy": "enemy_brute_01",
+          "weight": 0.2
+        },
+        {
+          "enemy": "enemy_ranged_01",
+          "weight": 0.2
+        }
+      ]
+    },
+    {
+      "count": 370,
+      "mix": [
+        {
+          "enemy": "enemy_swarmer_01",
+          "weight": 1
+        },
+        {
+          "enemy": "enemy_brute_01",
+          "weight": 0.2
+        },
+        {
+          "enemy": "enemy_ranged_01",
+          "weight": 0.2
+        }
+      ]
+    },
+    {
+      "count": 400,
+      "mix": [
+        {
+          "enemy": "enemy_swarmer_01",
+          "weight": 1
+        },
+        {
+          "enemy": "enemy_brute_01",
+          "weight": 0.2
+        },
+        {
+          "enemy": "enemy_ranged_01",
+          "weight": 0.2
+        }
+      ]
+    }
+  ],
+  "bosses": [
+    {
+      "at_sec": 300,
+      "enemy": "enemy_miniboss_01"
+    },
+    {
+      "at_sec": 600,
+      "enemy": "enemy_miniboss_02"
+    }
+  ],
+  "final_boss": {
+    "at_sec": 900,
+    "enemy": "enemy_boss_01"
+  },
+  "xp_base": 30,
+  "xp_step": 30,
+  "hearts_win": 100,
+  "hearts_loss_min": 30,
+  "hearts_loss_max": 50,
+  "card_type_weights": {
+    "new_tower": 3,
+    "signature": 2,
+    "skill": 2,
+    "perk": 2
+  }
+}

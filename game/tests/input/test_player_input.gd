@@ -270,3 +270,11 @@ func test_camera_zoom_and_recentre() -> void:
 	assert_eq(cam.focus(), Vector2(5, -2))
 	cam.recentre()
 	assert_eq(cam.focus(), Vector2.ZERO)
+
+
+func test_no_building_while_drafting() -> void:
+	assert_true(PlayerInput.can_build(world))
+	world.draft.xp = 30.0
+	world.step()
+	assert_true(world.draft.drafting)
+	assert_false(PlayerInput.can_build(world), "a card draft is open (D-147)")

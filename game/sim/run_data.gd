@@ -30,6 +30,11 @@ var final_boss_tick: int = 0
 var final_boss_type: int = -1
 ## Tower catalog indices offered in the build menu.
 var tower_types: PackedInt32Array = PackedInt32Array()
+## XP curve: level L to L + 1 costs xp_base + xp_step * (L - 1) (D-147).
+var xp_base: float = 0.0
+var xp_step: float = 0.0
+## Draft type weights in CardCatalog.Type order (new_tower, signature, skill, perk).
+var card_type_weights: PackedFloat32Array = PackedFloat32Array()
 
 var guardian_hp: float = 0.0
 var guardian_contact_radius: float = 0.0
@@ -83,6 +88,10 @@ static func load_id(run_id: String, enemies: EnemyCatalog, towers: TowerCatalog,
 	run.final_boss_type = _resolve(enemies.type_of(d.final_boss.enemy), d.final_boss.enemy)
 	for tower_id: String in d.towers:
 		run.tower_types.append(_resolve(towers.type_of(tower_id), tower_id))
+	run.xp_base = d.xp_base
+	run.xp_step = d.xp_step
+	for k in CardCatalog.Type.FILLER:
+		run.card_type_weights.append(d.card_type_weights[CardCatalog.TYPE_NAMES[k]])
 	run._load_guardian(guardian_id if guardian_id != "" else String(d.guardian))
 	return run
 

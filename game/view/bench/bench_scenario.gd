@@ -40,7 +40,10 @@ static func apply(world: SimWorld, cfg: Dictionary, sc: Dictionary) -> void:
 
 ## Combat scenarios: tops the horde back up after deaths, on the outer spawn ring.
 ## Harness only, like spawn_ring (the grid safety net rebuilds outside the phase timers).
+## Also takes the first card of a draft at once, so the horde never freezes (D-147).
 static func refill(world: SimWorld, cfg: Dictionary, sc: Dictionary) -> void:
+	if world.draft.drafting:
+		world.queue(SimCommand.pick_card(world.tick, 0))
 	var missing := int(sc.enemies) - world.enemies.count()
 	if missing > 0:
 		world.spawn_ring(world.catalog.type_of(cfg.enemy_type), missing, float(cfg.spawn_ring_max))
