@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" path="res://view/ui/pause_menu.tscn" id="9_pause"]
 [ext_resource type="PackedScene" path="res://view/ui/end_screen.tscn" id="10_end"]
 [ext_resource type="PackedScene" path="res://view/ui/draft_overlay.tscn" id="11_draft"]
+[ext_resource type="PackedScene" path="res://view/ui/hub.tscn" id="12_hub"]
 
 [sub_resource type="StandardMaterial3D" id="mat_ground"]
 shading_mode = 0
@@ -61,6 +62,8 @@ script = ExtResource("7_ghost")
 [node name="Hud" parent="." instance=ExtResource("6_hud")]
 
 [node name="StartScreen" parent="." instance=ExtResource("8_start")]
+
+[node name="Hub" parent="." instance=ExtResource("12_hub")]
 
 [node name="PauseMenu" parent="." instance=ExtResource("9_pause")]
 
