@@ -159,9 +159,9 @@ func _update_mode(event: InputEvent) -> void:
 		cursor = camera.focus()
 
 
-## Building is possible: a run is RUNNING and not paused (D-105). The build UI uses it too.
+## Building is possible: a run is RUNNING, not paused (D-105) and no card draft is open (D-147). The build UI uses it too.
 static func can_build(w: SimWorld) -> bool:
-	return w != null and w.run_state == SimWorld.RunState.RUNNING and not w.paused
+	return w != null and w.run_state == SimWorld.RunState.RUNNING and not w.paused and not w.draft.drafting
 
 
 func _use_skill(slot: int) -> void:
