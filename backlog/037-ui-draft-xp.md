@@ -1,9 +1,9 @@
 # 037 — UI: level-up draft, XP bar and card-unlocked towers in the build bar
-- Status: planned
+- Status: review
 - Milestone: M3
 - Depends on: 033
 - Labels: needs-human:playtest
-- PR:
+- PR: #44
 
 ## Goal
 The player sees XP and level, picks one of 3 cards when the draft opens (mouse, keyboard and gamepad), and towers unlocked by cards appear in the build bar and the radial.
