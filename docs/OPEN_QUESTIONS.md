@@ -81,6 +81,16 @@ Last reviewed: 2026-10-08 (daily docs review; owner answers recorded the same da
 
 ---
 
+## M3 (not blocking implementation)
+
+### Q-76 Can a player farm hearts by abandoning at once? (raised by task 039, M3 balance)
+`10_M3_CONTENT.md` 6.1 gives an abandon the loss hearts at the time reached, and the minimum is 30 at 0:00. Start a run, pause, abandon: about 5 seconds for 30 hearts, so the whole 1240-heart tree takes about 42 abandons (a few minutes). Task 039 builds 6.1 as written; changing it is a small sim change in `MetaProfile.hearts_for` (D-152 rule 4).
+- A) **No hearts for a loss or abandon before the first wave starts (`run.first_wave_tick`); 6.1 unchanged after that** ★
+- B) An abandon gives 0 hearts; only a real defeat gives 30-50.
+- C) Keep 6.1 as written (farming possible).
+
+---
+
 ## A. Deferred until the first real asset arrives
 
 ### Q-37 Where are large art files stored? (DEFERRED by the owner: decide when the first real asset arrives)
