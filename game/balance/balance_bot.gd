@@ -7,7 +7,7 @@ extends RefCounted
 ## The bot acts every ACT_TICKS ticks (0.5 s).
 const ACT_TICKS: int = 15
 ## Maze rings (D-164): walls 1 unit thick, corridors about 2 units, all inside every tower's range.
-const MAZE_RINGS: PackedFloat32Array = [4.0, 7.0, 10.0]
+const MAZE_RINGS: PackedFloat32Array = [2.5, 5.5, 8.5]
 ## One gap per ring, alternating at angle 0 and PI (the bench maze shape, D-115).
 const MAZE_GAP: float = 2.0
 ## Sunflower spacing (units per sqrt(index)).
