@@ -1,5 +1,5 @@
 # 032 — Sim: relationship synergies, Hymn's aura and Poppy's repair
-- Status: review
+- Status: done
 - Milestone: M3
 - Depends on: 031
 - PR: #47
@@ -71,3 +71,4 @@ Non-blocking: the plan takes the readings below (recorded in D-150); the owner c
 - A repair pulse with nothing to heal is spent (3.1: "every `cooldown`"), so a newly damaged tower may wait up to one cooldown.
 
 ## Review log
+- 2026-10-10 lead-dev: approved and squash-merged PR #47 into m3/dev. All criteria met; matches the plan (D-150, readings confirmed as D-159). `scripts\test.ps1` 362/362 + Python green on the branch, `scripts\validate.ps1` green; re-run on m3/dev after the merge. Bench in the PR within noise. Nit for a later task touching these files: `tower_links.gd` line 147 and `tower_stats.gd` line 93 contain stray tabs mid-line (a lost line continuation); harmless to the parser, worth re-wrapping.
