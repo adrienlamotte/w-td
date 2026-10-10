@@ -43,6 +43,15 @@ func _repairs() -> Array:
 	return out
 
 
+# [x, z] of the first TOWER_REPAIRED event of the last step.
+func _repair_pos() -> Array:
+	var ev := world.events
+	for e in ev.count:
+		if ev.kind[e] == SimEvents.Kind.TOWER_REPAIRED:
+			return [ev.x[e], ev.z[e]]
+	return []
+
+
 func test_hymn_never_targets_or_fires() -> void:
 	var h := _built("tower_hymn", 5.0, 0.0)
 	world.enemies.add(world.catalog.type_of(SWARMER), 6.0, 0.0, 1000.0)
@@ -93,6 +102,7 @@ func test_repair_lowest_fraction_on_cooldown() -> void:
 	world.damage_tower(_t(husk), 1e9)
 	world.step()
 	assert_eq(_repairs(), [[a, 20.0]], "lowest fraction in range first")
+	assert_eq(_repair_pos(), [5.0, 0.0], "x, z = the repairer's position (D-163)")
 	assert_eq(world.towers.hp[_t(a)], 70.0)
 	for n in DataFiles.ticks(2.0) - 1:
 		world.step()
@@ -134,6 +144,7 @@ func test_guardian_fallback() -> void:
 	world.step()
 	assert_eq(_repairs(), [[-1, 10.0]])
 	assert_eq(world.guardian_hp, max_hp - 40.0)
+	assert_eq(_repair_pos(), [4.0, 0.0], "x, z = the repairer's position (D-163)")
 	world.guardian_hp = max_hp - 5.0
 	for n in DataFiles.ticks(2.0):
 		world.step()

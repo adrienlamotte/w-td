@@ -28,3 +28,11 @@ func test_every_archetype_and_attack_has_a_look() -> void:
 	var swarmer := float(cfg.enemy_looks.swarmer.height_scale)
 	assert_gt(float(cfg.enemy_looks.miniboss.height_scale), swarmer)
 	assert_gt(float(cfg.enemy_looks.boss.height_scale), swarmer)
+
+
+func test_m3_kinds_have_distinct_shapes() -> void:
+	var cfg := HordeRenderer.load_config()
+	var shapes := {}
+	for k: String in ["wall", "aura", "repair", "mark", "slow_area"]:
+		shapes[cfg.tower_looks[k].shape] = true
+	assert_eq(shapes.size(), 5, "D-163: one shape per M3 kind")

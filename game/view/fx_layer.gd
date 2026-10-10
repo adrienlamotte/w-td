@@ -1,8 +1,9 @@
 class_name FxLayer
 extends Node3D
-## Draws the FxPool (D-120): discs (puffs, coins, sparks) in one MultiMesh, ribbons (shots)
-## and the blast ring in one ImmediateMesh rebuilt per frame, the Shield disc and the
-## Guardian hit flash. No Node per effect. View only, no rules.
+## Draws the FxPool (D-120) and the FxOverlays (D-163): discs (puffs, coins, sparks,
+## relationship markers) in one MultiMesh, ribbons (shots, repair beams) and rings (skill
+## blasts, aura and bounty rings) in one ImmediateMesh rebuilt per frame, the Shield and
+## Stand Firm discs and the Guardian hit flash. No Node per effect. View only, no rules.
 
 const DISC_SHADER := preload("res://view/fx.gdshader")
 const STRIDE: int = 16  # TRANSFORM_3D (12) + COLOR (4)
@@ -11,11 +12,14 @@ const COIN_ARC: float = 2.0
 const RING_SEGMENTS: int = 32
 
 var pool: FxPool
+var overlays: FxOverlays
 var _world: SimWorld
 var _discs: MultiMesh
 var _buf: PackedFloat32Array = PackedFloat32Array()
 var _ribbons: ImmediateMesh = ImmediateMesh.new()
 var _shield: MeshInstance3D
+var _guard: MeshInstance3D
+var _link_y: float
 var _guardian_mat: StandardMaterial3D
 var _guardian_color: Color
 
@@ -24,15 +28,18 @@ func setup(driver: SimDriver, guardian: MeshInstance3D) -> void:
 	_world = driver.world
 	var cfg := HordeRenderer.load_config()
 	pool = FxPool.new(cfg, _world)
+	overlays = FxOverlays.new(cfg)
+	_link_y = float(pool.fx.link_height)
+	var discs := pool.max_effects + FxOverlays.MAX_OVERLAYS
 	_discs = MultiMesh.new()
 	_discs.transform_format = MultiMesh.TRANSFORM_3D
 	_discs.use_colors = true
 	_discs.mesh = QuadMesh.new()
-	_discs.instance_count = pool.max_effects
+	_discs.instance_count = discs
 	_discs.visible_instance_count = 0
 	var area := _world.grid.half_extent + 4.0
-	_discs.custom_aabb = AABB(Vector3(-area, -1.0, -area), Vector3(2.0 * area, 2.0 + COIN_ARC, 2.0 * area))
-	_buf.resize(pool.max_effects * STRIDE)
+	_discs.custom_aabb = AABB(Vector3(-area, -1.0, -area), Vector3(2.0 * area, 2.0 + maxf(COIN_ARC, _link_y), 2.0 * area))
+	_buf.resize(discs * STRIDE)
 	var disc_mat := ShaderMaterial.new()
 	disc_mat.shader = DISC_SHADER
 	var mmi := MultiMeshInstance3D.new()
@@ -48,19 +55,8 @@ func setup(driver: SimDriver, guardian: MeshInstance3D) -> void:
 	ribbons.mesh = _ribbons
 	ribbons.material_override = flat
 	add_child(ribbons)
-	_shield = MeshInstance3D.new()
-	var disc := CylinderMesh.new()
-	disc.top_radius = float(pool.fx.shield_radius)
-	disc.bottom_radius = disc.top_radius
-	disc.height = 0.05
-	var shield_mat := flat.duplicate() as StandardMaterial3D
-	shield_mat.albedo_color = HordeRenderer.rgb(pool.fx.shield_color)
-	shield_mat.vertex_color_use_as_albedo = false
-	disc.material = shield_mat
-	_shield.mesh = disc
-	_shield.position.y = RIBBON_Y
-	_shield.visible = false
-	add_child(_shield)
+	_shield = _flat_disc(flat, float(pool.fx.shield_radius), pool.fx.shield_color)
+	_guard = _flat_disc(flat, float(pool.fx.guard_radius), pool.fx.guard_color)
 	_guardian_mat = (guardian.mesh.surface_get_material(0) as StandardMaterial3D).duplicate()
 	_guardian_color = _guardian_mat.albedo_color
 	guardian.material_override = _guardian_mat
@@ -77,6 +73,8 @@ func _process(delta: float) -> void:
 	pool.advance(delta)
 	var s := _world.skills
 	_shield.visible = _world.clock < s.shield_until and s.shield_left > 0.0
+	_guard.visible = _world.clock < s.guard_until
+	overlays.read_state(_world)
 	_guardian_mat.albedo_color = Color.WHITE if pool.guardian_flash > 0.0 else _guardian_color
 	_ribbons.clear_surfaces()
 	var c := 0
@@ -85,16 +83,16 @@ func _process(delta: float) -> void:
 		var k := pool.kind[i]
 		var p := pool.progress(i)
 		var col := pool.color[i]
-		if k == FxPool.Kind.SHOT or k == FxPool.Kind.RING:
+		if k == FxPool.Kind.SHOT or k == FxPool.Kind.BEAM or k == FxPool.Kind.RING:
 			if not ribbons:
 				_ribbons.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
 				ribbons = true
 			col.a *= 1.0 - p
 			_ribbons.surface_set_color(col)
-			if k == FxPool.Kind.SHOT:
-				_ribbon(pool.x0[i], pool.z0[i], pool.x1[i], pool.z1[i], pool.size[i])
+			if k == FxPool.Kind.RING:
+				_ring(0.0, 0.0, pool.x1[i] * p, pool.size[i])
 			else:
-				_ring(pool.x1[i] * p, pool.size[i])
+				_ribbon(pool.x0[i], pool.z0[i], pool.x1[i], pool.z1[i], pool.size[i])
 			continue
 		var x := pool.x0[i]
 		var z := pool.z0[i]
@@ -107,12 +105,18 @@ func _process(delta: float) -> void:
 		else:  # PUFF, SPARK: grow and fade
 			sz *= 0.5 + 0.5 * p
 			col.a *= 1.0 - p
-		var o := c * STRIDE
-		_buf[o] = sz; _buf[o + 1] = 0.0; _buf[o + 2] = 0.0; _buf[o + 3] = x
-		_buf[o + 4] = 0.0; _buf[o + 5] = sz; _buf[o + 6] = 0.0; _buf[o + 7] = y
-		_buf[o + 8] = 0.0; _buf[o + 9] = 0.0; _buf[o + 10] = sz; _buf[o + 11] = z
-		_buf[o + 12] = col.r; _buf[o + 13] = col.g; _buf[o + 14] = col.b; _buf[o + 15] = col.a
+		_disc(c, x, y, z, sz, col)
 		c += 1
+	for i in overlays.count():
+		if overlays.kind[i] == FxOverlays.Kind.LINK:
+			_disc(c, overlays.x[i], _link_y, overlays.z[i], overlays.size[i], overlays.color[i])
+			c += 1
+			continue
+		if not ribbons:
+			_ribbons.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
+			ribbons = true
+		_ribbons.surface_set_color(overlays.color[i])
+		_ring(overlays.x[i], overlays.z[i], overlays.r[i], overlays.size[i])
 	if ribbons:
 		_ribbons.surface_end()
 	_discs.buffer = _buf
@@ -130,15 +134,41 @@ func _ribbon(ax: float, az: float, bx: float, bz: float, width: float) -> void:
 		_ribbons.surface_add_vertex(v)
 
 
-# Flat annulus around the Guardian, outer radius r.
-func _ring(r: float, width: float) -> void:
+func _disc(c: int, x: float, y: float, z: float, sz: float, col: Color) -> void:
+	var o := c * STRIDE
+	_buf[o] = sz; _buf[o + 1] = 0.0; _buf[o + 2] = 0.0; _buf[o + 3] = x
+	_buf[o + 4] = 0.0; _buf[o + 5] = sz; _buf[o + 6] = 0.0; _buf[o + 7] = y
+	_buf[o + 8] = 0.0; _buf[o + 9] = 0.0; _buf[o + 10] = sz; _buf[o + 11] = z
+	_buf[o + 12] = col.r; _buf[o + 13] = col.g; _buf[o + 14] = col.b; _buf[o + 15] = col.a
+
+
+# Translucent disc at the Guardian (Shield, Stand Firm), hidden until its state is on.
+func _flat_disc(flat: StandardMaterial3D, radius: float, rgba: Array) -> MeshInstance3D:
+	var disc := CylinderMesh.new()
+	disc.top_radius = radius
+	disc.bottom_radius = radius
+	disc.height = 0.05
+	var mat := flat.duplicate() as StandardMaterial3D
+	mat.albedo_color = HordeRenderer.rgb(rgba)
+	mat.vertex_color_use_as_albedo = false
+	disc.material = mat
+	var mi := MeshInstance3D.new()
+	mi.mesh = disc
+	mi.position.y = RIBBON_Y
+	mi.visible = false
+	add_child(mi)
+	return mi
+
+
+# Flat annulus centred on (cx, cz), outer radius r.
+func _ring(cx: float, cz: float, r: float, width: float) -> void:
 	var inner := maxf(0.0, r - width)
 	for n in RING_SEGMENTS:
 		var a := TAU * n / RING_SEGMENTS
 		var b := TAU * (n + 1) / RING_SEGMENTS
-		var o0 := Vector3(cos(a) * r, RIBBON_Y, sin(a) * r)
-		var o1 := Vector3(cos(b) * r, RIBBON_Y, sin(b) * r)
-		var i0 := Vector3(cos(a) * inner, RIBBON_Y, sin(a) * inner)
-		var i1 := Vector3(cos(b) * inner, RIBBON_Y, sin(b) * inner)
+		var o0 := Vector3(cx + cos(a) * r, RIBBON_Y, cz + sin(a) * r)
+		var o1 := Vector3(cx + cos(b) * r, RIBBON_Y, cz + sin(b) * r)
+		var i0 := Vector3(cx + cos(a) * inner, RIBBON_Y, cz + sin(a) * inner)
+		var i1 := Vector3(cx + cos(b) * inner, RIBBON_Y, cz + sin(b) * inner)
 		for v in [o0, i0, o1, o1, i0, i1]:
 			_ribbons.surface_add_vertex(v)
