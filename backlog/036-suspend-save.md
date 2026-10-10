@@ -10,7 +10,8 @@ A run survives closing the game: a snapshot at card and wave boundaries, and Res
 ## Context
 - `docs/10_M3_CONTENT.md` 7 (written when a draft opens and at `WAVE_STARTED`, never mid-wave; full sim state with RNG states, command queue and clock, plus `state_hash()` checked on load; a snapshot, not a replay; derived grids and fields rebuilt; deleted at run end; abandon = loss, hearts per 6.1).
 - D-053, `docs/02_TECH_ARCHITECTURE.md` 7.
-- Settings stay session-only (`10_M3_CONTENT.md` 7): fix the "saved settings are M3" line in `docs/09_CONTROLS.md`.
+- D-156: closing the app mid-wave rewinds to the last suspend save (card or wave boundary); a run is resumable only from a suspend save. Settings are not part of it: 039 saves them in `user://settings.json` (D-157) and fixes the `09_CONTROLS.md` line.
+- D-158: an abandon of a suspended run before the first wave gives 0 hearts (`MetaProfile.hearts_for`, 039).
 
 ## Acceptance criteria
 - Snapshot write and read of every hashed world field; load rebuilds derived state (spatial grid, build grid, flow field, uid index, derived tower stats) and checks `state_hash()` against the saved one; a mismatch or unreadable file is reported and the run counts as abandoned, never silently resumed.
