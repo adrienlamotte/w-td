@@ -204,13 +204,13 @@ func test_abandon_confirm() -> void:
 	assert_signal_emitted(pause, "abandon_confirmed")
 
 
-func test_abandon_before_the_first_wave() -> void:
+func test_abandon_in_the_first_minute() -> void:
 	_paused_m3(0)
 	(pause.get_node("Panel/Box/Abandon") as Button).pressed.emit()
 	assert_eq((pause.get_node("Panel/Confirm/Text") as Label).text, tr("flow.abandon_confirm").format({"n": 0}))
 	(pause.get_node("Panel/Confirm/Abandon") as Button).pressed.emit()
 	var p := _profile()
-	assert_eq([p.hearts, p.runs, p.losses], [0, 1, 1], "D-158")
+	assert_eq([p.hearts, p.runs, p.losses], [0, 1, 1], "D-165")
 
 
 func test_restart_confirm() -> void:

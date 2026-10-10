@@ -26,9 +26,10 @@ func test_offer() -> void:
 
 
 func test_hearts() -> void:
-	assert_eq(MetaProfile.hearts_for(run, false, 0), 0, "before the first wave (D-158)")
-	assert_eq(MetaProfile.hearts_for(run, false, run.first_wave_tick), 0, "wave 0 not spawned yet")
-	assert_eq(MetaProfile.hearts_for(run, false, run.first_wave_tick + 1), 30, "wave 0 started")
+	assert_eq(run.hearts_min_tick, 60 * SimWorld.TICK_RATE)
+	assert_eq(MetaProfile.hearts_for(run, false, 0), 0, "before 60 s (D-165)")
+	assert_eq(MetaProfile.hearts_for(run, false, 1799), 0, "59.97 s")
+	assert_eq(MetaProfile.hearts_for(run, false, 1800), 30 + 20 * 1800 / run.final_boss_tick, "60 s")
 	assert_eq(MetaProfile.hearts_for(run, true, 0), 100, "a win at clock 0")
 	assert_eq(MetaProfile.hearts_for(run, false, 13500), 40, "7:30")
 	assert_eq(MetaProfile.hearts_for(run, false, run.final_boss_tick), 50)
@@ -63,7 +64,7 @@ func test_record_run_loss_and_placeholder() -> void:
 func test_record_run_before_the_first_wave() -> void:
 	run.guardian_id = "guardian_cinder"
 	assert_eq(p.record_run(cat, run, false, 0), 0)
-	assert_eq([p.hearts, p.runs, p.losses], [0, 1, 1], "still counted (D-158 is hearts only)")
+	assert_eq([p.hearts, p.runs, p.losses], [0, 1, 1], "still counted (D-165 is hearts only, D-166)")
 
 
 func test_roster_state() -> void:

@@ -87,12 +87,11 @@ func offer(cat: MetaCatalog) -> PackedStringArray:
 
 
 ## Hearts for a run that ended at run clock `clock` (6.1, D-048), in integer arithmetic.
-## 0 for a loss before the first wave started (D-158): the spawner starts wave 0 in the
-## step that runs clock first_wave_tick, so the clock is past it only after that step.
+## 0 for a loss before `hearts_min_tick` (D-165, replaces D-158).
 static func hearts_for(run: RunData, won: bool, clock: int) -> int:
 	if won:
 		return run.hearts_win
-	if clock <= run.first_wave_tick:
+	if clock < run.hearts_min_tick:
 		return 0
 	var span := run.hearts_loss_max - run.hearts_loss_min
 	return run.hearts_loss_min + span * mini(clock, run.final_boss_tick) / run.final_boss_tick
