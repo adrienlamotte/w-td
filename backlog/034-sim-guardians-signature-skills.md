@@ -1,8 +1,8 @@
 # 034 — Sim: Guardians and signature skills
-- Status: planned
+- Status: review
 - Milestone: M3
 - Depends on: 030
-- PR:
+- PR: #41
 
 ## Goal
 The run's Guardian comes from `StartRun` (`guardian_id`) and has her signature skill plus the shared Shield. The 6 signature skill kinds work, and skill modifiers (cards, synergy Guardian bonuses, meta) apply.
