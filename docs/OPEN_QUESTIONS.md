@@ -89,6 +89,16 @@ Last reviewed: 2026-10-08 (daily docs review; owner answers recorded the same da
 ---
 
 
+## M3 (not blocking implementation)
+
+### Q-79 Heart farming: D-158 does nothing in `run_m3` (raised by task 039 PR #48)
+D-158 gives 0 hearts before the first wave starts, but `run_m3` starts wave 1 at 0:00, so abandoning at 0:01 still gives 30 hearts and the tree can still be farmed in minutes.
+- A) **0 hearts for a loss or abandon before 60 s of run time (new run field `hearts_min_sec`, default 60)** ★
+- B) 0 hearts unless at least one wave was cleared.
+- C) Accept as is (farming possible).
+
+---
+
 ## A. Deferred until the first real asset arrives
 
 ### Q-37 Where are large art files stored? (DEFERRED by the owner: decide when the first real asset arrives)
