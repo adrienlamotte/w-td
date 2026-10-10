@@ -1,5 +1,5 @@
 # 035 — Meta: profile, hearts, meta tree, Guardian offer and win-unlock
-- Status: review
+- Status: done
 - Milestone: M3
 - Depends on: 033, 034, 045
 - PR: #46
@@ -64,3 +64,4 @@ Decision ID: **D-152** (PROPOSED, rules below). About 330 lines of code plus abo
 - Q-73 (what the player sees when `profile.json` is unreadable) sits on the unmerged docs review branch `docs/review-2026-10-10`. This task only keeps `profile.bad.json`, starts fresh and exposes `last_error`; the notice itself is task 039. Its ★ A fits this plan.
 
 ## Review log
+- 2026-10-10 lead-dev: approved and squash-merged PR #46 into m3/dev. test.ps1 green (346/346 GUT, 24 Python), validate.ps1 green, run in a separate worktree. Matches the plan and every criterion; sim/view/save split clean, determinism replay with meta nodes added. Owner check still open: best_sec = longest time survived (D-152 rule 1).
