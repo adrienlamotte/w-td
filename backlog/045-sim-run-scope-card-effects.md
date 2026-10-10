@@ -1,5 +1,5 @@
 # 045 — Sim: run-scope card effects (build radius, rebuild price, detour damage)
-- Status: review
+- Status: done
 - Milestone: M3
 - Depends on: 033
 - PR: #45
@@ -47,3 +47,4 @@ Decision ID: **D-148** (PROPOSED, rules below). About 80 lines of code plus abou
 ## Questions
 
 ## Review log
+- 2026-10-10 lead-dev: PR #45 approved and squash-merged into m3/dev. All criteria met, matches plan; sim/view split, determinism and D-148 PROPOSED OK. Tests 328/328 + Python green, validator green. Quiet release bench (step ms): pc_maze 7.62, pc_maze_churn 7.92, pc_maze_combat 7.08, pc_combat_stress 5.48 vs perf_m2 7.55 / 8.12 / ~7.0 / 5.03: within noise; re-check pc_combat_stress (+0.45) at the 043 milestone bench.
