@@ -1,9 +1,9 @@
 # 041 — Balance: M3 headless runner and first balance report
-- Status: planned
+- Status: changes
 - Milestone: M3
 - Depends on: 032, 033, 034, 035, 045
 - Labels: needs-human:balance
-- PR:
+- PR: #50
 
 ## Goal
 The full balance runner: bots that build, upgrade and pick cards, a maze strategy against a spread strategy, profile presets, and the first M3 balance report.
@@ -65,3 +65,4 @@ Order: 1, 2 with its tests, 3 with the attribution and smoke tests, 4, 6, 7. Hea
 - None blocking. Non-blocking, defaults taken in D-164 (owner may change them at CP-M3): (1) default N = 2 seeds per (strategy, profile, Guardian) = 54 runs, to keep a manual run near the M2 time per run; the nightly routine can pass more; (2) one fixed card priority for every bot (new tower > signature > skill > perk); (3) maze rings at radii 4, 7, 10 with 2-unit gaps.
 
 ## Review log
+- 2026-10-10 lead-dev, round 1, **changes** (PR #50 comment). Tests green (GUT 365/365, Python 24/24, validator OK); code, tests and docs fine. (1) The maze bot never forms a maze: the radius-4 inner ring needs about 22 slots (closes about 15 min in), so at 5:00 its 6 towers sit in one arc on the far side of the gap (Guardian HP 198 vs 378 for spread with the same gold and towers). A bot/plan weakness, not tuning. Fix: `MAZE_RINGS` = [2.5, 5.5, 8.5] (smallest buildable radius >= 2 if 2.5 is refused), update D-164 and 02 section 6, re-run `scripts\balance.ps1 -Runs 1` and commit the report; if the maze still loses, that is 042. (2) Merge `origin/m3/dev`: the DECISIONS.md conflict (D-164 vs D-165/D-166), keep all rows. Not blocking: Pip's 87-99 % damage share is 042 data tuning.

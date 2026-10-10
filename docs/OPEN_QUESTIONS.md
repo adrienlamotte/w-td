@@ -30,6 +30,7 @@ Last reviewed: 2026-10-08 (daily docs review; owner answers recorded the same da
 | Q-76 Heart farming by abandoning | No hearts for a loss or abandon before the first wave starts | D-158 |
 | Q-77 Poppy repair / Hymn aura readings | Keep all four plan readings | D-159 |
 | Q-78 Best time per Guardian | Longest time survived, wins included | D-160 |
+| Q-79 Heart farming under D-158 | 0 hearts for a loss or abandon before 60 s of run time (run field, default 60) | D-165 |
 | Q-60 When higher tiers and rivals open | After all 6 rescues; Vexa Hard, Gilda Nightmare | D-131 |
 | Q-61 Guardian in relationship bonuses | She counts like a placed waifu | D-132 |
 | Q-59 Maze tick budget | Accept within noise for M2, track worst case | D-124 |
@@ -88,16 +89,6 @@ Last reviewed: 2026-10-08 (daily docs review; owner answers recorded the same da
 
 ---
 
-
-## M3 (not blocking implementation)
-
-### Q-79 Heart farming: D-158 does nothing in `run_m3` (raised by task 039 PR #48)
-D-158 gives 0 hearts before the first wave starts, but `run_m3` starts wave 1 at 0:00, so abandoning at 0:01 still gives 30 hearts and the tree can still be farmed in minutes.
-- A) **0 hearts for a loss or abandon before 60 s of run time (new run field `hearts_min_sec`, default 60)** ★
-- B) 0 hearts unless at least one wave was cleared.
-- C) Accept as is (farming possible).
-
----
 
 ## A. Deferred until the first real asset arrives
 
