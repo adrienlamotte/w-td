@@ -144,7 +144,8 @@ func _aura(w: SimWorld, cache: Array) -> void:
 				continue
 			var b := _aura_of[o]
 			# Higher aura_damage, then higher aura_cooldown, then lower uid.
-			if b < 0 or _ad[h] > _ad[b] or (_ad[h] == _ad[b] and (_ac[h] > _ac[b] 					or (_ac[h] == _ac[b] and towers.uid[h] < towers.uid[b]))):
+			if b < 0 or _ad[h] > _ad[b] or (_ad[h] == _ad[b] and (_ac[h] > _ac[b]
+					or (_ac[h] == _ac[b] and towers.uid[h] < towers.uid[b]))):
 				_aura_of[o] = h
 	for o in n:
 		var h := _aura_of[o]

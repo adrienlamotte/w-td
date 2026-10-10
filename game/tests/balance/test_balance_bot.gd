@@ -1,5 +1,5 @@
 extends GutTest
-## M2 balance bot and runner (task 022, D-126). Short runs (60 s of run clock).
+## M3 balance bots and runner (task 041, D-164). Short runs (60 s of run clock).
 
 const Runner := preload("res://balance/balance_runner.gd")
 const SEC: int = 60
@@ -11,18 +11,35 @@ func _no_wall(r: Dictionary) -> Dictionary:
 	return d
 
 
+# A fresh run_m3 with Cinder (first of the fresh offer), stepped once so StartRun is applied.
+func _world() -> SimWorld:
+	var cat := MetaCatalog.load_dir()
+	var w := SimWorld.new(1)
+	w.queue(Runner.profile_preset("fresh", cat).start_command(cat, 0, 1, Runner.RUN_ID, "waifu_cinder"))
+	w.step()
+	return w
+
+
 func test_run_is_deterministic() -> void:
-	var a := Runner.run_one("spread", 3, SEC)
-	var b := Runner.run_one("spread", 3, SEC)
+	var a := Runner.run_one("maze", "full", "waifu_bastia", 3, SEC)
+	var b := Runner.run_one("maze", "full", "waifu_bastia", 3, SEC)
 	assert_eq_deep(_no_wall(a), _no_wall(b))
 	assert_eq(a.hash, b.hash)
 
 
+func test_profile_presets_offer_their_guardians() -> void:
+	var cat := MetaCatalog.load_dir()
+	assert_eq(Runner.profile_preset("fresh", cat).offer(cat), cat.offer_order.slice(0, 3))
+	var full := Runner.profile_preset("full", cat)
+	assert_eq(full.offer(cat), cat.offer_order)
+	assert_eq(full.meta_nodes, cat.ids)
+
+
 # Bots go through commands: gold never negative, every tower came with a TOWER_PLACED event.
 func test_bots_only_use_commands() -> void:
-	for strategy: String in ["spread", "ring"]:
+	for strategy: String in ["spread", "maze"]:
 		var st := {"min_gold": 1 << 30, "placed": {}, "w": null}
-		var r := Runner.run_one(strategy, 1, SEC, func(w: SimWorld) -> void:
+		var r := Runner.run_one(strategy, "fresh", "waifu_cinder", 1, SEC, func(w: SimWorld) -> void:
 			st.min_gold = mini(st.min_gold, w.gold)
 			st.w = w
 			for e in w.events.count:
@@ -37,46 +54,87 @@ func test_bots_only_use_commands() -> void:
 
 
 func test_passive_never_builds_but_casts() -> void:
-	var r := Runner.run_one("passive", 1, SEC)
+	var r := Runner.run_one("passive", "fresh", "waifu_cinder", 1, SEC)
 	assert_eq(r.towers_bought, 0)
 	assert_gt(r.skills_used, 0)
 
 
-func test_spread_builds_in_the_first_minute() -> void:
-	assert_gt(Runner.run_one("spread", 2, SEC).towers_bought, 0)
+func test_card_pick_takes_the_best_ranked_slot() -> void:
+	var w := _world()
+	var cards := w.cards
+	var perk := Array(cards.type).find(CardCatalog.Type.PERK)
+	var tower := Array(cards.type).find(CardCatalog.Type.NEW_TOWER)
+	w.draft.draft = PackedInt32Array([cards.filler, perk, tower])
+	w.draft.drafting = true
+	w.draft.pending = 1
+	BalanceBot.new("spread").act(w)
+	w.step()
+	var picked := -1
+	for e in w.events.count:
+		if w.events.kind[e] == SimEvents.Kind.CARD_PICKED:
+			picked = w.events.a[e]
+	assert_eq(picked, tower, "new_tower ranks before perk and filler")
 
 
-# Ring bot (D-126): the first KILL_ZONE_FIRST towers on the kill zone, the rest on the ring at
-# RING_R (or extra kill-zone towers); none in the gap or the corridor to the Guardian.
-func test_ring_towers_on_the_ring_and_not_in_the_gap() -> void:
+# Cheaper of placement and upgrade: Pip placed (50), then upgrading her (40) beats Mallow (60).
+func test_spend_takes_the_cheaper_of_placement_and_upgrade() -> void:
+	var w := _world()
+	w.gold = 10000  # test-only gold poke
+	var bot := BalanceBot.new("spread")
+	var first := bot.spend(w)
+	assert_eq(first.type, SimCommand.Type.PLACE_TOWER, "nothing to upgrade yet")
+	w.queue(first)
+	w.step()
+	var second := bot.spend(w)
+	assert_eq(second.type, SimCommand.Type.UPGRADE_TOWER)
+	assert_eq(second.tower_uid, w.towers.uid[0])
+
+
+# Maze: every tower on a MAZE_RINGS ring, outside its gap; the Pip-Mallow pair is linked.
+func test_maze_towers_on_rings_outside_gaps() -> void:
 	var st := {"w": null}
-	Runner.run_one("ring", 1, 3 * SEC, func(w: SimWorld) -> void: st.w = w)
+	Runner.run_one("maze", "fresh", "waifu_cinder", 1, SEC, func(w: SimWorld) -> void: st.w = w)
 	var w: SimWorld = st.w
-	assert_gt(w.towers.count(), BalanceBot.KILL_ZONE_FIRST, "ring started after the kill zone")
+	assert_gt(w.towers.count(), 1)
+	var linked := 0
 	for t in w.towers.count():
 		var p := Vector2(w.towers.pos_x[t], w.towers.pos_z[t])
 		var side := w.towers.footprint[t] * w.build.step
-		var on_ring := absf(p.length() - BalanceBot.RING_R) <= side
-		var kill_zone := p.distance_to(BalanceBot.KILL_ZONE) < BalanceBot.RING_R
-		assert_true(kill_zone if t < BalanceBot.KILL_ZONE_FIRST else (on_ring or kill_zone),
-			"tower %d at %s on the kill zone or the ring" % [t, p])
-		assert_false(p.x > 0.0 and absf(p.y) < BalanceBot.RING_GAP * 0.5, "tower %d not in the gap or corridor" % t)
+		var ring := -1
+		for k in BalanceBot.MAZE_RINGS.size():
+			if absf(p.length() - BalanceBot.MAZE_RINGS[k]) <= side:
+				ring = k
+		assert_gte(ring, 0, "tower %d at %s on a ring" % [t, p])
+		if ring >= 0:
+			var gap := Vector2.from_angle(BalanceBot.gap_angle(ring)) * BalanceBot.MAZE_RINGS[ring]
+			assert_gte(p.distance_to(gap), BalanceBot.MAZE_GAP * 0.5, "tower %d not in the gap" % t)
+		linked += int(w.towers.syn_mask[t] != 0)
+	assert_gt(linked, 0, "the Pip-Mallow pair is active")
 
 
-func test_report_lists_strategies_rates_and_data() -> void:
-	var results: Array[Dictionary] = []
-	for strategy: String in Runner.STRATEGIES:
-		for s in [1, 2]:
-			var won: bool = strategy == "spread" and s == 1
-			results.append({"strategy": strategy, "seed": s, "outcome": "won" if won else "lost",
-				"end_sec": 930 if won else 100 * s, "towers_bought": 3, "husks_rebuilt": 0, "skills_used": 4,
-				"earned": 50, "wall_ms": 1000, "minutes": [{"hp": 100, "gold": 10, "earned": 20, "towers": 3, "enemies": 9}]})
-	var text := Runner.report(results, 2, {"date": "2026-01-01", "commit": "abc"})
-	for strategy: String in Runner.STRATEGIES:
-		assert_string_contains(text, "| %s |" % strategy)
-	assert_string_contains(text, "| spread | 1 / 2 | 50 % |")
-	assert_string_contains(text, "| passive | 0 / 2 | 0 % |")
-	assert_string_contains(text, "NOT met")
+func test_damage_sources_sum_to_all_hits() -> void:
+	var st := {"total": 0.0}
+	var r := Runner.run_one("maze", "full", "waifu_bastia", 2, SEC, func(w: SimWorld) -> void:
+		for e in w.events.count:
+			if w.events.kind[e] == SimEvents.Kind.ENEMY_HIT:
+				st.total += w.events.value[e])
+	var sum := 0.0
+	for k: String in r.damage:
+		sum += r.damage[k]
+	assert_gt(st.total, 0.0)
+	assert_almost_eq(sum, st.total, 0.01 * st.total)
+	assert_false(r.damage.has("other"), "every hit has a source")
+
+
+func test_report_smoke() -> void:
+	var results: Array[Dictionary] = [Runner.run_one("maze", "fresh", "waifu_cinder", 1, SEC),
+		Runner.run_one("spread", "full", "waifu_poppy", 1, SEC)]
+	var text := Runner.report(results, 1, {"date": "2026-01-01", "commit": "abc"})
+	assert_string_contains(text, "**Targets (D-143):**")
+	assert_string_contains(text, "**Maze vs spread:** fresh maze")
+	assert_string_contains(text, "## Damage per source")
+	assert_string_contains(text, "| maze | fresh | tower_pip |")
 	assert_string_contains(text, "## Data")
-	assert_string_contains(text, "tower_single_01")
+	assert_string_contains(text, "tower_bastia")
 	assert_string_contains(text, "commit abc")
+	assert_string_contains(text, "NOT met")
