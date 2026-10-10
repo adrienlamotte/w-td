@@ -10,6 +10,8 @@ var type: Type = Type.START_RUN
 var run_seed: int = 0
 ## StartRun config: a data/runs id.
 var run_id: String = ""
+## StartRun: a data/guardians id; empty keeps the run file's Guardian (D-146).
+var guardian_id: String = ""
 var paused: bool = false
 ## A data/towers id.
 var tower_id: String = ""
@@ -21,10 +23,11 @@ var tower_uid: int = -1
 var skill_id: String = ""
 
 
-static func start_run(p_tick: int, p_seed: int, p_run_id: String) -> SimCommand:
+static func start_run(p_tick: int, p_seed: int, p_run_id: String, p_guardian_id := "") -> SimCommand:
 	var c := _make(p_tick, Type.START_RUN)
 	c.run_seed = p_seed
 	c.run_id = p_run_id
+	c.guardian_id = p_guardian_id
 	return c
 
 

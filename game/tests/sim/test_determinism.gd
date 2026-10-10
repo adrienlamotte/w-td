@@ -126,3 +126,21 @@ func _run_kinds(run_seed: int) -> int:
 				hits += 1
 	assert_gt(hits, 0, "the horde hit the wall")
 	return w.state_hash()
+
+
+# A non-placeholder Guardian casting her signature and the Shield (D-146).
+func _guardian_hash(gid: String) -> int:
+	var w := SimWorld.new(1)
+	w.queue(SimCommand.start_run(0, 7, "run_m2", gid))
+	for t in [100, 600, 1300, 2000]:
+		w.queue(SimCommand.use_skill(t, "skill_stand_firm"))
+	for t in [300, 1200]:
+		w.queue(SimCommand.use_skill(t, "skill_shield"))
+	for t in 2400:
+		w.step()
+	return w.state_hash()
+
+
+func test_guardian_skills_deterministic() -> void:
+	var h := _guardian_hash("guardian_bastia")
+	assert_eq(_guardian_hash("guardian_bastia"), h)

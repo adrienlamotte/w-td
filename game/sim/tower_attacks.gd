@@ -15,6 +15,7 @@ func fire(w: SimWorld) -> void:
 	var kind := w.tower_catalog.attack
 	var enemies := w.enemies
 	var cd := towers.cooldown
+	var haste := w.run.skill_cooldown_factor[w.run.signature_slot] if w.clock < w.skills.haste_until else 0.0
 	for t in towers.count():
 		var type := towers.type_id[t]
 		if type < 0 or towers.husk[t]:  # bare towers (M1 demo, bench) never fire
@@ -24,7 +25,7 @@ func fire(w: SimWorld) -> void:
 		var target := towers.target[t]
 		if cd[t] > 0 or target < 0 or enemies.hp[target] <= 0.0:
 			continue
-		cd[t] = towers.reload[t]
+		cd[t] = towers.reload[t] if haste == 0.0 else maxi(1, roundi(towers.reload[t] * haste))  # Crescendo (D-146)
 		var x := enemies.pos_x[target]
 		var z := enemies.pos_z[target]
 		w.events.push(SimEvents.Kind.TOWER_FIRED, towers.uid[t], x, z, type)
