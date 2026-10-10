@@ -1,5 +1,5 @@
 # 040 — View: placeholder feedback for M3 towers, skills and relationships
-- Status: review
+- Status: done
 - Milestone: M3
 - Depends on: 032, 034
 - Labels: needs-human:art
@@ -58,3 +58,4 @@ Not touched here: the stray mid-line tabs in `game/sim/tower_links.gd` (~147) an
 - None blocking. Shapes and colours are placeholders for the owner's art review (`needs-human:art`). Thorns get no new effect (the hit flash covers it, D-163); say so if a distinct thorns spark is wanted.
 
 ## Review log
+- 2026-10-10 lead-dev: approved, PR #49 squash-merged into `m3/dev`. Resolved the DECISIONS.md conflict with 039's owner answers (kept D-163, D-165, D-166). All criteria met, matches the plan (overlays split into `view/fx_overlays.gd` as the plan allows); sim change is the `TOWER_REPAIRED` payload only. Review worktree: `scripts\test.ps1` 372/372 twice (one earlier run had 1 failure, most likely a timing test under machine load, not reproduced), `scripts\validate.ps1` 0 errors. Bench not re-run (machine busy): the PR's noisy run shows view fill +0.05 to +0.15 ms/frame against M2; **043 must re-check view fill on a quiet machine**. Owner: `needs-human:art` for the placeholder shapes, colours, rings, beam and tints; thorns have no distinct effect (say if a spark is wanted).
