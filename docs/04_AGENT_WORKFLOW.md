@@ -79,6 +79,8 @@ The owner chose all four:
 
 Agents prepare a short **review pack** for each checkpoint (build instructions, what to look at, specific questions).
 
+**Milestone prototypes (D-149):** at each milestone checkpoint, export the build with `scripts\export.ps1 -Archive M<n>`. It keeps `build\archive\M<n>\WTD.exe` plus `commit.txt` (commit and date), so the owner has a playable exe of every development step. Archived builds are never deleted or overwritten by later milestones; they are local (not in git), and the review pack names the archive path.
+
 ## 7. Things agents must never do **[D]**
 - Publish to Steam, change store pages, or submit anything externally.
 - Spend money, use paid APIs (art is local-only), or handle credentials.
