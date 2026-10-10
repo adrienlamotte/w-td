@@ -1,9 +1,9 @@
 # 038 — UI: tower upgrade controls, hints and level display
-- Status: planned
+- Status: review
 - Milestone: M3
 - Depends on: 030
 - Labels: needs-human:playtest
-- PR:
+- PR: #42
 
 ## Goal
 The player can upgrade a placed tower with mouse/keyboard and with the gamepad, and sees its level and the next price, or why it cannot be upgraded.
