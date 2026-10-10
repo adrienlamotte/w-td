@@ -14,6 +14,8 @@ var run_id: String = ""
 var guardian_id: String = ""
 ## StartRun: rescued waifu ids (card eligibility, D-147); empty = nothing rescued.
 var unlocked: PackedStringArray = PackedStringArray()
+## StartRun: bought meta-tree node ids, applied in id order (D-152 rule 8).
+var meta_nodes: PackedStringArray = PackedStringArray()
 var paused: bool = false
 ## A data/towers id.
 var tower_id: String = ""
@@ -28,12 +30,13 @@ var slot: int = -1
 
 
 static func start_run(p_tick: int, p_seed: int, p_run_id: String, p_guardian_id := "",
-		p_unlocked := PackedStringArray()) -> SimCommand:
+		p_unlocked := PackedStringArray(), p_meta_nodes := PackedStringArray()) -> SimCommand:
 	var c := _make(p_tick, Type.START_RUN)
 	c.run_seed = p_seed
 	c.run_id = p_run_id
 	c.guardian_id = p_guardian_id
 	c.unlocked = p_unlocked
+	c.meta_nodes = p_meta_nodes
 	return c
 
 
