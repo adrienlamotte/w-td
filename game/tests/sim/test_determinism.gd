@@ -172,3 +172,31 @@ func _run_effects(run_seed: int) -> int:
 	assert_eq(w.build_radius, 23.0)
 	assert_eq(w.towers.count(), 14, "the expanded placement went through")
 	return w.state_hash()
+
+
+# Synergies, aura and repair (D-150): a Guardian with a waifu, damaged towers and a mid-run sell.
+func test_synergies_deterministic() -> void:
+	var h := _run_links(7)
+	assert_eq(_run_links(7), h)
+
+
+func _run_links(run_seed: int) -> int:
+	var w := SimWorld.new(1)
+	w.queue(SimCommand.start_run(0, run_seed, "run_m2", "guardian_cinder"))
+	w.step()
+	var us: Array[int] = []
+	var ids := ["tower_hymn", "tower_poppy", "tower_pip", "tower_mallow", "tower_bastia"]
+	for k in ids.size():
+		us.append(TowerBuilding.add_built(w, w.tower_catalog.type_of(ids[k]), 4.0 + k, 2.0))
+	w.queue(SimCommand.sell_tower(600, us[3]))
+	var repairs := 0
+	for i in 1800:
+		if i % 300 == 0:
+			for t in w.towers.count():
+				w.damage_tower(t, 30.0)
+		w.step()
+		for e in w.events.count:
+			if w.events.kind[e] == SimEvents.Kind.TOWER_REPAIRED:
+				repairs += 1
+	assert_gt(repairs, 0, "Poppy healed")
+	return w.state_hash()

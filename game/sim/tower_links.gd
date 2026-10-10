@@ -24,6 +24,10 @@ var heal_list: PackedInt32Array = PackedInt32Array()
 var _grid: SpatialGrid = null
 var _near: PackedInt32Array = PackedInt32Array()
 var _aura_of: PackedInt32Array = PackedInt32Array()
+var _waifu: PackedInt32Array = PackedInt32Array()
+## Per tower index: aura_damage, aura_cooldown of a live Hymn, else -1.
+var _ad: PackedFloat32Array = PackedFloat32Array()
+var _ac: PackedFloat32Array = PackedFloat32Array()
 
 
 ## `cache`: the store sums per tower type (TowerStats), filled for every built type.
@@ -77,22 +81,25 @@ func _relationships(w: SimWorld) -> void:
 	var gw := syn.waifu_of_guardian(w.run.guardian_id) if running else -1
 	var contact := w.run.guardian_contact_radius if running else 0.0
 	var gmask := 0
-	for t in towers.count():
-		if not live(towers, t):
-			continue
-		var a := syn.waifu_of_tower[towers.type_id[t]]
+	var n := towers.count()
+	_waifu.resize(n)
+	for t in n:
+		_waifu[t] = syn.waifu_of_tower[towers.type_id[t]] if live(towers, t) else -1
+	for t in n:
+		var a := _waifu[t]
 		if a < 0 or syn.waifu_reach[a] <= 0.0:
 			continue
 		var mask := 0
 		_grid.query_radius(px[t], pz[t], syn.waifu_reach[a], px, pz, _near)
 		for j in _near:
-			if j == t or not live(towers, j):
+			var b := _waifu[j]
+			if b < 0 or j == t:
 				continue
-			var b := syn.waifu_of_tower[towers.type_id[j]]
-			if b < 0:
+			var rules := syn.rules_for(a, b)
+			if rules.is_empty():
 				continue
 			var d := Vector2(px[j] - px[t], pz[j] - pz[t]).length()
-			for r in syn.rules_for(a, b):
+			for r in rules:
 				if d >= syn.min_d[r] and d <= syn.max_d[r]:
 					mask |= 1 << r
 		if gw >= 0:
@@ -119,32 +126,31 @@ func _aura(w: SimWorld, cache: Array) -> void:
 	var n := towers.count()
 	_aura_of.resize(n)
 	_aura_of.fill(-1)
+	_ad.resize(n)
+	_ad.fill(-1.0)
+	_ac.resize(n)
 	for h in n:
-		if not live(towers, h) or kind[towers.type_id[h]] != TowerCatalog.Attack.AURA:
+		if live(towers, h) and kind[towers.type_id[h]] == TowerCatalog.Attack.AURA:
+			var lv := _lv(w, h)
+			_ad[h] = lv.aura_damage
+			_ac[h] = lv.aura_cooldown
+	for h in n:
+		if _ad[h] < 0.0:
 			continue
-		var lv := _lv(w, h)
-		var r := TowerStats.value(lv.aura_radius, cache[towers.type_id[h]][_AURA_RADIUS] + extra[h * _N + _AURA_RADIUS])
+		var r := TowerStats.value(_lv(w, h).aura_radius, cache[towers.type_id[h]][_AURA_RADIUS] + extra[h * _N + _AURA_RADIUS])
 		_grid.query_radius(towers.pos_x[h], towers.pos_z[h], r, towers.pos_x, towers.pos_z, _near)
 		for o in _near:
-			if live(towers, o) and kind[towers.type_id[o]] != TowerCatalog.Attack.AURA \
-					and (_aura_of[o] < 0 or _stronger(w, h, _aura_of[o])):
+			if _ad[o] >= 0.0 or not live(towers, o):  # Hymns never get an aura
+				continue
+			var b := _aura_of[o]
+			# Higher aura_damage, then higher aura_cooldown, then lower uid.
+			if b < 0 or _ad[h] > _ad[b] or (_ad[h] == _ad[b] and (_ac[h] > _ac[b] 					or (_ac[h] == _ac[b] and towers.uid[h] < towers.uid[b]))):
 				_aura_of[o] = h
 	for o in n:
-		if _aura_of[o] >= 0:
-			var lv := _lv(w, _aura_of[o])
-			_add(o, _DAMAGE, SimModifiers.Op.MULT, lv.aura_damage)
-			_add(o, _COOLDOWN, SimModifiers.Op.MULT, -lv.aura_cooldown)
-
-
-# Higher aura_damage, then higher aura_cooldown, then lower uid.
-func _stronger(w: SimWorld, h: int, b: int) -> bool:
-	var lh := _lv(w, h)
-	var lb := _lv(w, b)
-	if lh.aura_damage != lb.aura_damage:
-		return lh.aura_damage > lb.aura_damage
-	if lh.aura_cooldown != lb.aura_cooldown:
-		return lh.aura_cooldown > lb.aura_cooldown
-	return w.towers.uid[h] < w.towers.uid[b]
+		var h := _aura_of[o]
+		if h >= 0:
+			_add(o, _DAMAGE, SimModifiers.Op.MULT, _ad[h])
+			_add(o, _COOLDOWN, SimModifiers.Op.MULT, -_ac[h])
 
 
 # Rule 7: each Poppy's live towers in her derived range, herself included.

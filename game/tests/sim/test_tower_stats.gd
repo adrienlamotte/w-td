@@ -129,7 +129,8 @@ func test_remove_moves_derived_arrays() -> void:
 	assert_eq(world.towers.thorns[0], 3.0)
 	for a in [world.towers.level, world.towers.damage, world.towers.reload, world.towers.max_hp,
 			world.towers.splash_radius, world.towers.slow_factor, world.towers.slow_ticks,
-			world.towers.thorns, world.towers.mark_gold, world.towers.mark_ticks]:
+			world.towers.thorns, world.towers.mark_gold, world.towers.mark_ticks, world.towers.reach,
+			world.towers.heal, world.towers.guardian_heal, world.towers.heal_targets, world.towers.syn_mask]:
 		assert_eq(a.size(), 1)
 
 
