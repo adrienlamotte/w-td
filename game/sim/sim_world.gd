@@ -28,6 +28,8 @@ var synergies: SynergyCatalog
 var links: TowerLinks = TowerLinks.new()
 ## Relationship rules active on the Guardian's side, bit = rule index (D-150). Hashed.
 var guardian_syn_mask: int = 0
+## Meta-tree nodes; loaded at the first StartRun that has some (D-152 rule 8).
+var meta: MetaCatalog = null
 ## XP, levels and the level-up draft (D-147); reset at StartRun.
 var draft: CardDraft = CardDraft.new()
 ## Buildable tower types this run: run.tower_types at StartRun, plus card unlocks (D-147). Hashed.
@@ -201,6 +203,7 @@ func _apply(cmd: SimCommand) -> void:
 			guardian_hp = guardian_max_hp
 			gold = run.starting_gold
 			modifiers = SimModifiers.new()
+			_apply_meta(cmd.meta_nodes)  # before the grid is sized from the build_radius adds
 			build_radius = run.build_radius + modifiers.target_sums("build_radius", "run").x
 			max_build_radius = build_radius + cards.max_build_radius_bonus
 			build = BuildGrid.new(max_build_radius, run.grid_step)
@@ -233,6 +236,19 @@ func _apply(cmd: SimCommand) -> void:
 		SimCommand.Type.PICK_CARD:
 			if run_state == RunState.RUNNING and not paused:
 				draft.pick(self, cmd.slot)
+
+
+# Bought meta nodes in catalog id order, so the store order (and float sums) do not depend on
+# the profile's order (D-152 rule 8). `gold` adds to the starting gold, the rest is stored.
+func _apply_meta(nodes: PackedStringArray) -> void:
+	if nodes.is_empty():
+		return
+	if meta == null:
+		meta = MetaCatalog.load_dir()
+	for id in meta.ids:
+		if nodes.has(id):
+			for e: Dictionary in meta.effects[id]:
+				CardEffects.apply(self, e)
 
 
 # Only while RUNNING and not paused; unknown id or cooldown: ignored, no event (D-110).

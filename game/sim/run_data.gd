@@ -11,6 +11,12 @@ const _SKILLS := {"area_blast": Skill.AREA_BLAST, "shield": Skill.SHIELD, "guard
 	"bounty": Skill.BOUNTY, "haste": Skill.HASTE, "snare": Skill.SNARE, "rebuild": Skill.REBUILD}
 
 var id: String = ""
+## The Guardian of this run (the StartRun override or the run file's).
+var guardian_id: String = ""
+## Hearts at run end (10_M3_CONTENT.md 6.1, D-152 rule 4).
+var hearts_win: int = 0
+var hearts_loss_min: int = 0
+var hearts_loss_max: int = 0
 var starting_gold: int = 0
 var build_radius: float = 0.0
 var grid_step: float = 0.0
@@ -36,8 +42,6 @@ var xp_step: float = 0.0
 ## Draft type weights in CardCatalog.Type order (new_tower, signature, skill, perk).
 var card_type_weights: PackedFloat32Array = PackedFloat32Array()
 
-## The Guardian file of this run (StartRun's choice, else the run file's).
-var guardian_id: String = ""
 var guardian_hp: float = 0.0
 var guardian_contact_radius: float = 0.0
 ## Skills, indexed by skill slot. Fields a kind does not use are 0.
@@ -62,7 +66,7 @@ var signature_slot: int = -1
 
 
 ## An empty `guardian_id` keeps the run file's Guardian (D-146).
-static func load_id(run_id: String, enemies: EnemyCatalog, towers: TowerCatalog, p_guardian_id := "") -> RunData:
+static func load_id(run_id: String, enemies: EnemyCatalog, towers: TowerCatalog, guardian_id := "") -> RunData:
 	var d := DataFiles.read_id(DIR + "/runs", run_id)
 	var run := RunData.new()
 	run.id = run_id
@@ -90,17 +94,20 @@ static func load_id(run_id: String, enemies: EnemyCatalog, towers: TowerCatalog,
 	run.final_boss_type = _resolve(enemies.type_of(d.final_boss.enemy), d.final_boss.enemy)
 	for tower_id: String in d.towers:
 		run.tower_types.append(_resolve(towers.type_of(tower_id), tower_id))
+	run.hearts_win = int(d.hearts_win)
+	run.hearts_loss_min = int(d.hearts_loss_min)
+	run.hearts_loss_max = int(d.hearts_loss_max)
 	run.xp_base = d.xp_base
 	run.xp_step = d.xp_step
 	for k in CardCatalog.Type.FILLER:
 		run.card_type_weights.append(d.card_type_weights[CardCatalog.TYPE_NAMES[k]])
-	run._load_guardian(p_guardian_id if p_guardian_id != "" else String(d.guardian))
+	run.guardian_id = guardian_id if guardian_id != "" else String(d.guardian)
+	run._load_guardian(run.guardian_id)
 	return run
 
 
-func _load_guardian(p_id: String) -> void:
-	guardian_id = p_id
-	var g := DataFiles.read_id(DIR + "/guardians", p_id)
+func _load_guardian(guardian_id: String) -> void:
+	var g := DataFiles.read_id(DIR + "/guardians", guardian_id)
 	guardian_hp = g.hp
 	guardian_contact_radius = g.contact_radius
 	for skill_id: String in g.skills:

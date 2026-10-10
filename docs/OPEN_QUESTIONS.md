@@ -81,6 +81,26 @@ Last reviewed: 2026-10-08 (daily docs review; owner answers recorded the same da
 
 ---
 
+## M3 (not blocking implementation)
+
+### Q-76 Can a player farm hearts by abandoning at once? (raised by task 039, M3 balance)
+`10_M3_CONTENT.md` 6.1 gives an abandon the loss hearts at the time reached, and the minimum is 30 at 0:00. Start a run, pause, abandon: about 5 seconds for 30 hearts, so the whole 1240-heart tree takes about 42 abandons (a few minutes). Task 039 builds 6.1 as written; changing it is a small sim change in `MetaProfile.hearts_for` (D-152 rule 4).
+- A) **No hearts for a loss or abandon before the first wave starts (`run.first_wave_tick`); 6.1 unchanged after that** ★
+- B) An abandon gives 0 hearts; only a real defeat gives 30-50.
+- C) Keep 6.1 as written (farming possible).
+
+### Q-77 Poppy repair and Hymn aura readings (task 032, D-150, not blocking)
+The plan takes the literal reading of `10_M3_CONTENT.md` 3.1 / D-135 on four points: Poppy can heal herself; at Signature level the Guardian is healed only when no tower needs a heal; Hymn's aura also shortens Poppy's repair cooldown (Crescendo does not); a repair pulse with nothing to heal is spent.
+- A) **Keep all four readings** ★
+- B) Change one or more (say which).
+
+### Q-78 What is "best time per Guardian" in the profile? (task 035, D-152, not blocking)
+035 stores the longest time survived with her, wins included.
+- A) **Longest time survived, wins included** ★
+- B) Fastest win (no value until she has won once).
+
+---
+
 ## A. Deferred until the first real asset arrives
 
 ### Q-37 Where are large art files stored? (DEFERRED by the owner: decide when the first real asset arrives)

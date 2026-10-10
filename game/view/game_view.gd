@@ -9,6 +9,8 @@ var demo: bool = true
 var world: SimWorld = SimWorld.new(RUN_SEED)
 var driver: SimDriver = SimDriver.new(world)
 var _slow_scale: float = 1.0
+# The run end was written to the profile (once per scene; Restart reloads the scene).
+var _recorded: bool = false
 
 
 func _ready() -> void:
@@ -64,3 +66,6 @@ func _process(delta: float) -> void:
 	var input: PlayerInput = $PlayerInput
 	driver.advance(delta * RunFlow.time_scale(RunFlow.slow_time_placing, input.is_placing(),
 			PlayerInput.can_build(world), _slow_scale))
+	if demo and not _recorded and world.run_state in [SimWorld.RunState.WON, SimWorld.RunState.LOST]:
+		_recorded = true
+		ProfileStore.record_run_end(world)  # hearts, stats, Guardian unlock (D-152); shown by 039

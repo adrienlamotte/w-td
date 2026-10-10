@@ -54,20 +54,29 @@ static func check_place(w: SimWorld, tower_id: String, x: float, z: float) -> Ch
 
 
 ## Price of the next tower of this catalog type: rises per copy, husks count (D-113).
+## Meta `price` mult (D-152 rule 9) rounds down, so a discount never rounds up. The epsilon
+## absorbs float32 sums (60 x 0.95 stays 57), as for kill gold (D-147).
 static func price(w: SimWorld, type: int) -> int:
-	return w.tower_catalog.cost[type] + w.tower_catalog.cost_per_copy[type] * w.towers.copies(type)
+	var cat := w.tower_catalog
+	var base := cat.cost[type] + cat.cost_per_copy[type] * w.towers.copies(type)
+	return floori(base * (1.0 + w.modifiers.sums("price", cat.ids[type]).y) + 1e-4)
 
 
-## Price to rebuild husk t: a fraction of what was paid (D-113), times 1 + `rebuild_price` mult (D-148).
+## Price to rebuild husk t: a fraction of what was paid (D-113, plus meta `rebuild_fraction`
+## adds, D-152), times 1 + `rebuild_price` mult (D-148).
 static func rebuild_price(w: SimWorld, t: int) -> int:
-	return maxi(0, floori(w.towers.paid[t] * w.tower_catalog.rebuild_fraction[w.towers.type_id[t]] * (1.0 + w.rebuild_mult)))
+	var type := w.towers.type_id[t]
+	var fraction := w.tower_catalog.rebuild_fraction[type] + w.modifiers.sums("rebuild_fraction", w.tower_catalog.ids[type]).x
+	return maxi(0, floori(w.towers.paid[t] * maxf(0.0, fraction) * (1.0 + w.rebuild_mult) + 1e-4))
 
 
 ## Gold back for selling tower t; 0 for a husk (D-113).
 static func sell_refund(w: SimWorld, t: int) -> int:
 	if w.towers.husk[t]:
 		return 0
-	return floori(w.towers.paid[t] * w.tower_catalog.sell_refund[w.towers.type_id[t]])
+	var type := w.towers.type_id[t]
+	var refund := w.tower_catalog.sell_refund[type] + w.modifiers.sums("sell_refund", w.tower_catalog.ids[type]).x
+	return floori(w.towers.paid[t] * clampf(refund, 0.0, 1.0) + 1e-4)  # plus meta adds (D-152)
 
 
 static func place(w: SimWorld, cmd: SimCommand) -> void:

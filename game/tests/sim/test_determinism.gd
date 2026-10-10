@@ -200,3 +200,18 @@ func _run_links(run_seed: int) -> int:
 				repairs += 1
 	assert_gt(repairs, 0, "Poppy healed")
 	return w.state_hash()
+
+
+# A run_m3 replay with every meta node bought (D-152): same commands, same state.
+func _meta_run() -> int:
+	var world := SimWorld.new(3)
+	world.queue(SimCommand.start_run(0, 99, "run_m3", "guardian_cinder", PackedStringArray(),
+		MetaCatalog.load_dir().ids))
+	world.queue(SimCommand.place_tower(10, "tower_pip", 6.0, 0.0))
+	for i in 30 * 40:
+		world.step()
+	return world.state_hash()
+
+
+func test_meta_replay_same_state() -> void:
+	assert_eq(_meta_run(), _meta_run())
