@@ -1,8 +1,8 @@
 # 036 — Save: suspend save and resume
-- Status: planned
+- Status: review
 - Milestone: M3
 - Depends on: 032, 033, 034, 035, 039, 045
-- PR:
+- PR: #51
 
 ## Goal
 A run survives closing the game: a snapshot at card and wave boundaries, and Resume or Abandon on the next launch.
