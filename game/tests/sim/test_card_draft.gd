@@ -266,3 +266,22 @@ func test_replay_with_picks() -> void:
 	assert_eq(_played(5, rec2, []).state_hash(), a.state_hash(), "same seed and commands")
 	var ignored: Array[SimCommand] = []
 	assert_eq(_played(5, ignored, rec).state_hash(), a.state_hash(), "replayed from the recorded commands")
+
+
+func test_level_progress() -> void:
+	var d := world.draft
+	assert_eq(d.level_progress(world.run), 0.0, "start of level 1")
+	d.xp = 15.0
+	assert_almost_eq(d.level_progress(world.run), 0.5, 1e-6, "half of xp_base 30")
+	d.xp = 30.0
+	world.step()
+	assert_eq(d.level, 2)
+	assert_eq(d.level_progress(world.run), 0.0, "right after the level-up")
+	d.xp = 75.0  # level 2 spans 30..90
+	assert_almost_eq(d.level_progress(world.run), 0.75, 1e-6)
+
+
+func test_card_text_keys() -> void:
+	var c := _card("card_tower_cinder")
+	assert_eq(world.cards.name_key[c], "card.card_tower_cinder.name")
+	assert_eq(world.cards.desc_key[c], "card.card_tower_cinder.desc")

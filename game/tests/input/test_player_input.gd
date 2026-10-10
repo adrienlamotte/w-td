@@ -4,12 +4,14 @@ extends GutTest
 ## Every action of docs/09_CONTROLS.md; keep equal to the spec's table.
 const ACTIONS: Array[String] = ["cam_pan_up", "cam_pan_down", "cam_pan_left", "cam_pan_right",
 	"menu_up", "menu_down", "menu_left", "menu_right", "cam_zoom_in", "cam_zoom_out",
-	"cam_recentre", "build_menu", "build_slot_1", "build_slot_2", "build_slot_3", "build_place",
+	"cam_recentre", "build_menu", "build_slot_1", "build_slot_2", "build_slot_3", "build_slot_4", "build_slot_5",
+	"build_slot_6", "build_slot_7", "build_slot_8", "build_place",
 	"build_cancel", "tower_sell", "tower_upgrade", "skill_1", "skill_2", "pause"]
 ## Gamepad only: keyboard/mouse pans with WASD and builds with the slot keys instead.
 const PAD_ONLY: Array[String] = ["menu_up", "menu_down", "menu_left", "menu_right", "build_menu"]
 ## Keyboard only: the gamepad picks a tower with the radial menu (build_menu) instead.
-const KEY_ONLY: Array[String] = ["build_slot_1", "build_slot_2", "build_slot_3"]
+const KEY_ONLY: Array[String] = ["build_slot_1", "build_slot_2", "build_slot_3", "build_slot_4",
+	"build_slot_5", "build_slot_6", "build_slot_7", "build_slot_8"]
 const SINGLE := "tower_single_01"
 
 var world: SimWorld
@@ -184,7 +186,7 @@ func test_pad_cancel_and_menu() -> void:
 
 func test_keyboard_mouse() -> void:
 	input.handle(_key(KEY_2))
-	assert_eq(input.selected_tower, world.tower_catalog.ids[world.run.tower_types[1]])
+	assert_eq(input.selected_tower, world.tower_catalog.ids[world.tower_types[1]])
 	input.cursor = Vector2(-3.0, 5.0)
 	input.handle(_mouse(MOUSE_BUTTON_LEFT))
 	assert_false(input.gamepad)
@@ -278,3 +280,38 @@ func test_no_building_while_drafting() -> void:
 	world.step()
 	assert_true(world.draft.drafting)
 	assert_false(PlayerInput.can_build(world), "a card draft is open (D-147)")
+
+
+
+func test_only_pause_during_a_draft() -> void:
+	world.draft.xp = 30.0
+	world.step()
+	assert_true(PlayerInput.in_draft(world))
+	input.select_tower(SINGLE)
+	input.menu_open = true
+	input.cursor = Vector2(3.0, 4.0)
+	cam.set_zoom(1)
+	for e: InputEvent in [_key(KEY_Q), _key(KEY_2), _mouse(MOUSE_BUTTON_LEFT), _pad(JOY_BUTTON_A),
+			_pad(JOY_BUTTON_X), _pad(JOY_BUTTON_RIGHT_SHOULDER), _key(KEY_HOME)]:
+		input.handle(e)
+	assert_eq(_queued().size(), 0, "nothing queued")
+	assert_eq(input.selected_tower, SINGLE, "the selection is kept for after the pick")
+	assert_false(input.menu_open, "the radial closes")
+	assert_eq(cam.zoom_index, 1, "no zoom")
+	var before := cam.position
+	input.set_process(true)
+	Input.action_press(&"cam_pan_right")
+	input._process(1.0)
+	Input.action_release(&"cam_pan_right")
+	input.set_process(false)
+	assert_eq(cam.position, before, "no pan")
+	input.handle(_key(KEY_P))
+	assert_eq(_queued().size(), 1)
+	assert_eq(_queued()[0].type, SimCommand.Type.PAUSE)
+	assert_true(_queued()[0].paused)
+
+
+func test_slot_8_selects_the_eighth_tower() -> void:
+	world.tower_types = PackedInt32Array([0, 1, 2, 3, 4, 5, 6, 7])
+	input.handle(_key(KEY_8))
+	assert_eq(input.selected_tower, world.tower_catalog.ids[7])

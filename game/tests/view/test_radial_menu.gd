@@ -49,7 +49,7 @@ func test_deadzone() -> void:
 
 func test_release_selects_or_keeps() -> void:
 	var ids := world.tower_catalog.ids
-	var types := world.run.tower_types
+	var types := world.tower_types
 	input.select_tower(ids[types[0]])
 	input.build_menu_closed.emit(_at(30.0))
 	assert_eq(input.selected_tower, ids[types[1]])
@@ -64,8 +64,18 @@ func test_shown_while_open() -> void:
 	input.menu_dir = _at(150.0)
 	radial.refresh()
 	assert_true(radial.visible)
-	assert_eq(radial.get_child_count(), world.run.tower_types.size())
-	assert_eq(world.run.tower_types.size(), 3, "run_m2 offers 3 towers")
+	assert_eq(radial.get_child_count(), world.tower_types.size())
+	assert_eq(world.tower_types.size(), 3, "run_m2 offers 3 towers")
 	assert_eq(radial.hover, 2)
-	var price := TowerBuilding.price(world, world.run.tower_types[0])
+	var price := TowerBuilding.price(world, world.tower_types[0])
 	assert_string_contains((radial.get_child(0) as Label).text, str(price))
+
+
+func test_grows_with_card_unlocks() -> void:
+	var c := world.cards.index_of("card_tower_cinder")
+	CardEffects.apply(world, world.cards.effects[c][0])
+	input.menu_open = true
+	radial.refresh()
+	assert_eq(radial.get_child_count(), 4)
+	input.build_menu_closed.emit(Vector2.LEFT)
+	assert_eq(input.selected_tower, "tower_cinder", "slice 3 of 4 is the unlocked tower")

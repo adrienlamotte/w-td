@@ -10,6 +10,9 @@ const TYPE_NAMES: PackedStringArray = ["new_tower", "signature", "skill", "perk"
 var ids: PackedStringArray = PackedStringArray()
 var type: PackedInt32Array = PackedInt32Array()
 var max_picks: PackedInt32Array = PackedInt32Array()
+## Localisation keys of the card text (view only).
+var name_key: PackedStringArray = PackedStringArray()
+var desc_key: PackedStringArray = PackedStringArray()
 ## Waifu id that must be rescued (StartRun `unlocked`); "" = none.
 var req_unlocked: PackedStringArray = PackedStringArray()
 ## Tower type that must be buildable this run; -1 = none.
@@ -40,6 +43,8 @@ static func load_dir(towers: TowerCatalog, path := "res://data/cards", waifu_pat
 		cat.ids.append(d.id)
 		cat.type.append(TYPE_NAMES.find(d.type))
 		cat.max_picks.append(int(d.max_picks))
+		cat.name_key.append(d.name_key)
+		cat.desc_key.append(d.desc_key)
 		cat.req_unlocked.append(req.get("unlocked", ""))
 		cat.req_buildable_type.append(waifu_tower.get(req.get("buildable", ""), -1))
 		cat.unlock_type.append(unlock)

@@ -8,6 +8,7 @@ hud.seconds,{value}s
 hud.hint.skill_1,Q / LT
 hud.hint.skill_2,E / RT
 hud.paused,Paused
+hud.level,Lv {level}
 enemy.boss_01.name,Boss
 enemy.brute_01.name,Brute
 enemy.miniboss_01.name,Mini-boss A
@@ -160,3 +161,9 @@ meta.radius.name,Wide Grounds
 meta.radius.desc,Build radius +2.
 meta.discount.name,Discount
 meta.discount.desc,Tower placement price -5%.
+draft.title,Level {level}!
+draft.type.new_tower,New waifu
+draft.type.signature,Signature
+draft.type.skill,Guardian skill
+draft.type.perk,Perk
+draft.type.filler,Bonus

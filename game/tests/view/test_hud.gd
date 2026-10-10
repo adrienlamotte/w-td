@@ -7,7 +7,7 @@ const KEYS := ["hud.hp", "hud.gold", "hud.wave", "hud.break", "hud.ready", "hud.
 	"build.slot", "build.gold", "build.cost", "build.reason.occupied", "build.reason.out_of_radius",
 	"build.reason.too_close", "build.reason.no_gold", "build.reason.not_offered", "build.hint.sell",
 	"build.hint.rebuild", "input.kbm.build_place", "input.pad.build_place", "input.kbm.tower_sell",
-	"input.pad.tower_sell"]
+	"input.pad.tower_sell", "hud.level"]
 
 var world: SimWorld
 var hud: Hud
@@ -130,3 +130,17 @@ func test_keys_translate() -> void:
 	keys.append_array(world.run.skill_name_key)
 	for k: String in keys:
 		assert_ne(tr(k), k, k)
+
+
+func test_level_and_xp_bar() -> void:
+	var bar: ProgressBar = hud.get_node("Root/TopLeft/XpBar")
+	assert_eq(_label("TopLeft/Level").text, "Lv 1")
+	assert_eq(bar.value, 0.0)
+	world.draft.xp = 12.0
+	hud.refresh()
+	assert_almost_eq(bar.value, world.draft.level_progress(world.run), 1e-6)
+	assert_gt(bar.value, 0.0)
+	world.draft.xp = world.draft.xp_next
+	_steps(1)
+	assert_eq(world.draft.level, 2)
+	assert_eq(_label("TopLeft/Level").text, "Lv 2")

@@ -1,8 +1,8 @@
 class_name BuildBar
-extends HBoxContainer
-## Build bar (D-122): one button per run tower with name, price and hotkey. A click selects the
-## tower like the slot key (PlayerInput.select_tower). Greyed (still clickable) when gold is
-## short, disabled when not RUNNING or paused (D-105). Prices from TowerBuilding.price only.
+extends GridContainer
+## Build bar (D-122, D-153): one button per buildable tower (world.tower_types, up to 8 in
+## 4 columns) with name, price and hotkey. A click selects the tower like the slot key
+## (PlayerInput.select_tower). Greyed (still clickable) when gold is short, disabled when not RUNNING or paused (D-105). Prices from TowerBuilding.price only.
 
 const GREYED := Color(0.55, 0.55, 0.55, 1.0)
 
@@ -11,6 +11,10 @@ var input: PlayerInput
 var _run: RunData
 # Last [price, affordable, selected, enabled] shown per button (text rebuilt on change only).
 var _shown: Array = []
+
+
+func _init() -> void:
+	columns = 4
 
 
 func setup(w: SimWorld, p_input: PlayerInput) -> void:
@@ -26,12 +30,12 @@ func _process(_delta: float) -> void:
 func refresh() -> void:
 	if input == null:
 		return
-	if world.run != _run:
+	if world.run != _run or (_run != null and world.tower_types.size() != get_child_count()):
 		_build()
 	var enabled := PlayerInput.can_build(world)
 	for s in get_child_count():
 		var b: Button = get_child(s)
-		var type := world.run.tower_types[s]
+		var type := world.tower_types[s]
 		var price := TowerBuilding.price(world, type)
 		var state := [price, world.gold >= price, input.selected_tower == world.tower_catalog.ids[type], enabled]
 		if state == _shown[s]:
@@ -51,7 +55,7 @@ func _build() -> void:
 	_shown.clear()
 	if _run == null:
 		return
-	for type in _run.tower_types:
+	for type in world.tower_types:
 		var b := Button.new()
 		b.toggle_mode = true
 		b.focus_mode = Control.FOCUS_NONE  # the gamepad uses the radial, not GUI focus
