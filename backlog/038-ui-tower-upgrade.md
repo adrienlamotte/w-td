@@ -1,5 +1,5 @@
 # 038 — UI: tower upgrade controls, hints and level display
-- Status: review
+- Status: done
 - Milestone: M3
 - Depends on: 030
 - Labels: needs-human:playtest
@@ -56,3 +56,4 @@ Playtest note: the main scene still runs `run_m2` (M2 towers, max level 1), so i
 - None blocking. For the owner (no answer needed to proceed): the upgrade UI can only be tried in game once 039 starts runs with waifu towers; the label shows "Lv 1" too (all levels visible, per the acceptance criteria), only on towers that can level up.
 
 ## Review log
+- 2026-10-10 lead-dev: approved, PR #42 squash-merged into m3/dev. All criteria met, matches plan (input/view/data only, no sim change). test.ps1 288/288 GUT + 24 tools tests green, validate.ps1 0 errors. Draft gate (can_build vs w.draft.drafting) belongs to the 033 PR. Playtest at CP-M3 once 039 runs waifu towers.
