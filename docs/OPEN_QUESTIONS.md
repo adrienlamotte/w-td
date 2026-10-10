@@ -89,6 +89,16 @@ Last reviewed: 2026-10-08 (daily docs review; owner answers recorded the same da
 - B) An abandon gives 0 hearts; only a real defeat gives 30-50.
 - C) Keep 6.1 as written (farming possible).
 
+### Q-77 Poppy repair and Hymn aura readings (task 032, D-150, not blocking)
+The plan takes the literal reading of `10_M3_CONTENT.md` 3.1 / D-135 on four points: Poppy can heal herself; at Signature level the Guardian is healed only when no tower needs a heal; Hymn's aura also shortens Poppy's repair cooldown (Crescendo does not); a repair pulse with nothing to heal is spent.
+- A) **Keep all four readings** ★
+- B) Change one or more (say which).
+
+### Q-78 What is "best time per Guardian" in the profile? (task 035, D-152, not blocking)
+035 stores the longest time survived with her, wins included.
+- A) **Longest time survived, wins included** ★
+- B) Fastest win (no value until she has won once).
+
 ---
 
 ## A. Deferred until the first real asset arrives
