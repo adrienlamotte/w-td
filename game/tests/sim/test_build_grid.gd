@@ -41,7 +41,8 @@ func test_run_m2_grid_size() -> void:
 	var world := SimWorld.new(1)
 	world.queue(SimCommand.start_run(0, 7, "run_m2"))
 	world.step()
-	assert_eq(world.build.size, 88)
+	# 112, not 88: sized for the reachable radius 20 + perk_expand 2 x 3 (D-148)
+	assert_eq(world.build.size, 112)
 
 
 func test_cell_of() -> void:

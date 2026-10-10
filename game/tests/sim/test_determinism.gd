@@ -144,3 +144,31 @@ func _guardian_hash(gid: String) -> int:
 func test_guardian_skills_deterministic() -> void:
 	var h := _guardian_hash("guardian_bastia")
 	assert_eq(_guardian_hash("guardian_bastia"), h)
+
+
+# Run-scope card effects (D-148): perk_expand and perk_maze picked through the draft on run_m3.
+func test_run_effects_deterministic() -> void:
+	var h := _run_effects(7)
+	assert_eq(_run_effects(7), h)
+
+
+func _run_effects(run_seed: int) -> int:
+	var w := SimWorld.new(1)
+	w.queue(SimCommand.start_run(0, run_seed, "run_m3"))
+	w.step()
+	w.gold = 1 << 20
+	for id in ["perk_expand", "perk_maze"]:
+		var c := w.cards.index_of(id)
+		w.draft.draft = PackedInt32Array([c, c, c])
+		w.draft.drafting = true
+		w.draft.pending = 1
+		w.queue(SimCommand.pick_card(w.tick, 0))
+		w.step()
+	for z in range(-6, 7):
+		w.queue(SimCommand.place_tower(w.tick, "tower_pip", 8.0, z))
+	w.queue(SimCommand.place_tower(w.tick, "tower_pip", 22.0, 0.0))  # only inside 23
+	for i in 1800:
+		w.step()
+	assert_eq(w.build_radius, 23.0)
+	assert_eq(w.towers.count(), 14, "the expanded placement went through")
+	return w.state_hash()

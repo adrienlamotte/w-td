@@ -37,6 +37,12 @@ func _cell(i: int, j: int) -> int:
 	return j * world.build.size + i
 
 
+# Cell (di, dj) from the grid centre: the grid size follows the reachable radius (D-148).
+func _at(di: int, dj: int) -> int:
+	var h := world.build.size / 2
+	return _cell(h + di, h + dj)
+
+
 func _assert_rejected(cmd: SimCommand, why: String) -> void:
 	var gold := world.gold
 	var n := world.towers.count()
@@ -61,11 +67,11 @@ func test_place() -> void:
 	assert_eq(world.events.x[ev[0]], 3.0)
 	assert_eq(world.events.z[ev[0]], 4.0)
 	assert_eq(world.events.value[ev[0]], float(single))
-	# Centre 3.0 with 2 cells: cells 49..50 in x, 51..52 in z (4-cell margin, D-115).
-	for c in [_cell(49, 51), _cell(50, 51), _cell(49, 52), _cell(50, 52)]:
+	# Centre 3.0 with 2 cells: centre + 5..6 in x, centre + 7..8 in z.
+	for c in [_at(5, 7), _at(6, 7), _at(5, 8), _at(6, 8)]:
 		assert_eq(world.build.owner[c], 0)
 		assert_eq(world.build.solid[c], 1)
-	assert_eq(world.build.owner[_cell(51, 51)], -1)
+	assert_eq(world.build.owner[_at(7, 7)], -1)
 	assert_eq(world.build.version, v + 1)
 
 
@@ -126,8 +132,8 @@ func test_sell() -> void:
 	_do(SimCommand.sell_tower(world.tick, 0))
 	var refund := floori(paid * world.tower_catalog.sell_refund[single])
 	assert_eq(world.gold, gold + refund)
-	assert_eq(world.build.owner[_cell(49, 51)], -1)
-	assert_eq(world.build.solid[_cell(49, 51)], 0)
+	assert_eq(world.build.owner[_at(5, 7)], -1)
+	assert_eq(world.build.solid[_at(5, 7)], 0)
 	assert_eq(world.build.version, v + 1)
 	var ev := _events_of(SimEvents.Kind.TOWER_SOLD)
 	assert_eq(ev.size(), 1)
@@ -157,8 +163,8 @@ func test_damage_and_husk() -> void:
 	assert_eq(world.towers.hp[0], 0.0)
 	assert_eq(world.towers.husk[0], 1)
 	assert_eq(_events_of(SimEvents.Kind.TOWER_DIED).size(), 1)
-	assert_eq(world.build.owner[_cell(49, 51)], 0)
-	assert_eq(world.build.solid[_cell(49, 51)], 0)
+	assert_eq(world.build.owner[_at(5, 7)], 0)
+	assert_eq(world.build.solid[_at(5, 7)], 0)
 	assert_eq(world.build.version, v + 1)
 	world.step()
 	assert_eq(world.towers.target[0], -1, "a husk never targets")
@@ -170,7 +176,7 @@ func test_damage_and_husk() -> void:
 	var gold := world.gold
 	_do(SimCommand.sell_tower(world.tick, 0))
 	assert_eq(world.gold, gold, "a husk refunds nothing")
-	assert_eq(world.build.owner[_cell(49, 51)], -1)
+	assert_eq(world.build.owner[_at(5, 7)], -1)
 
 
 func test_live_tower_targets() -> void:
@@ -200,7 +206,7 @@ func test_rebuild() -> void:
 	assert_eq(world.gold, 0)
 	assert_eq(world.towers.husk[0], 0)
 	assert_eq(world.towers.hp[0], world.tower_catalog.hp[single])
-	assert_eq(world.build.solid[_cell(49, 51)], 1)
+	assert_eq(world.build.solid[_at(5, 7)], 1)
 	assert_eq(world.build.version, v + 1)
 	var ev := _events_of(SimEvents.Kind.TOWER_PLACED)
 	assert_eq(ev.size(), 1)

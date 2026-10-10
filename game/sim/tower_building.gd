@@ -42,7 +42,7 @@ static func check_place(w: SimWorld, tower_id: String, x: float, z: float) -> Ch
 	var dist := sqrt(c.x * c.x + c.z * c.z)
 	if not b.is_free(c.i0, c.j0, c.footprint):  # out of the grid, or a tower or husk is there
 		c.reason = Reason.OCCUPIED
-	elif dist + radius > w.run.build_radius:
+	elif dist + radius > w.build_radius:  # current radius (D-148)
 		c.reason = Reason.OUT_OF_RADIUS
 	elif dist < w.run.guardian_contact_radius + radius:
 		c.reason = Reason.TOO_CLOSE
@@ -58,9 +58,9 @@ static func price(w: SimWorld, type: int) -> int:
 	return w.tower_catalog.cost[type] + w.tower_catalog.cost_per_copy[type] * w.towers.copies(type)
 
 
-## Price to rebuild husk t: a fraction of what was paid (D-113).
+## Price to rebuild husk t: a fraction of what was paid (D-113), times 1 + `rebuild_price` mult (D-148).
 static func rebuild_price(w: SimWorld, t: int) -> int:
-	return floori(w.towers.paid[t] * w.tower_catalog.rebuild_fraction[w.towers.type_id[t]])
+	return maxi(0, floori(w.towers.paid[t] * w.tower_catalog.rebuild_fraction[w.towers.type_id[t]] * (1.0 + w.rebuild_mult)))
 
 
 ## Gold back for selling tower t; 0 for a husk (D-113).

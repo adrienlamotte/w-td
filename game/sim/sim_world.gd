@@ -31,6 +31,14 @@ var unlocked: PackedStringArray = PackedStringArray()
 ## Run-scope multipliers (1 + sum of mult) of `xp` and `kill_gold`, cached with the tower stats.
 var xp_mult: float = 1.0
 var kill_gold_mult: float = 1.0
+## Build radius reachable this run, set at StartRun: sizes `build` once (D-148 rule 1).
+var max_build_radius: float = 0.0
+## Current build radius: run radius + `build_radius` adds on `run`, cached with the tower stats. Hashed.
+var build_radius: float = 0.0
+## Sum of `rebuild_price` mult on `run` (D-148 rule 2) and of `detour_damage` mult on
+## `all_towers` (rule 3), cached with the tower stats.
+var rebuild_mult: float = 0.0
+var detour_mult: float = 0.0
 ## Events of the last step(), cleared at its start.
 var events: SimEvents = SimEvents.new()
 var enemies: SimEnemies = SimEnemies.new()
@@ -185,8 +193,12 @@ func _apply(cmd: SimCommand) -> void:
 			guardian_max_hp = run.guardian_hp
 			guardian_hp = guardian_max_hp
 			gold = run.starting_gold
-			build = BuildGrid.new(run.build_radius, run.grid_step)
 			modifiers = SimModifiers.new()
+			build_radius = run.build_radius + modifiers.target_sums("build_radius", "run").x
+			max_build_radius = build_radius + cards.max_build_radius_bonus
+			build = BuildGrid.new(max_build_radius, run.grid_step)
+			rebuild_mult = 0.0
+			detour_mult = 0.0
 			skills.reset(run.skill_ids.size())
 			draft.reset(run.xp_base, cards.ids.size())
 			tower_types = run.tower_types.duplicate()
@@ -239,10 +251,14 @@ func _recompute_guardian_max() -> void:
 		guardian_hp = minf(guardian_hp, guardian_max_hp)
 
 
-# Run-scope `xp` and `kill_gold` multipliers (D-147): (1 + add) * (1 + mult), never summed per kill.
+# Run-scope `xp` and `kill_gold` multipliers (D-147), build radius, rebuild and detour (D-148): (1 + add) * (1 + mult), never summed per kill.
 func _recompute_run_mults() -> void:
 	xp_mult = TowerStats.value(1.0, modifiers.target_sums("xp", "run"))
 	kill_gold_mult = TowerStats.value(1.0, modifiers.target_sums("kill_gold", "run"))
+	rebuild_mult = modifiers.target_sums("rebuild_price", "run").y
+	detour_mult = modifiers.target_sums("detour_damage", "all_towers").y
+	if run:  # D-148: placement reads it; the grid was sized for the max at StartRun
+		build_radius = run.build_radius + modifiers.target_sums("build_radius", "run").x
 
 
 ## Stand Firm (D-146): damage to towers and the Guardian, reduced while guarded.
@@ -377,4 +393,4 @@ func state_hash() -> int:
 		towers.slow_factor, towers.slow_ticks, towers.thorns, towers.mark_gold, towers.mark_ticks,
 		towers.stats_dirty, modifiers.hash_parts(), skills.ready_at, skills.shield_left, skills.shield_until,
 		skills.guard_until, skills.bounty_until, skills.bounty_gold, skills.haste_until,
-		draft.hash_parts(), tower_types, unlocked])
+		draft.hash_parts(), tower_types, unlocked, build_radius])
