@@ -22,6 +22,12 @@ var run: RunData = null
 var catalog: EnemyCatalog
 var tower_catalog: TowerCatalog
 var cards: CardCatalog
+## Relationship rules and the waifu of each tower type and Guardian (D-150).
+var synergies: SynergyCatalog
+## Synergies, aura and repair lists, computed with the tower stats (D-150).
+var links: TowerLinks = TowerLinks.new()
+## Relationship rules active on the Guardian's side, bit = rule index (D-150). Hashed.
+var guardian_syn_mask: int = 0
 ## Meta-tree nodes; loaded at the first StartRun that has some (D-152 rule 8).
 var meta: MetaCatalog = null
 ## XP, levels and the level-up draft (D-147); reset at StartRun.
@@ -89,6 +95,7 @@ func _init(run_seed: int, p_catalog: EnemyCatalog = null) -> void:
 	catalog = p_catalog if p_catalog else EnemyCatalog.load_dir()
 	tower_catalog = TowerCatalog.load_dir()
 	cards = CardCatalog.load_dir(tower_catalog)
+	synergies = SynergyCatalog.load_dir(tower_catalog)
 	phase_usec.resize(Phase.size())
 	phase_usec_sum.resize(Phase.size())
 	_seed_rngs(run_seed)
@@ -407,6 +414,7 @@ func state_hash() -> int:
 		towers.uid, towers.type_id, towers.hp, towers.husk, towers.paid, towers.cell_i, towers.cell_j,
 		towers.cooldown, towers.level, towers.damage, towers.reload, towers.max_hp, towers.splash_radius,
 		towers.slow_factor, towers.slow_ticks, towers.thorns, towers.mark_gold, towers.mark_ticks,
+		towers.reach, towers.heal, towers.guardian_heal, towers.heal_targets, towers.syn_mask, guardian_syn_mask,
 		towers.stats_dirty, modifiers.hash_parts(), skills.ready_at, skills.shield_left, skills.shield_until,
 		skills.guard_until, skills.bounty_until, skills.bounty_gold, skills.haste_until,
 		draft.hash_parts(), tower_types, unlocked, build_radius])

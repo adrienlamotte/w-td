@@ -3,6 +3,7 @@ extends RefCounted
 ## Tower attacks in the ATTACKS phase, before the enemy attacks (D-114). Instant hits (D-098);
 ## every damage goes through SimWorld.damage_enemy (D-107). Slow rule: D-117. Mark,
 ## slow_area: D-145; wall, aura and repair have no target, so they never reach the match.
+## Repair pulses: D-150.
 
 ## Splash buffer, reused: no allocation once the peak is reached.
 var _hits: PackedInt32Array = PackedInt32Array()
@@ -22,6 +23,11 @@ func fire(w: SimWorld) -> void:
 			continue
 		if cd[t] > 0:
 			cd[t] -= 1
+		if kind[type] == TowerCatalog.Attack.REPAIR:  # D-150: a pulse every cooldown, no Crescendo
+			if cd[t] == 0:
+				cd[t] = towers.reload[t]
+				repair(w, t)
+			continue
 		var target := towers.target[t]
 		if cd[t] > 0 or target < 0 or enemies.hp[target] <= 0.0:
 			continue
@@ -49,6 +55,40 @@ func fire(w: SimWorld) -> void:
 				mark(enemies, target, w.clock, towers.mark_gold[t], towers.mark_ticks[t])
 			_:
 				_hit(w, target, dmg, detour)
+
+
+## Repair pulse of tower t (D-150 rule 7): the `heal_targets` live towers of her list with the
+## lowest HP fraction below 1 (ties: lower uid), else the Guardian if her body is in reach.
+static func repair(w: SimWorld, t: int) -> void:
+	var towers := w.towers
+	var links := w.links
+	if t >= links.heal_first.size():
+		return
+	var first := links.heal_first[t]
+	var healed: Array[int] = []
+	for k in towers.heal_targets[t]:
+		var best := -1
+		var best_f := 1.0
+		for n in range(first, first + links.heal_count[t]):
+			var o := links.heal_list[n]
+			if towers.husk[o] or healed.has(o):
+				continue
+			var f := towers.hp[o] / towers.max_hp[o]
+			if f < best_f or (f == best_f and best >= 0 and towers.uid[o] < towers.uid[best]):
+				best = o
+				best_f = f
+		if best < 0:
+			break
+		healed.append(best)
+		var amount := minf(towers.heal[t], towers.max_hp[best] - towers.hp[best])
+		towers.hp[best] += amount
+		w.events.push(SimEvents.Kind.TOWER_REPAIRED, towers.uid[best], towers.pos_x[best], towers.pos_z[best], amount)
+	if not healed.is_empty() or w.guardian_hp >= w.guardian_max_hp:
+		return
+	if Vector2(towers.pos_x[t], towers.pos_z[t]).length() - w.run.guardian_contact_radius <= towers.reach[t]:
+		var amount := minf(towers.guardian_heal[t], w.guardian_max_hp - w.guardian_hp)
+		w.guardian_hp += amount
+		w.events.push(SimEvents.Kind.TOWER_REPAIRED, -1, 0.0, 0.0, amount)
 
 
 ## Tower shots only (D-148 rule 3): an enemy whose cell's straight line is blocked (detouring)

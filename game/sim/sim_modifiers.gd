@@ -10,13 +10,35 @@ var stat: PackedStringArray = PackedStringArray()
 var op: PackedInt32Array = PackedInt32Array()
 var value: PackedFloat64Array = PackedFloat64Array()
 var target: PackedStringArray = PackedStringArray()
+## 1 = written by the layout recompute (Guardian synergy side, D-150); cleared by clear_layout().
+var layout: PackedByteArray = PackedByteArray()
 
 
-func add(p_stat: String, p_op: Op, p_value: float, p_target: String) -> void:
+func add(p_stat: String, p_op: Op, p_value: float, p_target: String, p_layout := false) -> void:
 	stat.append(p_stat)
 	op.append(p_op)
 	value.append(p_value)
 	target.append(p_target)
+	layout.append(1 if p_layout else 0)
+
+
+## Removes every layout entry, keeping the order of the others.
+func clear_layout() -> void:
+	var k := 0
+	for e in stat.size():
+		if layout[e]:
+			continue
+		stat[k] = stat[e]
+		op[k] = op[e]
+		value[k] = value[e]
+		target[k] = target[e]
+		layout[k] = 0
+		k += 1
+	stat.resize(k)
+	op.resize(k)
+	value.resize(k)
+	target.resize(k)
+	layout.resize(k)
 
 
 ## (sum of add, sum of mult) of `p_stat` over the entries targeting this tower type.
@@ -62,7 +84,7 @@ func unlocked_level(tower_id: String) -> int:
 
 
 func hash_parts() -> Array:
-	return [stat, op, value, target]
+	return [stat, op, value, target, layout]
 
 
 func _hits(e: int, tower_id: String) -> bool:
