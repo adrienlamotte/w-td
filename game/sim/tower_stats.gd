@@ -47,7 +47,12 @@ static func value(level_value: float, s: Vector2) -> float:
 
 ## Cooldown in ticks, clamped at 50% of the level value and at least 1 tick.
 static func reload_ticks(level_sec: float, s: Vector2) -> int:
-	var base := DataFiles.ticks(level_sec)
+	return clamped_ticks(DataFiles.ticks(level_sec), s)
+
+
+## Cooldown of `base` ticks with modifier sums (add in seconds), clamped at 50% and at least
+## 1 tick; shared with the Guardian skills (D-144, D-146).
+static func clamped_ticks(base: int, s: Vector2) -> int:
 	return maxi(maxi(1, ceili(base * 0.5)), roundi(value(base, Vector2(s.x * SimWorld.TICK_RATE, s.y))))
 
 

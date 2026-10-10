@@ -58,10 +58,10 @@ func refresh() -> void:
 	var run := world.run
 	if _skill_state.size() != run.skill_ids.size():
 		_build_skills(run)
-	_hp_bar.value = world.guardian_hp / run.guardian_hp
+	_hp_bar.value = world.guardian_hp / world.guardian_max_hp
 	var hp := ceili(world.guardian_hp)
 	if _changed(_hp, hp):
-		_hp.text = tr("hud.hp").format({"hp": hp, "max": ceili(run.guardian_hp)})
+		_hp.text = tr("hud.hp").format({"hp": hp, "max": ceili(world.guardian_max_hp)})
 	if _changed(_clock, world.clock / SimWorld.TICK_RATE):
 		_clock.text = clock_text(world.clock)
 	var tl := WaveSpawner.timeline(world.clock, run)

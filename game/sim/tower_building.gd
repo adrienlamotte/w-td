@@ -126,17 +126,23 @@ static func rebuild(w: SimWorld, tower_uid: int) -> void:
 	var t := _find(towers, tower_uid)
 	if t < 0 or not towers.husk[t]:
 		return
-	var type := towers.type_id[t]
 	var price := rebuild_price(w, t)
 	if w.gold < price:
 		return
 	w.gold -= price
-	towers.hp[t] = towers.max_hp[t]  # the level is kept (D-144)
+	restore(w, t)
+
+
+## Husk t back to a live tower at full HP, cells solid; no gold check (rebuild, Emergency
+## Rebuild D-146). The level is kept (D-144).
+static func restore(w: SimWorld, t: int) -> void:
+	var towers := w.towers
+	towers.hp[t] = towers.max_hp[t]
 	towers.husk[t] = 0
 	towers.stats_dirty = true
 	towers.cooldown[t] = 0
-	w.build.fill(towers.cell_i[t], towers.cell_j[t], towers.footprint[t], tower_uid, 1)
-	w.events.push(SimEvents.Kind.TOWER_PLACED, tower_uid, towers.pos_x[t], towers.pos_z[t], type)
+	w.build.fill(towers.cell_i[t], towers.cell_j[t], towers.footprint[t], towers.uid[t], 1)
+	w.events.push(SimEvents.Kind.TOWER_PLACED, towers.uid[t], towers.pos_x[t], towers.pos_z[t], towers.type_id[t])
 
 
 ## A lethal hit leaves a walkable husk that keeps its cells (D-104); a husk ignores damage.

@@ -31,6 +31,25 @@ func sums(p_stat: String, tower_id: String) -> Vector2:
 	return out
 
 
+## (sum of add, sum of mult) over the entries targeting a Guardian skill (D-146 rule 2):
+## `guardian`, `signature` (signature slot only) or `skill:<id>`.
+func skill_sums(p_stat: String, skill_id: String, is_signature: bool) -> Vector2:
+	var out := Vector2.ZERO
+	for e in stat.size():
+		if stat[e] == p_stat and (target[e] == "guardian" or target[e] == "skill:" + skill_id 				or (is_signature and target[e] == "signature")):
+			out += Vector2(value[e], 0.0) if op[e] == Op.ADD else Vector2(0.0, value[e])
+	return out
+
+
+## (sum of add, sum of mult) over the entries targeting `guardian` (her max HP).
+func guardian_sums(p_stat: String) -> Vector2:
+	var out := Vector2.ZERO
+	for e in stat.size():
+		if stat[e] == p_stat and target[e] == "guardian":
+			out += Vector2(value[e], 0.0) if op[e] == Op.ADD else Vector2(0.0, value[e])
+	return out
+
+
 ## Highest `unlock_level` value targeting this tower type, 0 if none (D-144 rule 4).
 func unlocked_level(tower_id: String) -> int:
 	var best := 0

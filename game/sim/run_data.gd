@@ -4,10 +4,11 @@ extends RefCounted
 ## catalog index and every duration in ticks (D-099). A typed view of the file:
 ## the wave/timeline logic lives elsewhere (task 013).
 
-enum Skill { AREA_BLAST, SHIELD }
+enum Skill { AREA_BLAST, SHIELD, GUARD, BOUNTY, HASTE, SNARE, REBUILD }
 
 const DIR := "res://data"
-const _SKILLS := {"area_blast": Skill.AREA_BLAST, "shield": Skill.SHIELD}
+const _SKILLS := {"area_blast": Skill.AREA_BLAST, "shield": Skill.SHIELD, "guard": Skill.GUARD,
+	"bounty": Skill.BOUNTY, "haste": Skill.HASTE, "snare": Skill.SNARE, "rebuild": Skill.REBUILD}
 
 var id: String = ""
 var starting_gold: int = 0
@@ -42,9 +43,19 @@ var skill_radius: PackedFloat32Array = PackedFloat32Array()
 var skill_damage: PackedFloat32Array = PackedFloat32Array()
 var skill_absorb: PackedFloat32Array = PackedFloat32Array()
 var skill_duration: PackedInt32Array = PackedInt32Array()
+var skill_damage_factor: PackedFloat32Array = PackedFloat32Array()
+var skill_gold_per_kill: PackedInt32Array = PackedInt32Array()
+var skill_cooldown_factor: PackedFloat32Array = PackedFloat32Array()
+var skill_slow_factor: PackedFloat32Array = PackedFloat32Array()
+var skill_guardian_heal: PackedFloat32Array = PackedFloat32Array()
+## Fields `skill_power` multiplies (10_M3_CONTENT.md 4.1).
+var skill_power_stats: Array[PackedStringArray] = []
+## Her signature skill: the first whose kind is not Shield; -1 if none (D-146).
+var signature_slot: int = -1
 
 
-static func load_id(run_id: String, enemies: EnemyCatalog, towers: TowerCatalog) -> RunData:
+## An empty `guardian_id` keeps the run file's Guardian (D-146).
+static func load_id(run_id: String, enemies: EnemyCatalog, towers: TowerCatalog, guardian_id := "") -> RunData:
 	var d := DataFiles.read_id(DIR + "/runs", run_id)
 	var run := RunData.new()
 	run.id = run_id
@@ -72,7 +83,7 @@ static func load_id(run_id: String, enemies: EnemyCatalog, towers: TowerCatalog)
 	run.final_boss_type = _resolve(enemies.type_of(d.final_boss.enemy), d.final_boss.enemy)
 	for tower_id: String in d.towers:
 		run.tower_types.append(_resolve(towers.type_of(tower_id), tower_id))
-	run._load_guardian(d.guardian)
+	run._load_guardian(guardian_id if guardian_id != "" else String(d.guardian))
 	return run
 
 
@@ -90,6 +101,14 @@ func _load_guardian(guardian_id: String) -> void:
 		skill_damage.append(s.get("damage", 0.0))
 		skill_absorb.append(s.get("absorb", 0.0))
 		skill_duration.append(DataFiles.ticks(s.get("duration_sec", 0.0)))
+		skill_damage_factor.append(s.get("damage_factor", 0.0))
+		skill_gold_per_kill.append(int(s.get("gold_per_kill", 0)))
+		skill_cooldown_factor.append(s.get("cooldown_factor", 0.0))
+		skill_slow_factor.append(s.get("slow_factor", 0.0))
+		skill_guardian_heal.append(s.get("guardian_heal", 0.0))
+		skill_power_stats.append(PackedStringArray(s.get("power_stats", [])))
+		if signature_slot < 0 and skill_kind[-1] != Skill.SHIELD:
+			signature_slot = skill_kind.size() - 1
 
 
 static func _resolve(index: int, ref: String) -> int:

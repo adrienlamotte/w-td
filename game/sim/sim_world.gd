@@ -43,6 +43,8 @@ var tower_attacks: TowerAttacks = TowerAttacks.new()
 var skills: GuardianSkills = GuardianSkills.new()
 ## Set from the run at StartRun (D-107); 0 before.
 var guardian_hp: float = 0.0
+## Guardian hp with the `guardian`-targeted hp modifiers (D-146); recomputed with the tower stats.
+var guardian_max_hp: float = 0.0
 var gold: int = 0
 ## Wall-clock usec of each phase of the last step(), indexed by Phase.
 ## Diagnostics only: never read by rules, not in state_hash(). A missing phase reads 0.
@@ -114,6 +116,7 @@ func step() -> void:
 		return
 	_path()
 	if towers.stats_dirty:  # once, after any layout, level or modifier change (D-144)
+		_recompute_guardian_max()
 		TowerStats.recompute(self)
 	_lap(Phase.PATH)
 	if _grid_count != enemies.count():  # safety net: enemies added/removed outside step()
@@ -164,9 +167,10 @@ func _apply(cmd: SimCommand) -> void:
 			if run_state != RunState.IDLE:
 				return
 			_seed_rngs(cmd.run_seed)
-			run = RunData.load_id(cmd.run_id, catalog, tower_catalog)
+			run = RunData.load_id(cmd.run_id, catalog, tower_catalog, cmd.guardian_id)
 			movement.set_stop(catalog, run.guardian_contact_radius)
-			guardian_hp = run.guardian_hp
+			guardian_max_hp = run.guardian_hp
+			guardian_hp = guardian_max_hp
 			gold = run.starting_gold
 			build = BuildGrid.new(run.build_radius, run.grid_step)
 			modifiers = SimModifiers.new()
@@ -196,23 +200,27 @@ func _use_skill(skill_id: String) -> void:
 	if run_state != RunState.RUNNING or paused:
 		return
 	var slot := run.skill_ids.find(skill_id)
-	if slot < 0 or not skills.try_use(slot, clock, run):
+	if slot < 0 or not skills.try_use(slot, clock, SignatureSkills.cooldown_ticks(self, slot)):
 		return
 	events.push(SimEvents.Kind.SKILL_USED, slot, 0.0, 0.0, 0.0)
-	if run.skill_kind[slot] == RunData.Skill.AREA_BLAST:
-		_area_blast(slot)
+	SignatureSkills.cast(self, slot)
 
 
-# Every enemy whose body touches the disk around the Guardian (D-107 edge rule), index order.
-# ponytail: linear scan, once per cooldown; the grid cannot reach boss radii.
-func _area_blast(slot: int) -> void:
-	var reach := run.skill_radius[slot]
-	var dmg := run.skill_damage[slot]
-	var px := enemies.pos_x
-	var pz := enemies.pos_z
-	for i in enemies.count():
-		if sqrt(px[i] * px[i] + pz[i] * pz[i]) - catalog.radius[enemies.type_id[i]] <= reach:
-			damage_enemy(i, dmg)
+# (hp + add) * (1 + mult) over `guardian` entries; a rise adds the difference, a fall clamps (D-146).
+func _recompute_guardian_max() -> void:
+	if run == null:
+		return
+	var old_max := guardian_max_hp
+	guardian_max_hp = TowerStats.value(run.guardian_hp, modifiers.guardian_sums("hp"))
+	if guardian_max_hp > old_max:
+		guardian_hp += guardian_max_hp - old_max
+	elif guardian_max_hp < old_max:
+		guardian_hp = minf(guardian_hp, guardian_max_hp)
+
+
+## Stand Firm (D-146): damage to towers and the Guardian, reduced while guarded.
+func guarded(dmg: float) -> float:
+	return dmg * run.skill_damage_factor[run.signature_slot] if clock < skills.guard_until else dmg
 
 
 # In index order, no swap-remove: indices and count stay stable.
@@ -244,13 +252,15 @@ func damage_enemy(i: int, amount: float) -> void:
 
 
 ## Single entry point for damage to towers (walled-in enemies, D-116). A lethal hit leaves a husk (D-104, D-109).
+## Stand Firm reduces it (D-146).
 func damage_tower(t: int, amount: float) -> void:
-	TowerBuilding.damage(self, t, amount)
+	TowerBuilding.damage(self, t, guarded(amount))
 
 
 # Highest index first, so a swap-remove never moves an unvisited enemy (D-081).
 func _deaths() -> void:
 	var hp := enemies.hp
+	var bounty := skills.bounty_gold if clock < skills.bounty_until else 0  # Clearance Sale (D-146)
 	for i in range(enemies.count() - 1, -1, -1):
 		if hp[i] > 0.0:
 			continue
@@ -263,6 +273,7 @@ func _deaths() -> void:
 			gained = catalog.gold[t]
 		if clock < enemies.mark_until[i]:  # D-145: after the base gold, not rolled
 			gained += enemies.mark_gold[i]
+		gained += bounty
 		gold += gained
 		enemies.remove(i)
 		events.push(SimEvents.Kind.ENEMY_DIED, t, x, z, gained)
@@ -289,7 +300,7 @@ func _enemy_attacks() -> void:
 				if k < 0 or towers.husk[k]:
 					continue
 				cd[i] = catalog.attack_cooldown[t]
-				events.push(SimEvents.Kind.TOWER_HIT, u, enemies.pos_x[i], enemies.pos_z[i], catalog.damage[t])
+				events.push(SimEvents.Kind.TOWER_HIT, u, enemies.pos_x[i], enemies.pos_z[i], guarded(catalog.damage[t]))
 				damage_tower(k, catalog.damage[t])
 				if towers.thorns[k] > 0.0:  # D-145: every landed hit, the lethal one too
 					damage_enemy(i, towers.thorns[k])
@@ -300,9 +311,9 @@ func _enemy_attacks() -> void:
 				return
 
 
-# Single path for damage to the Guardian: the Shield absorbs first (D-110).
+# Single path for damage to the Guardian: Stand Firm, then the Shield absorbs (D-110, D-146).
 func _hit_guardian(type_id: int, x: float, z: float, dmg: float) -> void:
-	dmg = skills.absorb(dmg, clock)
+	dmg = skills.absorb(guarded(dmg), clock)
 	guardian_hp -= dmg
 	events.push(SimEvents.Kind.GUARDIAN_HIT, type_id, x, z, dmg)
 	if guardian_hp <= 0.0:
@@ -326,11 +337,12 @@ func _lap(phase: Phase) -> void:
 ## Extend it with every entity array as they are added.
 func state_hash() -> int:
 	return hash([tick, clock, run_state, paused, run.id if run else "", _spawn_rng.state, _loot_rng.state,
-		guardian_hp, gold, enemies.pos_x, enemies.pos_z, enemies.hp,
+		guardian_hp, guardian_max_hp, gold, enemies.pos_x, enemies.pos_z, enemies.hp,
 		enemies.type_id, enemies.state, enemies.anim_frame, enemies.cooldown, enemies.slow_factor, enemies.slow_ticks,
 		enemies.target_id, enemies.mark_gold, enemies.mark_until,
 		towers.pos_x, towers.pos_z, towers.attack_range, towers.target, next_tower_uid,
 		towers.uid, towers.type_id, towers.hp, towers.husk, towers.paid, towers.cell_i, towers.cell_j,
 		towers.cooldown, towers.level, towers.damage, towers.reload, towers.max_hp, towers.splash_radius,
 		towers.slow_factor, towers.slow_ticks, towers.thorns, towers.mark_gold, towers.mark_ticks,
-		towers.stats_dirty, modifiers.hash_parts(), skills.ready_at, skills.shield_left, skills.shield_until])
+		towers.stats_dirty, modifiers.hash_parts(), skills.ready_at, skills.shield_left, skills.shield_until,
+		skills.guard_until, skills.bounty_until, skills.bounty_gold, skills.haste_until])
