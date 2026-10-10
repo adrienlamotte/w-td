@@ -20,6 +20,8 @@ var unlock_type: PackedInt32Array = PackedInt32Array()
 var effects: Array[Array] = []
 ## The first filler card by id; -1 if none.
 var filler: int = -1
+## Largest `build_radius` gain reachable from cards: max_picks x value of every add (D-148 rule 1).
+var max_build_radius_bonus: float = 0.0
 
 
 static func load_dir(towers: TowerCatalog, path := "res://data/cards", waifu_path := "res://data/waifus") -> CardCatalog:
@@ -33,6 +35,8 @@ static func load_dir(towers: TowerCatalog, path := "res://data/cards", waifu_pat
 		for e: Dictionary in d.effects:
 			if e.stat == "unlock_tower":
 				unlock = towers.type_of(String(e.target).trim_prefix("tower:"))
+			elif e.stat == "build_radius" and e.op == "add":
+				cat.max_build_radius_bonus += int(d.max_picks) * float(e.value)
 		cat.ids.append(d.id)
 		cat.type.append(TYPE_NAMES.find(d.type))
 		cat.max_picks.append(int(d.max_picks))
