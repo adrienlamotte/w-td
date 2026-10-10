@@ -1,8 +1,8 @@
 # 033 — Sim: XP, level-up draft and card effects
-- Status: planned
+- Status: review
 - Milestone: M3
 - Depends on: 030
-- PR:
+- PR: #43
 
 ## Goal
 Kills give XP; a level-up freezes the run and offers 3 cards; `PICK_CARD` applies one. Card effects feed the modifier store (030), unlock towers and level 4, and change the run-scope stats.
