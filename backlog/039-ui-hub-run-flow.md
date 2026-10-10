@@ -1,5 +1,5 @@
 # 039 — UI: hub screen and M3 run flow
-- Status: review
+- Status: done
 - Milestone: M3
 - Depends on: 035
 - Labels: needs-human:playtest
@@ -75,3 +75,4 @@ Answered by the owner (commit d10b41a): Q-72 -> D-155 (confirm, Cancel default, 
 - For 036: D-156 (closing mid-wave rewinds to the last suspend save) is noted in 036's Context; the Resume / Abandon choice will sit on the start screen or the hub of this task.
 
 ## Review log
+- 2026-10-10 lead-dev: approved, PR #48 squash-merged into m3/dev. All criteria met; D-165 (hearts_min_sec 60, replaces D-158) and D-166 applied; D-154 PROPOSED. Tests 378/378 green twice on the branch, 388/388 after merging m3/dev (040), validator green. Code ~480 lines, over the ~420 split line but one cohesive flow; settings (36 lines) not split out. Resolved a docs-only conflict in 02_TECH_ARCHITECTURE 2 (040 + 039 Main scene sentence). Nit for later: test_record_run_before_the_first_wave keeps its D-158 name. Needs the owner playtest (start -> hub -> run -> abandon / win -> hub).
