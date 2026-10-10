@@ -39,7 +39,7 @@ Setup (once per machine): Godot **4.7.2-stable** (pinned, D-065; scripts refuse 
 - Archive a milestone prototype (to `build\archive\M<n>\`, at each checkpoint, D-149): `scripts\export.ps1 -Archive M<n>`. Never delete archived builds.
 - Development loop (product owner): `/dev-loop` (runs until a stop; asks the owner questions in the session). Roles: `04_AGENT_WORKFLOW.md` 2a.
 - Perf benchmark: `scripts\bench.ps1` (exports and runs the release build `build\windows\WTD.exe --bench`, writes `reports/perf_<date>.json`, about 2.5 min; needs a GPU, not headless)
-- M2 balance bot: `scripts\balance.ps1` (`-Runs N`, default 5; headless bot runs of `run_m2`, writes `reports/balance_m2.md`, about 5-11 min). The full balance simulation is M3.
+- Balance runner (M3, D-164): `scriptsalance.ps1` (`-Runs N` seeds per strategy x profile x Guardian, default 2 = 54 runs; `-Profiles fresh,full`; headless bot runs of `run_m3`, writes `reports/balance_<yyyy-MM-dd>.md`; measured 341 s for `-Runs 1` (27 runs) on a busy machine, so about 10-12 min for the default). `reports/balance_m2.md` is the M2 record.
 - Asset forge CLI: _TBD in M4_
 
 ## When you finish a task
