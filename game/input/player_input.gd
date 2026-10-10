@@ -80,6 +80,11 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func handle(event: InputEvent) -> void:
 	_update_mode(event)
+	if in_draft(world):  # only pause passes; the draft overlay takes the rest (D-153)
+		menu_open = false
+		if _pressed(event, &"pause"):
+			set_paused(true)
+		return
 	if menu_open and event.is_action_released(&"build_menu"):
 		menu_open = false
 		build_menu_closed.emit(menu_dir)
@@ -103,10 +108,10 @@ func handle(event: InputEvent) -> void:
 
 
 func _build(event: InputEvent) -> void:
-	for slot in 3:
+	for slot in 8:
 		if _pressed(event, StringName("build_slot_%d" % (slot + 1))):
-			if slot < world.run.tower_types.size():
-				selected_tower = world.tower_catalog.ids[world.run.tower_types[slot]]
+			if slot < world.tower_types.size():
+				selected_tower = world.tower_catalog.ids[world.tower_types[slot]]
 			return
 	if _pressed(event, &"build_menu"):
 		menu_open = true
@@ -128,6 +133,8 @@ func _build(event: InputEvent) -> void:
 
 
 func _process(delta: float) -> void:
+	if in_draft(world):
+		return
 	var dir := Input.get_vector(&"cam_pan_left", &"cam_pan_right", &"cam_pan_up", &"cam_pan_down")
 	var stick := Input.get_vector(&"menu_left", &"menu_right", &"menu_up", &"menu_down")
 	if menu_open:
@@ -166,6 +173,11 @@ func _update_mode(event: InputEvent) -> void:
 ## Building is possible: a run is RUNNING, not paused (D-105) and no card draft is open (D-147). The build UI uses it too.
 static func can_build(w: SimWorld) -> bool:
 	return w != null and w.run_state == SimWorld.RunState.RUNNING and not w.paused and not w.draft.drafting
+
+
+## A card draft is open on screen: RUNNING, not paused, drafting (D-153).
+static func in_draft(w: SimWorld) -> bool:
+	return w != null and w.run_state == SimWorld.RunState.RUNNING and not w.paused and w.draft.drafting
 
 
 func _use_skill(slot: int) -> void:

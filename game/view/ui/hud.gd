@@ -13,6 +13,8 @@ var _skill_bar: Array[ProgressBar] = []
 
 @onready var _hp_bar: ProgressBar = $Root/TopLeft/HpBar
 @onready var _hp: Label = $Root/TopLeft/Hp
+@onready var _level: Label = $Root/TopLeft/Level
+@onready var _xp_bar: ProgressBar = $Root/TopLeft/XpBar
 @onready var _clock: Label = $Root/TopCentre/Clock
 @onready var _wave: Label = $Root/TopCentre/Wave
 @onready var _gold: Label = $Root/TopRight/Gold
@@ -63,6 +65,9 @@ func refresh() -> void:
 	var hp := ceili(world.guardian_hp)
 	if _changed(_hp, hp):
 		_hp.text = tr("hud.hp").format({"hp": hp, "max": ceili(world.guardian_max_hp)})
+	_xp_bar.value = world.draft.level_progress(run)
+	if _changed(_level, world.draft.level):
+		_level.text = tr("hud.level").format({"level": world.draft.level})
 	if _changed(_clock, world.clock / SimWorld.TICK_RATE):
 		_clock.text = clock_text(world.clock)
 	var tl := WaveSpawner.timeline(world.clock, run)

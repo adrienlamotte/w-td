@@ -33,6 +33,16 @@ show_percentage = false
 [node name="Hp" type="Label" parent="Root/TopLeft"]
 layout_mode = 2
 
+[node name="Level" type="Label" parent="Root/TopLeft"]
+layout_mode = 2
+
+[node name="XpBar" type="ProgressBar" parent="Root/TopLeft"]
+custom_minimum_size = Vector2(560, 16)
+layout_mode = 2
+mouse_filter = 2
+max_value = 1.0
+show_percentage = false
+
 [node name="TopCentre" type="VBoxContainer" parent="Root"]
 layout_mode = 1
 anchor_left = 0.5
@@ -78,7 +88,7 @@ grow_vertical = 0
 mouse_filter = 2
 theme_override_constants/separation = 24
 
-[node name="BuildBar" type="HBoxContainer" parent="Root"]
+[node name="BuildBar" type="GridContainer" parent="Root"]
 layout_mode = 1
 anchor_left = 0.5
 anchor_top = 1.0
@@ -89,7 +99,8 @@ offset_bottom = -48.0
 grow_horizontal = 2
 grow_vertical = 0
 mouse_filter = 2
-theme_override_constants/separation = 16
+theme_override_constants/h_separation = 16
+theme_override_constants/v_separation = 16
 script = ExtResource("2_bar")
 
 [node name="Radial" type="Control" parent="Root"]

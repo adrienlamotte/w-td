@@ -1,8 +1,9 @@
 class_name RadialMenu
 extends Control
 ## Gamepad radial build menu (D-046, D-122): shown while PlayerInput.menu_open, one slice per
-## run tower, slice 0 centred at the top, clockwise. Releasing on a slice selects its tower,
-## releasing in the centre keeps the selection. Prices from TowerBuilding.price only.
+## buildable tower (world.tower_types, up to 8), slice 0 centred at the top, clockwise.
+## Releasing on a slice selects its tower, releasing in the centre keeps the selection.
+## Prices from TowerBuilding.price only.
 
 const BG := Color(0.0, 0.0, 0.0, 0.55)
 const HOVER := Color(1.0, 1.0, 1.0, 0.35)
@@ -41,7 +42,7 @@ func refresh() -> void:
 	visible = input != null and input.menu_open and world.run != null
 	if not visible:
 		return
-	var types := world.run.tower_types
+	var types := world.tower_types
 	if _labels.size() != types.size():
 		_build_labels(types.size())
 	hover = slice(input.menu_dir, types.size(), deadzone)
@@ -71,9 +72,9 @@ func _draw() -> void:
 func _on_closed(dir: Vector2) -> void:
 	if world.run == null:
 		return
-	var s := slice(dir, world.run.tower_types.size(), deadzone)
+	var s := slice(dir, world.tower_types.size(), deadzone)
 	if s >= 0:
-		input.select_tower(world.tower_catalog.ids[world.run.tower_types[s]])
+		input.select_tower(world.tower_catalog.ids[world.tower_types[s]])
 
 
 func _build_labels(n: int) -> void:
