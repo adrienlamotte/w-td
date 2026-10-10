@@ -12,7 +12,7 @@ Gamepad names use the Xbox layout, which matches the Steam Deck A/B/X/Y position
 | `cam_zoom_in` / `cam_zoom_out` | wheel up / down | RB / LB | zoom step (D-041) |
 | `cam_recentre` | Space | R3 (right stick click) | focus back on the Guardian (D-041) |
 | `build_menu` | - (mouse/keyboard use the build bar and the slot keys) | Y, hold | radial menu open while held; release selects (D-046) |
-| `build_slot_1..3` | 1 / 2 / 3 | - (radial) | select the run's tower 1..3 |
+| `build_slot_1..8` | 1 .. 8 | - (radial) | select the run's buildable tower 1..8 (starters plus card unlocks, D-147, D-153) |
 | `build_place` | left click | A | on a husk: RebuildTower; on a free spot with a tower selected: PlaceTower at the cursor; the selection stays (place several) |
 | `build_cancel` | right click; Esc while something is selected | B | clear selection / close menu (D-046) |
 | `tower_sell` | X (tower under the mouse) | X (tower under the cursor) | SellTower (live or husk) |
@@ -29,11 +29,12 @@ All stick and trigger deadzones are 0.2 (placeholder).
 
 ## Rules
 - Building actions (`build_menu`, `build_slot_*`, `build_place`, `tower_sell`, `tower_upgrade`) do nothing unless a run is running and not paused (D-105). Camera, skills and pause always pass (the sim gates skills, D-110).
+- During a card draft (running, not paused, draft open) only `pause` passes: camera pan, zoom, recentre, skills and building actions do nothing, an open radial closes without selecting, and the tower selection is kept for after the pick (D-153).
 - Esc cancels first: with a tower selected or the menu open it only cancels; otherwise it pauses.
 
-## Build UI (D-122, task 027)
-- **Build bar** (bottom centre, all devices): one button per run tower with name, current price and hotkey `[1]..[3]`. A click selects like the slot key; the selected button stays pressed. Greyed but clickable when gold is short (the ghost then says why); disabled unless a run is running and not paused. The buttons take no GUI focus (the gamepad uses the radial).
-- **Radial menu** (gamepad): shown while `build_menu` is held, centred on the screen; one slice per run tower, slice 0 centred at the top, then clockwise; each shows name and price, greyed when not affordable; the slice under the left stick is highlighted. Release on a slice selects its tower; release with the stick in the centre (under `radial_deadzone`) keeps the current selection.
+## Build UI (D-122, task 027; D-153)
+- **Build bar** (bottom centre, all devices): one button per buildable tower of the run (starters plus card unlocks, up to 8) with name, current price and hotkey `[1]..[8]`, in a 4-column grid (8 towers = 2 rows). A click selects like the slot key; the selected button stays pressed. Greyed but clickable when gold is short (the ghost then says why); disabled unless a run is running and not paused. The buttons take no GUI focus (the gamepad uses the radial).
+- **Radial menu** (gamepad): shown while `build_menu` is held, centred on the screen; one slice per buildable tower (up to 8), slice 0 centred at the top, then clockwise; each shows name and price, greyed when not affordable; the slice under the left stick is highlighted. Release on a slice selects its tower; release with the stick in the centre (under `radial_deadzone`) keeps the current selection.
 - **Placement ghost:** with a tower selected, a flat box of the tower footprint at the snapped position under the cursor plus its attack range ring, green when the placement is valid, red otherwise. A label next to the cursor shows the price, or why it cannot be built (occupied, too far from the Guardian, too close to the Guardian, not enough gold, not in this run). Verdict, position and price come from the sim's `check_place`.
 - **Hints** (nothing selected): on a tower, "{sell key}: sell (+refund)"; on a husk, "{place key}: rebuild (price)" and "{sell key}: sell (+0)". On a live tower that can level up (waifu towers; not the M2 towers), an upgrade line comes first, from the sim's `TowerUpgrade.check`: "{upgrade key}: upgrade to Lv n (price)", or "{upgrade key}: upgrade (price), not enough gold", "Lv 4 needs her signature card", "Max level"; a husk shows no upgrade line. The key names follow the device mode (Left click / A, X / X, R / D-pad up) (D-151).
 - **Level labels:** "Lv n" above every tower (live or husk) that can level up, at `level_label_height` (`data/ui`) above the tower (D-151).
@@ -43,6 +44,7 @@ All stick and trigger deadzones are 0.2 (placeholder).
 - **Screens:** start screen (Start run, Slow time while placing, Quit game) -> run -> pause menu (Resume, Restart, Slow time while placing, Main menu) -> win or lose screen (time survived, Restart, Main menu). Restart and Main menu reload the scene; Restart starts a new run at once.
 - **Navigation:** Godot GUI focus. Up/down arrows, d-pad or left stick move between buttons; Enter, Space or A press; the mouse clicks. Each menu focuses its first button when it opens. The build bar never takes focus.
 - **Pause:** Start / P toggle the pause as before; while the pause menu is shown, Esc or B (`ui_cancel`) resumes. No pause outside a running run (start and end screens).
+- **Level-up draft** (D-153): an overlay with the title "Level n!" and 3 card buttons (name, type, description); the first card is focused when it opens and again after the pause menu closes. Left/right move, Enter, Space or A pick, the mouse clicks. A pick is final: the buttons are disabled until the next draft (several level-ups show one draft after the other). No skip: Esc / P / Start pause (the pause menu hides the draft), B does nothing.
 - **Slow time while placing** (accessibility option, D-046): off by default, kept for the session only (saved settings are M3). While on, the game runs at `slow_time_scale` (placeholder 0.5, `data/ui`) whenever a tower is selected or the radial is open and building is possible. Camera, cursor, radial and ghost keep real time.
 
 ## Later (not in this spec's code)

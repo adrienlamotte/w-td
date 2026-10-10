@@ -43,6 +43,12 @@ func check_levels(w: SimWorld) -> void:
 		open(w)
 
 
+## Fill of the XP bar (0-1) between the current level's threshold and the next. Read-only.
+func level_progress(run: RunData) -> float:
+	var span := run.xp_base + run.xp_step * (level - 1)
+	return clampf((xp - (xp_next - span)) / span, 0.0, 1.0) if span > 0.0 else 0.0
+
+
 ## Draws SLOTS cards (rule 3): per slot a type by weight, then a card uniformly; filler when none is left.
 func open(w: SimWorld) -> void:
 	var cat := w.cards

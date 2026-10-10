@@ -28,6 +28,7 @@ func _ready() -> void:
 			menu.restart_pressed.connect(restart)
 			menu.main_menu_pressed.connect(main_menu)
 		$EndScreen.setup(world)
+		$DraftOverlay.setup(world)
 		if RunFlow.autostart:
 			RunFlow.autostart = false
 			start_run()
@@ -61,8 +62,5 @@ func main_menu() -> void:
 
 func _process(delta: float) -> void:
 	var input: PlayerInput = $PlayerInput
-	# Stopgap until the draft UI (task 037) replaces it: take the first card (D-147).
-	if world.draft.drafting and not world.paused:
-		world.queue(SimCommand.pick_card(world.tick, 0))
 	driver.advance(delta * RunFlow.time_scale(RunFlow.slow_time_placing, input.is_placing(),
 			PlayerInput.can_build(world), _slow_scale))

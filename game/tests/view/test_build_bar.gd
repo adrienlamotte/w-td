@@ -24,7 +24,7 @@ func _button(s: int) -> Button:
 
 
 func test_one_button_per_tower_with_price() -> void:
-	var types := world.run.tower_types
+	var types := world.tower_types
 	assert_eq(bar.get_child_count(), types.size())
 	for s in types.size():
 		var t := _button(s).text
@@ -35,7 +35,7 @@ func test_one_button_per_tower_with_price() -> void:
 
 
 func test_price_rises_after_placing() -> void:
-	var type := world.run.tower_types[0]
+	var type := world.tower_types[0]
 	var before := TowerBuilding.price(world, type)
 	world.queue(SimCommand.place_tower(world.tick, world.tower_catalog.ids[type], 5.0, 5.0))
 	world.step()
@@ -47,7 +47,7 @@ func test_price_rises_after_placing() -> void:
 
 func test_click_selects_and_highlights() -> void:
 	_button(1).pressed.emit()
-	var id := world.tower_catalog.ids[world.run.tower_types[1]]
+	var id := world.tower_catalog.ids[world.tower_types[1]]
 	assert_eq(input.selected_tower, id)
 	bar.refresh()
 	assert_true(_button(1).button_pressed)
@@ -75,3 +75,21 @@ func test_disabled_when_paused_or_no_run() -> void:
 	assert_false(_button(0).disabled)
 	bar.setup(SimWorld.new(1), input)
 	assert_eq(bar.get_child_count(), 0)
+
+
+func test_grows_with_card_unlocks() -> void:
+	var n := world.tower_types.size()
+	var c := world.cards.index_of("card_tower_cinder")
+	CardEffects.apply(world, world.cards.effects[c][0])
+	bar.refresh()
+	assert_eq(bar.get_child_count(), n + 1)
+	assert_string_contains(_button(n).text, tr(world.tower_catalog.name_key[world.tower_catalog.type_of("tower_cinder")]))
+
+
+func test_eight_towers_in_four_columns() -> void:
+	world.tower_types = PackedInt32Array([0, 1, 2, 3, 4, 5, 6, 7])
+	bar.refresh()
+	assert_eq(bar.get_child_count(), 8)
+	assert_eq(bar.columns, 4)
+	for s in 8:
+		assert_string_contains(_button(s).text, "[%d]" % (s + 1))
