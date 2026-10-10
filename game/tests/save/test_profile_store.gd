@@ -59,8 +59,9 @@ func test_record_run_end_win() -> void:
 	w.step()
 	w.run_state = SimWorld.RunState.WON
 	w.clock = 27000
-	assert_eq(ProfileStore.record_run_end(w, DIR), 100)
+	assert_eq(ProfileStore.record_run_end(w, DIR), {"hearts": 100, "unlocked": "waifu_cinder"})
+	assert_eq(ProfileStore.record_run_end(w, DIR), {"hearts": 100, "unlocked": ""}, "already rescued")
 	var p := ProfileStore.load_profile(cat, DIR)
-	assert_eq(p.hearts, 100)
+	assert_eq(p.hearts, 200)
 	assert_eq(p.unlocked, PackedStringArray(["waifu_cinder"]))
-	assert_eq([p.runs, p.wins], [1, 1])
+	assert_eq([p.runs, p.wins], [2, 2])
