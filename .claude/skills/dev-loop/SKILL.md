@@ -29,7 +29,7 @@ a. **Milestone not started** (no `m<n>/dev` branch). The previous milestone must
 b. A task in `review` → spawn `lead-dev` with "review backlog/NNN-....md".
 c. A task in `changes`, or the lowest-numbered `planned` task whose dependencies are `done` → spawn `game-dev` with "implement backlog/NNN-....md".
 d. The lowest-numbered `todo` task whose dependencies are `done` → spawn `lead-dev` with "plan backlog/NNN-....md".
-e. **All tasks `done`** → checkpoint. Run `scripts\test.ps1` and `scripts\validate.ps1` on `m<n>/dev`, write the review pack `reports/milestone_<n>.md` (what was built, how to run it, what to look at, 3-5 specific questions), open the PR `m<n>/dev` → `main`, and ask the owner the checkpoint form (PR link, review pack, the playtest questions). Stop. Only the owner merges into `main`, unless they explicitly ask you to.
+e. **All tasks `done`** → checkpoint. Run `scripts\test.ps1` and `scripts\validate.ps1` on `m<n>/dev`, archive the prototype with `scripts\export.ps1 -Archive M<n>` (D-149), write the review pack `reports/milestone_<n>.md` (what was built, how to run it including the archived exe path, what to look at, 3-5 specific questions), open the PR `m<n>/dev` → `main`, and ask the owner the checkpoint form (PR link, review pack, the playtest questions). Stop. Only the owner merges into `main`, unless they explicitly ask you to.
 f. **Nothing can move** (every remaining task is `blocked`) → ask the pending questions; if answers unblock work, continue, otherwise stop.
 
 ### 3. After each step
