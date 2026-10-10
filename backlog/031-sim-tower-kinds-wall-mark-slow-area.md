@@ -1,5 +1,5 @@
 # 031 — Sim: tower kinds wall, mark and slow_area
-- Status: review
+- Status: done
 - Milestone: M3
 - Depends on: 030
 - PR: #39
@@ -56,3 +56,4 @@ No new per-tick loop: thorns is one call inside the existing walled-in hit, mark
 ## Questions
 
 ## Review log
+- 2026-10-10 lead-dev: PR #39 approved and squash-merged. Matches the plan (D-145 rules 1-5); sim/view split clean, new arrays in remove() and state_hash(), docs and D-145 PROPOSED in the PR. test.ps1 271/271 GUT + 24 Python, validate.ps1 green. Bench in PR within noise (one run). Resolved an append-only DECISIONS.md conflict with D-149 before merging.
