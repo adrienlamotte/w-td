@@ -99,6 +99,12 @@ func busy() -> bool:
 	return _stage != Stage.IDLE
 
 
+## True when no computation runs and the published arrays match the grid's layout: a field
+## rebuilt in full from the grid equals this one (suspend save, D-167).
+func settled() -> bool:
+	return _stage == Stage.IDLE and _version == grid.version
+
+
 func _start() -> void:
 	_solid = grid.solid.duplicate()
 	_version = grid.version
