@@ -189,3 +189,4 @@ hub.roster.rescued,Rescued
 hub.roster.locked,Locked
 hub.notice.bad_profile,Your profile could not be read; it was kept as profile.bad.json and a new one was started.
 hub.notice.ok,OK
+flow.suspend_failed,Your suspended run could not be restored. It counts as abandoned.

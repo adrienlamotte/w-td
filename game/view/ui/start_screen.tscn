@@ -40,6 +40,18 @@ layout_mode = 2
 custom_minimum_size = Vector2(560, 0)
 text = "flow.play"
 
+[node name="Resume" type="Button" parent="Panel/Box"]
+visible = false
+layout_mode = 2
+custom_minimum_size = Vector2(560, 0)
+text = "flow.resume"
+
+[node name="Abandon" type="Button" parent="Panel/Box"]
+visible = false
+layout_mode = 2
+custom_minimum_size = Vector2(560, 0)
+text = "flow.abandon"
+
 [node name="SlowTime" type="CheckButton" parent="Panel/Box"]
 layout_mode = 2
 custom_minimum_size = Vector2(560, 0)
@@ -49,3 +61,68 @@ text = "flow.slow_time"
 layout_mode = 2
 custom_minimum_size = Vector2(560, 0)
 text = "flow.quit"
+
+[node name="Confirm" type="VBoxContainer" parent="Panel"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 24
+
+[node name="Text" type="Label" parent="Panel/Confirm"]
+layout_mode = 2
+custom_minimum_size = Vector2(1000, 0)
+text = "flow.abandon_confirm"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Cancel" type="Button" parent="Panel/Confirm"]
+layout_mode = 2
+custom_minimum_size = Vector2(560, 0)
+size_flags_horizontal = 4
+text = "flow.cancel"
+
+[node name="Abandon" type="Button" parent="Panel/Confirm"]
+layout_mode = 2
+custom_minimum_size = Vector2(560, 0)
+size_flags_horizontal = 4
+text = "flow.abandon"
+
+[node name="Notice" type="Panel" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("style_bg")
+
+[node name="Box" type="VBoxContainer" parent="Notice"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 32
+
+[node name="Text" type="Label" parent="Notice/Box"]
+layout_mode = 2
+custom_minimum_size = Vector2(1200, 0)
+text = "flow.suspend_failed"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="OK" type="Button" parent="Notice/Box"]
+layout_mode = 2
+size_flags_horizontal = 4
+custom_minimum_size = Vector2(560, 0)
+text = "hub.notice.ok"

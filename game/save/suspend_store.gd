@@ -37,6 +37,16 @@ static func load_into(world: SimWorld, dir := "user://") -> bool:
 	return false
 
 
+## Start-screen Abandon run (D-167 rule 4): restores the save into a scratch world and records
+## it as a loss at the saved clock, which deletes the file. A failed restore follows rule 6:
+## recorded only if the header was readable.
+static func abandon(dir := "user://") -> void:
+	var w := SimWorld.new(0)
+	load_into(w, dir)
+	if w.run != null:
+		ProfileStore.record_run_end(w, dir)
+
+
 static func delete(dir := "user://") -> void:
 	if exists(dir):
 		DirAccess.remove_absolute(dir.path_join(FILE))
