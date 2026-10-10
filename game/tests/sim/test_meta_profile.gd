@@ -26,7 +26,11 @@ func test_offer() -> void:
 
 
 func test_hearts() -> void:
-	assert_eq(MetaProfile.hearts_for(run, false, 0), 30)
+	assert_eq(run.hearts_min_tick, 60 * SimWorld.TICK_RATE)
+	assert_eq(MetaProfile.hearts_for(run, false, 0), 0, "before 60 s (D-165)")
+	assert_eq(MetaProfile.hearts_for(run, false, 1799), 0, "59.97 s")
+	assert_eq(MetaProfile.hearts_for(run, false, 1800), 30 + 20 * 1800 / run.final_boss_tick, "60 s")
+	assert_eq(MetaProfile.hearts_for(run, true, 0), 100, "a win at clock 0")
 	assert_eq(MetaProfile.hearts_for(run, false, 13500), 40, "7:30")
 	assert_eq(MetaProfile.hearts_for(run, false, run.final_boss_tick), 50)
 	assert_eq(MetaProfile.hearts_for(run, false, run.final_boss_tick + 900), 50)
@@ -55,6 +59,23 @@ func test_record_run_loss_and_placeholder() -> void:
 	run.guardian_id = "guardian_placeholder_01"
 	p.record_run(cat, run, true, 27000)
 	assert_eq(p.unlocked.size(), 0, "the placeholder Guardian unlocks nothing")
+
+
+func test_record_run_before_the_first_wave() -> void:
+	run.guardian_id = "guardian_cinder"
+	assert_eq(p.record_run(cat, run, false, 0), 0)
+	assert_eq([p.hearts, p.runs, p.losses], [0, 1, 1], "still counted (D-165 is hearts only, D-166)")
+
+
+func test_roster_state() -> void:
+	assert_eq(cat.starters, PackedStringArray(["waifu_mallow", "waifu_pip"]))
+	_rescue(["waifu_cinder"])
+	assert_eq(p.roster_state(cat, "waifu_pip"), MetaProfile.Roster.STARTER)
+	assert_eq(p.roster_state(cat, "waifu_cinder"), MetaProfile.Roster.RESCUED)
+	assert_eq(p.roster_state(cat, "waifu_bastia"), MetaProfile.Roster.LOCKED)
+	assert_eq(cat.branch["meta_gold_1"], "economy")
+	assert_eq(cat.name_key["meta_gold_1"], "meta.gold_1.name")
+	assert_eq(cat.waifu_name_key["waifu_cinder"], "waifu.cinder.name")
 
 
 func test_buy() -> void:

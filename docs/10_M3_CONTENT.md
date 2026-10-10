@@ -207,5 +207,5 @@ Data: `data/meta/meta_<id>.json` with `id`, `name_key`, `desc_key`, `cost`, `req
 ## 8. Sim and data summary (for the implementation plan)
 - New data folders: `cards`, `synergies`, `meta`, `waifus`; new tower and guardian files per waifu; run file gains `xp_base`, `xp_step`, the hearts fields and drops `guardian` (now a StartRun field).
 - New commands: `PICK_CARD{slot}`, `UPGRADE_TOWER{tower_uid}`; `START_RUN` gains `guardian_id` and the profile modifiers (unlocked waifus, meta effects) so the run stays a pure function of `(seed, start data, commands)`.
-- New events: `LEVEL_UP` (a = level), `CARD_PICKED` (a = card index), `TOWER_UPGRADED` (a = uid, value = level), `TOWER_REPAIRED` (a = uid or -1 for the Guardian, value = HP); thorns damage is a normal `ENEMY_HIT` (no new kind).
+- New events: `LEVEL_UP` (a = level), `CARD_PICKED` (a = card index), `TOWER_UPGRADED` (a = uid, value = level), `TOWER_REPAIRED` (a = uid or -1 for the Guardian, x, z = the repairer's position, value = HP); thorns damage is a normal `ENEMY_HIT` (no new kind).
 - New world state (hashed): `guard_until`, `bounty_until`, `haste_until`, XP, level, draft cards and `drafting`, picked-card counts, per-tower `level`, enemy `mark_gold` and `mark_until`.

@@ -63,7 +63,7 @@ func setup(driver: SimDriver, camera: Camera3D) -> void:
 		var strip := PlaceholderArt.enemy_strip(rgb(look.color), frames, CELL_PX, look.shape)
 		var h := float(config.enemy_sprite_height) * float(look.height_scale)
 		_enemy_margin = maxf(_enemy_margin, h)
-		_enemy_mm.append(_add_batch(quad, strip, frames, float(config.walk_fps), h, area))
+		_enemy_mm.append(_add_batch(quad, strip, frames, float(config.walk_fps), h, area, config.fx.mark_tint))
 	var looks: Array = []
 	for type in tcat.ids.size():
 		looks.append(tower_look(config, tcat, type))
@@ -72,16 +72,18 @@ func setup(driver: SimDriver, camera: Camera3D) -> void:
 	for look: Dictionary in looks:
 		var img := PlaceholderArt.tower_image(rgb(look.color), CELL_PX, look.shape)
 		_tower_mm.append(_add_batch(quad, img, 1, 0.0,
-			float(config.tower_sprite_height) * float(look.height_scale), area))
+			float(config.tower_sprite_height) * float(look.height_scale), area, config.fx.haste_tint))
 
 
-func _add_batch(quad: QuadMesh, img: Image, frames: int, fps: float, h: float, area: float) -> MultiMesh:
+func _add_batch(quad: QuadMesh, img: Image, frames: int, fps: float, h: float, area: float,
+		tint: Array) -> MultiMesh:
 	img.generate_mipmaps()
 	var mat := ShaderMaterial.new()
 	mat.shader = SHADER
 	mat.set_shader_parameter("tex", ImageTexture.create_from_image(img))
 	mat.set_shader_parameter("frames", frames)
 	mat.set_shader_parameter("fps", fps)
+	mat.set_shader_parameter("tint", rgb(tint))
 	mat.set_shader_parameter("sprite_size", Vector2(h * img.get_width() / frames / img.get_height(), h))
 	var mm := MultiMesh.new()
 	mm.transform_format = MultiMesh.TRANSFORM_3D  # format changes only while instance_count is 0
@@ -102,20 +104,23 @@ func _process(_delta: float) -> void:
 	var start := Time.get_ticks_usec()
 	var aspect := get_viewport().get_visible_rect().size.aspect()
 	var cam := _camera.global_transform
-	var e := _driver.world.enemies
+	var world := _driver.world
+	var e := world.enemies
 	_enemy_batcher.fill(e.pos_x, e.pos_z, e.prev_x, e.prev_z, _driver.alpha(), e.type_id,
 		HordeBatcher.make_cull(cam, _camera.size, aspect, _enemy_margin),
-		e.hp, e.hit_tick, _driver.world.tick - _flash_ticks)
+		e.hp, e.hit_tick, world.tick - _flash_ticks, e.mark_until, world.clock)
 	for t in _enemy_mm.size():
 		_upload(_enemy_mm[t], _enemy_batcher, t)
-	var towers := _driver.world.towers
+	var towers := world.towers
 	var husk_batch := _tower_mm.size() - 2
 	_tower_batch.resize(towers.count())
 	for t in towers.count():
 		var type := towers.type_id[t]
 		_tower_batch[t] = husk_batch + 1 if type < 0 else (husk_batch if towers.husk[t] else type)
 	_tower_batcher.fill(towers.pos_x, towers.pos_z, towers.pos_x, towers.pos_z, 0.0, _tower_batch,
-		HordeBatcher.make_cull(cam, _camera.size, aspect, float(config.tower_sprite_height)))
+		HordeBatcher.make_cull(cam, _camera.size, aspect, float(config.tower_sprite_height)),
+		PackedFloat32Array(), PackedInt32Array(), 0, PackedInt32Array(), 0,
+		world.run != null and world.clock < world.skills.haste_until)
 	for t in _tower_mm.size():
 		_upload(_tower_mm[t], _tower_batcher, t)
 	last_fill_usec = Time.get_ticks_usec() - start

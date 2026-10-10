@@ -53,10 +53,12 @@ static func save_profile(p: MetaProfile, dir := "user://") -> Error:
 	return DirAccess.rename_absolute(tmp, path)
 
 
-## Run end (D-152 rule 5): load, record, save once. Returns the hearts earned.
-static func record_run_end(world: SimWorld, dir := "user://") -> int:
+## Run end (D-152 rule 5): load, record, save once. Returns {"hearts": earned,
+## "unlocked": the waifu this run rescued, "" if none}. A RUNNING run is recorded as a loss.
+static func record_run_end(world: SimWorld, dir := "user://") -> Dictionary:
 	var cat := world.meta if world.meta else MetaCatalog.load_dir()
 	var p := load_profile(cat, dir)
+	var before := p.unlocked.size()
 	var earned := p.record_run(cat, world.run, world.run_state == SimWorld.RunState.WON, world.clock)
 	save_profile(p, dir)
-	return earned
+	return {"hearts": earned, "unlocked": p.unlocked[before] if p.unlocked.size() > before else ""}

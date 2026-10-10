@@ -82,13 +82,13 @@ static func repair(w: SimWorld, t: int) -> void:
 		healed.append(best)
 		var amount := minf(towers.heal[t], towers.max_hp[best] - towers.hp[best])
 		towers.hp[best] += amount
-		w.events.push(SimEvents.Kind.TOWER_REPAIRED, towers.uid[best], towers.pos_x[best], towers.pos_z[best], amount)
+		w.events.push(SimEvents.Kind.TOWER_REPAIRED, towers.uid[best], towers.pos_x[t], towers.pos_z[t], amount)
 	if not healed.is_empty() or w.guardian_hp >= w.guardian_max_hp:
 		return
 	if Vector2(towers.pos_x[t], towers.pos_z[t]).length() - w.run.guardian_contact_radius <= towers.reach[t]:
 		var amount := minf(towers.guardian_heal[t], w.guardian_max_hp - w.guardian_hp)
 		w.guardian_hp += amount
-		w.events.push(SimEvents.Kind.TOWER_REPAIRED, -1, 0.0, 0.0, amount)
+		w.events.push(SimEvents.Kind.TOWER_REPAIRED, -1, towers.pos_x[t], towers.pos_z[t], amount)
 
 
 ## Tower shots only (D-148 rule 3): an enemy whose cell's straight line is blocked (detouring)

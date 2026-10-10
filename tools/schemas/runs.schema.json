@@ -26,6 +26,7 @@
     "hearts_win",
     "hearts_loss_min",
     "hearts_loss_max",
+    "hearts_min_sec",
     "card_type_weights"
   ],
   "$defs": {
@@ -80,6 +81,7 @@
     "hearts_win": {"type": "integer", "minimum": 0},
     "hearts_loss_min": {"type": "integer", "minimum": 0},
     "hearts_loss_max": {"type": "integer", "minimum": 0},
+    "hearts_min_sec": {"type": "number", "minimum": 0, "description": "a loss before this run time gives 0 hearts (D-165)"},
     "card_type_weights": {
       "type": "object",
       "additionalProperties": false,

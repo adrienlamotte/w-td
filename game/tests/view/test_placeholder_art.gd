@@ -1,7 +1,7 @@
 extends GutTest
 
 const ENEMY_SHAPES := ["blob", "brute", "ranged", "crown"]
-const TOWER_SHAPES := ["single", "splash", "slow", "husk", "bare"]
+const TOWER_SHAPES := ["single", "splash", "slow", "husk", "bare", "wall", "aura", "repair", "mark", "slow_area"]
 
 
 func test_enemy_strip() -> void:

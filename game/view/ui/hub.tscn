@@ -1,0 +1,93 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://view/ui/hub.gd" id="1_script"]
+
+[sub_resource type="StyleBoxFlat" id="style_bg"]
+bg_color = Color(0.08, 0.06, 0.12, 1)
+
+[node name="Hub" type="CanvasLayer"]
+layer = 10
+script = ExtResource("1_script")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("style_bg")
+
+[node name="Box" type="VBoxContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 64.0
+offset_top = 48.0
+offset_right = -64.0
+offset_bottom = -48.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 24
+
+[node name="Title" type="Label" parent="Panel/Box"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 64
+text = "hub.title"
+horizontal_alignment = 1
+
+[node name="Hearts" type="Label" parent="Panel/Box"]
+layout_mode = 2
+text = "hub.hearts"
+horizontal_alignment = 1
+
+[node name="Offer" type="HBoxContainer" parent="Panel/Box"]
+layout_mode = 2
+theme_override_constants/separation = 32
+alignment = 1
+
+[node name="Tree" type="HBoxContainer" parent="Panel/Box"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 32
+
+[node name="Back" type="Button" parent="Panel/Box"]
+layout_mode = 2
+size_flags_horizontal = 4
+custom_minimum_size = Vector2(560, 0)
+text = "hub.back"
+
+[node name="Notice" type="Panel" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("style_bg")
+
+[node name="Box" type="VBoxContainer" parent="Notice"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 32
+
+[node name="Text" type="Label" parent="Notice/Box"]
+layout_mode = 2
+custom_minimum_size = Vector2(1200, 0)
+text = "hub.notice.bad_profile"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="OK" type="Button" parent="Notice/Box"]
+layout_mode = 2
+size_flags_horizontal = 4
+custom_minimum_size = Vector2(560, 0)
+text = "hub.notice.ok"

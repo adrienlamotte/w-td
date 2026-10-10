@@ -43,11 +43,11 @@ upgrade.reason.locked,Lv {level} needs her signature card
 upgrade.reason.max_level,Max level
 tower.level,Lv {level}
 flow.title,Waifu Tower Defense
-flow.start,Start run
+flow.play,Play
 flow.quit,Quit game
 flow.resume,Resume
 flow.restart,Restart
-flow.main_menu,Main menu
+flow.abandon,Abandon run
 flow.slow_time,Slow time while placing
 flow.won,Victory!
 flow.lost,Defeat
@@ -167,3 +167,25 @@ draft.type.signature,Signature
 draft.type.skill,Guardian skill
 draft.type.perk,Perk
 draft.type.filler,Bonus
+flow.abandon_confirm,Abandon run? You keep {n} hearts.
+flow.cancel,Cancel
+flow.continue,Continue
+flow.hearts_earned,+{n} hearts
+flow.unlocked,{name} joins your towers!
+hub.title,Hub
+hub.hearts,Hearts: {n}
+hub.rescue,Rescue {name}
+hub.best,Best {time}
+hub.back,Back
+hub.branch.economy,Economy
+hub.branch.guardian,Guardian
+hub.branch.towers,Towers
+hub.node.cost,{cost} hearts
+hub.node.locked,Needs {name}
+hub.node.owned,Bought
+hub.roster,Roster
+hub.roster.starter,Starter
+hub.roster.rescued,Rescued
+hub.roster.locked,Locked
+hub.notice.bad_profile,Your profile could not be read; it was kept as profile.bad.json and a new one was started.
+hub.notice.ok,OK

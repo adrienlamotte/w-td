@@ -3,7 +3,8 @@ extends RefCounted
 ## Packs sim positions into MultiMesh buffers, one batch per type (D-087). No Node,
 ## testable headless. Per instance: TRANSFORM_3D (12 floats, row-major 3x4, identity
 ## basis: the shader sizes and orients the quad) + 4 custom floats (r = frame offset,
-## g = flip, b = 1 while hit-flashing, D-120). Corpses (hp <= 0) are skipped (D-120).
+## g = flip, b = 1 while hit-flashing, D-120; a = 1 while tinted: marked enemy or every
+## tower under Crescendo, D-163). Corpses (hp <= 0) are skipped (D-120).
 ## Visible instances are packed from slot 0; buffers grow by doubling, never shrink.
 
 const STRIDE: int = 16
@@ -40,13 +41,16 @@ func capacity(t: int) -> int:
 func fill(xs: PackedFloat32Array, zs: PackedFloat32Array, prev_x: PackedFloat32Array,
 		prev_z: PackedFloat32Array, alpha: float, type_id: PackedInt32Array, cull: PackedFloat32Array,
 		hp: PackedFloat32Array = PackedFloat32Array(), hit_tick: PackedInt32Array = PackedInt32Array(),
-		flash_from: int = 0) -> void:
+		flash_from: int = 0, mark_until: PackedInt32Array = PackedInt32Array(), clock: int = 0,
+		tint_all: bool = false) -> void:
 	var ax := cull[0]; var bx := cull[1]; var cx := cull[2]
 	var ay := cull[3]; var by := cull[4]; var cy := cull[5]
 	var hw := cull[6]; var hh := cull[7]
 	var n := xs.size()
 	var n_prev := mini(prev_x.size(), n)
 	var has_hp := hp.size() == n  # towers pass none: never skipped, never flash
+	var has_mark := mark_until.size() == n
+	var all_tint := 1.0 if tint_all else 0.0
 	# ponytail: one pass over all enemies per batch, because writing buffers[t][k] in one
 	# pass would copy the packed array on every write. Sort by type if many types appear.
 	for t in counts.size():
@@ -85,6 +89,7 @@ func fill(xs: PackedFloat32Array, zs: PackedFloat32Array, prev_x: PackedFloat32A
 			# Faces the Guardian: flipped when right of it on screen.
 			buf[k + 13] = 1.0 if sx > cx else 0.0
 			buf[k + 14] = 1.0 if has_hp and hit_tick[i] >= flash_from else 0.0
+			buf[k + 15] = 1.0 if has_mark and mark_until[i] > clock else all_tint
 			c += 1
 		counts[t] = c
 		buffers[t] = buf

@@ -41,11 +41,12 @@ All stick and trigger deadzones are 0.2 (placeholder).
 - The cursor label sits next to the mouse in mouse mode and under the screen centre in gamepad mode.
 
 ## Menus (D-125, task 021)
-- **Screens:** start screen (Start run, Slow time while placing, Quit game) -> run -> pause menu (Resume, Restart, Slow time while placing, Main menu) -> win or lose screen (time survived, Restart, Main menu). Restart and Main menu reload the scene; Restart starts a new run at once.
+- **Screens (D-154):** start screen (Play, Slow time while placing, Quit game) -> hub (hearts, Rescue buttons, meta tree, roster, Back) -> run -> pause menu (Resume, Restart, Slow time while placing, Abandon run) -> win or lose screen (time survived, hearts earned, the new tower on a win, Continue) -> hub. Restart and Abandon run open a confirm (Cancel focused, `ui_cancel` = Cancel, D-155) and record the run as a loss; Abandon returns to the hub, Restart starts a new run with the same Guardian at once.
+- **Hub:** GUI focus moves across the rescue row, the three tree columns and Back (the first Rescue button focused on open); every node button stays focusable whatever its state; accept buys; `ui_cancel` = Back. An unreadable profile shows a notice first, OK focused.
 - **Navigation:** Godot GUI focus. Up/down arrows, d-pad or left stick move between buttons; Enter, Space or A press; the mouse clicks. Each menu focuses its first button when it opens. The build bar never takes focus.
 - **Pause:** Start / P toggle the pause as before; while the pause menu is shown, Esc or B (`ui_cancel`) resumes. No pause outside a running run (start and end screens).
 - **Level-up draft** (D-153): an overlay with the title "Level n!" and 3 card buttons (name, type, description); the first card is focused when it opens and again after the pause menu closes. Left/right move, Enter, Space or A pick, the mouse clicks. A pick is final: the buttons are disabled until the next draft (several level-ups show one draft after the other). No skip: Esc / P / Start pause (the pause menu hides the draft), B does nothing.
-- **Slow time while placing** (accessibility option, D-046): off by default, kept for the session only (saved settings are M3). While on, the game runs at `slow_time_scale` (placeholder 0.5, `data/ui`) whenever a tower is selected or the radial is open and building is possible. Camera, cursor, radial and ghost keep real time.
+- **Slow time while placing** (accessibility option, D-046): off by default, saved in `settings.json` (D-157). While on, the game runs at `slow_time_scale` (placeholder 0.5, `data/ui`) whenever a tower is selected or the radial is open and building is possible. Camera, cursor, radial and ghost keep real time.
 
 ## Later (not in this spec's code)
 - Runtime rebinding (edits the InputMap and saves overrides to the user settings) and Steam Input (maps the Deck onto the same actions): later milestones.
