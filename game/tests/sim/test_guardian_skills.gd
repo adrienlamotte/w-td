@@ -166,12 +166,14 @@ func test_shield_duration_and_recast() -> void:
 	var cd := run.skill_cooldown[s]
 	var gs := GuardianSkills.new()
 	gs.reset(run.skill_ids.size())
-	assert_true(gs.try_use(s, 10, run))
+	assert_true(gs.try_use(s, 10, cd))
+	gs.raise_shield(10, absorb, dur)
 	assert_eq(gs.absorb(3.0, 10), 0.0)
 	assert_eq(gs.absorb(3.0, 10 + dur - 1), 0.0, "last shielded tick")
 	assert_eq(gs.absorb(3.0, 10 + dur), 3.0, "expired with absorb left")
-	assert_false(gs.try_use(s, 10 + cd - 1, run))
-	assert_true(gs.try_use(s, 10 + cd, run))
+	assert_false(gs.try_use(s, 10 + cd - 1, cd))
+	assert_true(gs.try_use(s, 10 + cd, cd))
+	gs.raise_shield(10 + cd, absorb, dur)
 	assert_eq(gs.shield_left, absorb, "recast refills, does not stack")
 
 
