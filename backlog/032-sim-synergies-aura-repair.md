@@ -1,8 +1,8 @@
 # 032 — Sim: relationship synergies, Hymn's aura and Poppy's repair
-- Status: planned
+- Status: review
 - Milestone: M3
 - Depends on: 031
-- PR:
+- PR: #47
 
 ## Goal
 Relationship bonuses (the game's hook, D-057) and the two neighbour-based kinds (`aura`, `repair`) are computed in the derived-stats recompute, so their per-tick cost stays near zero.
