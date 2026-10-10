@@ -126,6 +126,22 @@ func test_remove_moves_derived_arrays() -> void:
 	assert_eq(world.towers.count(), 1)
 	assert_eq(world.towers.level[0], 2)
 	assert_eq(world.towers.max_hp[0], 600.0)
+	assert_eq(world.towers.thorns[0], 3.0)
 	for a in [world.towers.level, world.towers.damage, world.towers.reload, world.towers.max_hp,
-			world.towers.splash_radius, world.towers.slow_factor, world.towers.slow_ticks]:
+			world.towers.splash_radius, world.towers.slow_factor, world.towers.slow_ticks,
+			world.towers.thorns, world.towers.mark_gold, world.towers.mark_ticks]:
 		assert_eq(a.size(), 1)
+
+
+func test_kind_fields() -> void:
+	var b := _built(BASTIA, -4.0, 4.0)
+	var c := _built("tower_clover")
+	assert_eq(world.towers.attack_range[b], 0.0, "wall: no targeting (D-145)")
+	assert_eq(world.towers.thorns[b], 3.0)
+	assert_eq([world.towers.mark_gold[c], world.towers.mark_ticks[c]], [2, DataFiles.ticks(4.0)])
+	_upgrade(c)
+	_upgrade(c)
+	world.towers.level[c] = 4  # L4 needs a card
+	world.towers.stats_dirty = true
+	world.step()
+	assert_eq([world.towers.mark_gold[c], world.towers.mark_ticks[c]], [5, DataFiles.ticks(6.0)])

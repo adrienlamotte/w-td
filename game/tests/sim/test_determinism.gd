@@ -100,3 +100,29 @@ func _replay_upgrades() -> int:
 	for i in 900:
 		w.step()
 	return w.state_hash()
+
+
+# M3 kinds (D-145): a walled-in ring of Bastia, Clover and Tansy on run_m2.
+func test_tower_kinds_deterministic() -> void:
+	var h := _run_kinds(7)
+	assert_eq(_run_kinds(7), h)
+	assert_ne(_run_kinds(8), h)
+
+
+func _run_kinds(run_seed: int) -> int:
+	var w := SimWorld.new(1)
+	w.queue(SimCommand.start_run(0, run_seed, "run_m2"))
+	w.step()
+	var ids := ["tower_bastia", "tower_clover", "tower_tansy"]
+	var count := ceili(TAU * 6.0 / 0.25)
+	for k in count:
+		var a := k * TAU / count
+		TowerBuilding.add_built(w, w.tower_catalog.type_of(ids[k % 3]), cos(a) * 6.0, sin(a) * 6.0)
+	var hits := 0
+	for i in 2400:
+		w.step()
+		for e in w.events.count:
+			if w.events.kind[e] == SimEvents.Kind.TOWER_HIT:
+				hits += 1
+	assert_gt(hits, 0, "the horde hit the wall")
+	return w.state_hash()

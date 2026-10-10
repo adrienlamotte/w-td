@@ -2,8 +2,8 @@ class_name TowerCatalog
 extends RefCounted
 ## Tower types loaded from data/towers (D-099). Index = position sorted by id,
 ## like EnemyCatalog. Seconds are converted to ticks at load.
-## M3 kinds (D-140) are loaded but not simulated yet (030-032): range, damage and
-## cooldown default to 0 for kinds that have none. Kind fields are read through level_stats.
+## Range, damage and cooldown default to 0 for kinds that have none (D-140). Kind fields are
+## read through level_stats.
 
 ## Appended only, so existing values never move; the view looks kinds up by lowercased key.
 enum Attack { SINGLE, SPLASH, SLOW, WALL, AURA, REPAIR, MARK, SLOW_AREA }
@@ -42,7 +42,7 @@ var level_stats: Array = []
 
 ## Level 1 values of the stats a kind may lack.
 const _LEVEL_DEFAULTS := {"range": 0.0, "damage": 0.0, "cooldown_sec": 0.0, "splash_radius": 0.0,
-		"slow_factor": 1.0, "slow_sec": 0.0}
+		"slow_factor": 1.0, "slow_sec": 0.0, "thorns": 0.0, "mark_sec": 0.0, "mark_gold": 0}
 
 
 static func load_dir(path: String = "res://data/towers") -> TowerCatalog:

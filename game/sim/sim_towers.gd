@@ -37,6 +37,11 @@ var max_hp: PackedFloat32Array = PackedFloat32Array()
 var splash_radius: PackedFloat32Array = PackedFloat32Array()
 var slow_factor: PackedFloat32Array = PackedFloat32Array()
 var slow_ticks: PackedInt32Array = PackedInt32Array()
+## Damage a walled-in attacker takes per hit on this tower (D-145); 0 = none.
+var thorns: PackedFloat32Array = PackedFloat32Array()
+## Mark shot (D-145): extra gold of a marked enemy's death, mark duration in ticks.
+var mark_gold: PackedInt32Array = PackedInt32Array()
+var mark_ticks: PackedInt32Array = PackedInt32Array()
 ## Set by every layout, level or modifier change; TowerStats.recompute clears it in the PATH phase.
 var stats_dirty: bool = false
 
@@ -67,6 +72,9 @@ func add(x: float, z: float, p_range: float) -> int:
 	splash_radius.append(0.0)
 	slow_factor.append(1.0)
 	slow_ticks.append(0)
+	thorns.append(0.0)
+	mark_gold.append(0)
+	mark_ticks.append(0)
 	return pos_x.size() - 1
 
 
@@ -93,6 +101,9 @@ func remove(t: int) -> void:
 	splash_radius[t] = splash_radius[last]
 	slow_factor[t] = slow_factor[last]
 	slow_ticks[t] = slow_ticks[last]
+	thorns[t] = thorns[last]
+	mark_gold[t] = mark_gold[last]
+	mark_ticks[t] = mark_ticks[last]
 	pos_x.resize(last)
 	pos_z.resize(last)
 	attack_range.resize(last)
@@ -113,6 +124,9 @@ func remove(t: int) -> void:
 	splash_radius.resize(last)
 	slow_factor.resize(last)
 	slow_ticks.resize(last)
+	thorns.resize(last)
+	mark_gold.resize(last)
+	mark_ticks.resize(last)
 
 
 ## Towers of this catalog type on the field, husks included (D-113).
@@ -120,10 +134,12 @@ func copies(p_type: int) -> int:
 	return type_id.count(p_type)
 
 
-## Sets every tower's target to its nearest enemy in range, in tower index order. Husks never target.
+## Sets every tower's target to its nearest enemy in range, in tower index order. Husks and
+## towers with no range (wall, aura, repair: D-145) never target and skip the grid query.
 func retarget(grid: SpatialGrid, xs: PackedFloat32Array, zs: PackedFloat32Array) -> void:
 	for t in pos_x.size():
-		target[t] = -1 if husk[t] else grid.nearest(pos_x[t], pos_z[t], attack_range[t], xs, zs)
+		var r := attack_range[t]
+		target[t] = -1 if husk[t] or r <= 0.0 else grid.nearest(pos_x[t], pos_z[t], r, xs, zs)
 
 
 ## Rebuilds uid_index for uids 0..next_uid-1.

@@ -6,6 +6,8 @@ extends RefCounted
 
 ## Stats the modifier store can change, in the order of the cached sums.
 const MODDED: PackedStringArray = ["range", "damage", "cooldown", "hp"]
+## Kinds that never shoot enemies: range 0, so they skip targeting (D-145).
+const _NO_TARGET: Array[int] = [TowerCatalog.Attack.WALL, TowerCatalog.Attack.AURA, TowerCatalog.Attack.REPAIR]
 
 
 ## Fills tower t's derived arrays at once, with full HP (a newly built tower).
@@ -59,10 +61,14 @@ static func _sums(w: SimWorld, type: int) -> PackedVector2Array:
 static func _derive(w: SimWorld, t: int, s: PackedVector2Array) -> void:
 	var towers := w.towers
 	var lv: Dictionary = w.tower_catalog.level_stats[towers.type_id[t]][towers.level[t] - 1]
-	towers.attack_range[t] = value(lv.range, s[0])
+	var kind := w.tower_catalog.attack[towers.type_id[t]]
+	towers.attack_range[t] = 0.0 if kind in _NO_TARGET else value(lv.range, s[0])
 	towers.damage[t] = value(lv.damage, s[1])
 	towers.reload[t] = reload_ticks(lv.cooldown_sec, s[2])
 	towers.max_hp[t] = value(lv.hp, s[3])
 	towers.splash_radius[t] = lv.splash_radius
 	towers.slow_factor[t] = lv.slow_factor
 	towers.slow_ticks[t] = DataFiles.ticks(lv.slow_sec)
+	towers.thorns[t] = lv.thorns
+	towers.mark_gold[t] = int(lv.mark_gold)
+	towers.mark_ticks[t] = DataFiles.ticks(lv.mark_sec)

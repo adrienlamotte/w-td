@@ -23,6 +23,9 @@ var slow_factor: PackedFloat32Array = PackedFloat32Array()
 var slow_ticks: PackedInt32Array = PackedInt32Array()
 ## Attack target: tower uid, -1 = the Guardian. Set by EnemyMovement.steer() every tick (D-116).
 var target_id: PackedInt32Array = PackedInt32Array()
+## Mark (D-145): extra gold on death while clock < mark_until (absolute run clock tick); 0 = none.
+var mark_gold: PackedInt32Array = PackedInt32Array()
+var mark_until: PackedInt32Array = PackedInt32Array()
 ## Presentation only (D-120): no rule reads them, not in state_hash(). Kept here so they
 ## follow every swap-remove. prev_* = position at the start of the tick; hit_tick = tick of
 ## the last damage_enemy (NEVER_HIT before).
@@ -47,6 +50,8 @@ func add(p_type_id: int, x: float, z: float, p_hp: float) -> int:
 	slow_factor.append(1.0)
 	slow_ticks.append(0)
 	target_id.append(-1)
+	mark_gold.append(0)
+	mark_until.append(0)
 	prev_x.append(x)
 	prev_z.append(z)
 	hit_tick.append(NEVER_HIT)
@@ -66,6 +71,8 @@ func remove(i: int) -> void:
 	slow_factor[i] = slow_factor[last]
 	slow_ticks[i] = slow_ticks[last]
 	target_id[i] = target_id[last]
+	mark_gold[i] = mark_gold[last]
+	mark_until[i] = mark_until[last]
 	prev_x[i] = prev_x[last]
 	prev_z[i] = prev_z[last]
 	hit_tick[i] = hit_tick[last]
@@ -79,6 +86,8 @@ func remove(i: int) -> void:
 	slow_factor.resize(last)
 	slow_ticks.resize(last)
 	target_id.resize(last)
+	mark_gold.resize(last)
+	mark_until.resize(last)
 	prev_x.resize(last)
 	prev_z.resize(last)
 	hit_tick.resize(last)
