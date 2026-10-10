@@ -1,9 +1,9 @@
 # 040 — View: placeholder feedback for M3 towers, skills and relationships
-- Status: planned
+- Status: review
 - Milestone: M3
 - Depends on: 032, 034
 - Labels: needs-human:art
-- PR:
+- PR: #49
 
 ## Goal
 The playtest can read what happens: tower looks per kind, active relationships, aura and repair, marks, thorns and the 6 signature skills, all with placeholder art.
