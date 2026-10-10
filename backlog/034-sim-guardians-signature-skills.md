@@ -1,5 +1,5 @@
 # 034 — Sim: Guardians and signature skills
-- Status: review
+- Status: done
 - Milestone: M3
 - Depends on: 030
 - PR: #41
@@ -65,3 +65,4 @@ Decision ID: **D-146** (PROPOSED, rules below). About 250 lines of code plus abo
 ## Questions
 
 ## Review log
+- 2026-10-10 lead-dev: approved and squash-merged PR #41. All criteria met and the code matches the plan (D-146 PROPOSED). GUT green and the validator passes; the release bench is within noise. Nit for the next task that touches `sim_modifiers.gd` (033): `skill_sums` line 39 has a broken line continuation (tabs where `\` plus a newline was meant). It is harmless.

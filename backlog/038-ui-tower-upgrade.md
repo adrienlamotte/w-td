@@ -48,7 +48,7 @@ Decision ID: **D-151** (PROPOSED, the UI details below; D-141 already fixes the 
 - `DECISIONS.md`: D-151 PROPOSED (rules 1-3).
 
 ### Order
-1. Action + input branch + input tests. 2. Hint lines + strings + hint tests. 3. `TowerLevels`, data field, schema, HUD wiring, tests. 4. Docs, D-151; `scripts	est.ps1` twice, `scriptsalidate.ps1`.
+1. Action + input branch + input tests. 2. Hint lines + strings + hint tests. 3. `TowerLevels`, data field, schema, HUD wiring, tests. 4. Docs, D-151; `scripts/test.ps1` twice, `scripts/validate.ps1`.
 
 Playtest note: the main scene still runs `run_m2` (M2 towers, max level 1), so in game nothing is upgradeable until a run with waifu towers is playable (`run_m3` from 033, main scene switch in 039). The needs-human:playtest label is checked at CP-M3.
 
