@@ -165,3 +165,5 @@ Format: `ID | date | decision | status | notes`. Status: DECIDED (owner confirme
 | D-160 | 2026-10-10 | Profile "best time per Guardian" = longest time survived with her, wins included | DECIDED | Q-78 |
 | D-161 | 2026-10-10 | Unreadable `profile.json`: one-screen notice, fresh profile, `profile.bad.json` kept untouched | DECIDED | Q-73 |
 | D-162 | 2026-10-10 | Owner approves D-145, D-146, D-147 (including: the tick in which a draft opens still finishes), D-148, D-151, D-152, D-153 as DECIDED; their numbers stay balance placeholders | DECIDED | Owner approval |
+| D-165 | 2026-10-10 | Replaces D-158: a loss or abandon before 60 s of run time gives 0 hearts (run data field, default 60 s, tunable); `10_M3_CONTENT.md` 6.1 unchanged after that | DECIDED | Q-79 |
+| D-166 | 2026-10-10 | Run flow readings of task 039 confirmed: pause-menu Restart = abandon (loss recorded) then a new run with the same Guardian; the end screen has only Continue (to the hub); runs ended in the 0-heart window still count in runs and losses | DECIDED | Owner answer |

@@ -177,7 +177,7 @@ Guardian examples: with Cinder as Guardian, a Mallow 2-6 units from her edge get
 ### 6.1 Hearts per run (D-048)
 - **Win:** 100 hearts.
 - **Loss:** `floori(100 * (0.30 + 0.20 * min(1, clock / final_boss_tick)))`: 30 at 0:00, 40 at 7:30, 50 if she falls after the final boss spawned.
-- **Abandon** (Main menu from the pause menu, or discarding a suspended run) counts as a loss at the time reached. A loss or abandon before the first wave starts gives 0 hearts (D-158). The Main menu button asks for confirmation first (default Cancel) and goes to the hub (D-155). Hearts are added to the profile at run end only.
+- **Abandon** (Main menu from the pause menu, or discarding a suspended run) counts as a loss at the time reached. A loss or abandon before 60 s of run time gives 0 hearts (D-165, run data field). The Main menu button asks for confirmation first (default Cancel) and goes to the hub (D-155). Hearts are added to the profile at run end only.
 - Run data: `hearts_win`, `hearts_loss_min`, `hearts_loss_max`.
 
 ### 6.2 Meta tree (12 nodes, flat permanent upgrades, D-052)
