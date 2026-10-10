@@ -110,3 +110,36 @@ func test_sell_and_rebuild_hints() -> void:
 		"Left click: rebuild (%d)\nX: sell (+0)" % TowerBuilding.rebuild_price(world, t))
 	input.cursor = Vector2(-5.0, -5.0)
 	assert_eq(PlacementGhost.hint(world, input).size(), 0, "nothing under the cursor")
+
+
+func test_upgrade_hints() -> void:
+	var uid := TowerBuilding.add_built(world, world.tower_catalog.type_of("tower_pip"), 5.0, 5.0, 50)
+	var t := world.towers.uid.find(uid)
+	world.gold = 1000
+	input.selected_tower = ""
+	input.cursor = Vector2(5.0, 5.0)
+	var h := PlacementGhost.hint(world, input)
+	assert_eq(h, [
+		{"key": "upgrade.hint", "values": {"key": "input.kbm.tower_upgrade", "gold": 40, "level": 2}},
+		{"key": "build.hint.sell", "values": {"key": "input.kbm.tower_sell", "gold": TowerBuilding.sell_refund(world, t)}},
+	] as Array[Dictionary])
+	assert_eq(PlacementGhost.text([h[0]] as Array[Dictionary]), "R: upgrade to Lv 2 (40)")
+	input.gamepad = true
+	assert_eq(PlacementGhost.hint(world, input)[0].values.key, "input.pad.tower_upgrade")
+	world.gold = 0
+	assert_eq(PlacementGhost.hint(world, input)[0].key, "upgrade.reason.no_gold")
+	world.gold = 1000
+	world.towers.level[t] = 3
+	h = PlacementGhost.hint(world, input)
+	assert_eq(h[0].key, "upgrade.reason.locked")
+	assert_eq(PlacementGhost.text([h[0]] as Array[Dictionary]), "Lv 4 needs her signature card")
+	world.add_modifier("unlock_level", SimModifiers.Op.ADD, 4, "tower:tower_pip")
+	world.towers.level[t] = 4
+	assert_eq(PlacementGhost.hint(world, input)[0].key, "upgrade.reason.max_level")
+	TowerBuilding.damage(world, t, 1.0e9)
+	h = PlacementGhost.hint(world, input)
+	assert_eq(h.size(), 2)
+	assert_eq(h[0].key, "build.hint.rebuild", "husk: no upgrade line")
+	_place(-5.0, -5.0)
+	input.cursor = Vector2(-5.0, -5.0)
+	assert_eq(PlacementGhost.hint(world, input).size(), 1, "M2 tower: sell line only")

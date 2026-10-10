@@ -29,6 +29,7 @@ func setup(w: SimWorld, input: PlayerInput = null, p_ghost: PlacementGhost = nul
 		_cursor_offset = Vector2(config.cursor_label_offset_px[0], config.cursor_label_offset_px[1])
 		($Root/BuildBar as BuildBar).setup(w, input)
 		($Root/Radial as RadialMenu).setup(w, input, config)
+		($Root/TowerLevels as TowerLevels).setup(w, input.camera.get_node("Camera3D"))
 	refresh()
 
 

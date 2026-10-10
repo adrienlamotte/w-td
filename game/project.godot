@@ -105,6 +105,10 @@ tower_sell={
 "deadzone": 0.2,
 "events": [Object(InputEventKey,"device":-1,"physical_keycode":88), Object(InputEventJoypadButton,"device":-1,"button_index":2)]
 }
+tower_upgrade={
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":82), Object(InputEventJoypadButton,"device":-1,"button_index":11)]
+}
 skill_1={
 "deadzone": 0.2,
 "events": [Object(InputEventKey,"device":-1,"physical_keycode":81), Object(InputEventJoypadMotion,"device":-1,"axis":4,"axis_value":1.0)]
