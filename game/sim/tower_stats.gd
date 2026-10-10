@@ -90,7 +90,7 @@ static func _derive(w: SimWorld, t: int, s: PackedVector2Array) -> void:
 	towers.thorns[t] = value(lv.thorns, s[5])
 	towers.mark_gold[t] = roundi(value(lv.mark_gold, s[6]))
 	towers.mark_ticks[t] = DataFiles.ticks(lv.mark_sec)
-	towers.reach[t] = value(lv.aura_radius, s[7]) if kind == TowerCatalog.Attack.AURA 			else value(lv.range, s[0]) if kind == TowerCatalog.Attack.REPAIR else 0.0
+	towers.reach[t] = value(lv.aura_radius, s[7]) if kind == TowerCatalog.Attack.AURA \n			else value(lv.range, s[0]) if kind == TowerCatalog.Attack.REPAIR else 0.0
 	towers.heal[t] = value(lv.heal, s[8])
 	towers.guardian_heal[t] = value(lv.guardian_heal, s[9])
 	towers.heal_targets[t] = int(lv.heal_targets)
