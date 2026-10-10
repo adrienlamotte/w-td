@@ -3,7 +3,7 @@ extends RefCounted
 ## One player input for the sim, applied at the start of tick `tick` (D-100,
 ## 02_TECH_ARCHITECTURE.md 3a). Only the fields of its type are used.
 
-enum Type { START_RUN, PAUSE, PLACE_TOWER, SELL_TOWER, USE_SKILL, REBUILD_TOWER, UPGRADE_TOWER }
+enum Type { START_RUN, PAUSE, PLACE_TOWER, SELL_TOWER, USE_SKILL, REBUILD_TOWER, UPGRADE_TOWER, PICK_CARD }
 
 var tick: int = 0
 var type: Type = Type.START_RUN
@@ -12,6 +12,8 @@ var run_seed: int = 0
 var run_id: String = ""
 ## StartRun: a data/guardians id; empty keeps the run file's Guardian (D-146).
 var guardian_id: String = ""
+## StartRun: rescued waifu ids (card eligibility, D-147); empty = nothing rescued.
+var unlocked: PackedStringArray = PackedStringArray()
 var paused: bool = false
 ## A data/towers id.
 var tower_id: String = ""
@@ -21,13 +23,17 @@ var z: float = 0.0
 var tower_uid: int = -1
 ## A data/skills id.
 var skill_id: String = ""
+## PICK_CARD: draft slot 0-2.
+var slot: int = -1
 
 
-static func start_run(p_tick: int, p_seed: int, p_run_id: String, p_guardian_id := "") -> SimCommand:
+static func start_run(p_tick: int, p_seed: int, p_run_id: String, p_guardian_id := "",
+		p_unlocked := PackedStringArray()) -> SimCommand:
 	var c := _make(p_tick, Type.START_RUN)
 	c.run_seed = p_seed
 	c.run_id = p_run_id
 	c.guardian_id = p_guardian_id
+	c.unlocked = p_unlocked
 	return c
 
 
@@ -68,6 +74,13 @@ static func upgrade_tower(p_tick: int, p_tower_uid: int) -> SimCommand:
 static func use_skill(p_tick: int, p_skill_id: String) -> SimCommand:
 	var c := _make(p_tick, Type.USE_SKILL)
 	c.skill_id = p_skill_id
+	return c
+
+
+## Takes the card in `p_slot` of the open draft (D-147).
+static func pick_card(p_tick: int, p_slot: int) -> SimCommand:
+	var c := _make(p_tick, Type.PICK_CARD)
+	c.slot = p_slot
 	return c
 
 

@@ -29,7 +29,7 @@ static func check_place(w: SimWorld, tower_id: String, x: float, z: float) -> Ch
 	var c := Check.new()
 	var cat := w.tower_catalog
 	c.type = cat.type_of(tower_id)
-	if c.type < 0 or not w.run.tower_types.has(c.type):
+	if c.type < 0 or not w.tower_types.has(c.type):
 		return c
 	var b := w.build
 	var radius := cat.radius[c.type]
