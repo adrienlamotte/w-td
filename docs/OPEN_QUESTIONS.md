@@ -30,6 +30,7 @@ Last reviewed: 2026-10-08 (daily docs review; owner answers recorded the same da
 | Q-76 Heart farming by abandoning | No hearts for a loss or abandon before the first wave starts | D-158 |
 | Q-77 Poppy repair / Hymn aura readings | Keep all four plan readings | D-159 |
 | Q-78 Best time per Guardian | Longest time survived, wins included | D-160 |
+| Q-79 Heart farming under D-158 | 0 hearts for a loss or abandon before 60 s of run time (run field, default 60) | D-165 |
 | Q-60 When higher tiers and rivals open | After all 6 rescues; Vexa Hard, Gilda Nightmare | D-131 |
 | Q-61 Guardian in relationship bonuses | She counts like a placed waifu | D-132 |
 | Q-59 Maze tick budget | Accept within noise for M2, track worst case | D-124 |

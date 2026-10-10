@@ -1,9 +1,9 @@
 # 041 — Balance: M3 headless runner and first balance report
-- Status: planned
+- Status: review
 - Milestone: M3
 - Depends on: 032, 033, 034, 035, 045
 - Labels: needs-human:balance
-- PR:
+- PR: #50
 
 ## Goal
 The full balance runner: bots that build, upgrade and pick cards, a maze strategy against a spread strategy, profile presets, and the first M3 balance report.
