@@ -7,6 +7,8 @@ const CURRENT_VERSION := 1
 
 ## Verdicts of check_buy, in check order (D-152 rule 6).
 enum Buy { OK, UNKNOWN, OWNED, LOCKED, NO_HEARTS }
+## Hub roster states (task 039).
+enum Roster { STARTER, RESCUED, LOCKED }
 
 ## Rescued waifu ids; starters are implicit.
 var unlocked: PackedStringArray = PackedStringArray()
@@ -85,9 +87,12 @@ func offer(cat: MetaCatalog) -> PackedStringArray:
 
 
 ## Hearts for a run that ended at run clock `clock` (6.1, D-048), in integer arithmetic.
+## 0 for a loss before `hearts_min_tick` (D-165, replaces D-158).
 static func hearts_for(run: RunData, won: bool, clock: int) -> int:
 	if won:
 		return run.hearts_win
+	if clock < run.hearts_min_tick:
+		return 0
 	var span := run.hearts_loss_max - run.hearts_loss_min
 	return run.hearts_loss_min + span * mini(clock, run.final_boss_tick) / run.final_boss_tick
 
@@ -106,6 +111,12 @@ func record_run(cat: MetaCatalog, run: RunData, won: bool, clock: int) -> int:
 		losses += 1
 	best_sec[run.guardian_id] = maxi(best_sec.get(run.guardian_id, 0), clock / SimWorld.TICK_RATE)
 	return earned
+
+
+func roster_state(cat: MetaCatalog, waifu_id: String) -> Roster:
+	if cat.starters.has(waifu_id):
+		return Roster.STARTER
+	return Roster.RESCUED if unlocked.has(waifu_id) else Roster.LOCKED
 
 
 func check_buy(cat: MetaCatalog, id: String) -> Buy:

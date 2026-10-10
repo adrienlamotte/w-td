@@ -237,6 +237,7 @@
   "hearts_win": 100,
   "hearts_loss_min": 30,
   "hearts_loss_max": 50,
+  "hearts_min_sec": 60,
   "card_type_weights": {
     "new_tower": 3,
     "signature": 2,

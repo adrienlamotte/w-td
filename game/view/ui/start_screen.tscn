@@ -38,7 +38,7 @@ horizontal_alignment = 1
 [node name="Start" type="Button" parent="Panel/Box"]
 layout_mode = 2
 custom_minimum_size = Vector2(560, 0)
-text = "flow.start"
+text = "flow.play"
 
 [node name="SlowTime" type="CheckButton" parent="Panel/Box"]
 layout_mode = 2

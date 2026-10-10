@@ -17,6 +17,8 @@ var guardian_id: String = ""
 var hearts_win: int = 0
 var hearts_loss_min: int = 0
 var hearts_loss_max: int = 0
+## A loss before this run clock gives 0 hearts (D-165).
+var hearts_min_tick: int = 0
 var starting_gold: int = 0
 var build_radius: float = 0.0
 var grid_step: float = 0.0
@@ -97,6 +99,7 @@ static func load_id(run_id: String, enemies: EnemyCatalog, towers: TowerCatalog,
 	run.hearts_win = int(d.hearts_win)
 	run.hearts_loss_min = int(d.hearts_loss_min)
 	run.hearts_loss_max = int(d.hearts_loss_max)
+	run.hearts_min_tick = DataFiles.ticks(d.hearts_min_sec)
 	run.xp_base = d.xp_base
 	run.xp_step = d.xp_step
 	for k in CardCatalog.Type.FILLER:

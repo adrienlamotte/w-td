@@ -1,11 +1,13 @@
 extends GutTest
-## Start screen, pause menu, end screen (D-125).
+## Start screen, pause menu, end screen (D-125, D-154).
 
 const START := preload("res://view/ui/start_screen.tscn")
 const PAUSE := preload("res://view/ui/pause_menu.tscn")
 const END := preload("res://view/ui/end_screen.tscn")
-const KEYS := ["flow.title", "flow.start", "flow.quit", "flow.resume", "flow.restart",
-	"flow.main_menu", "flow.slow_time", "flow.won", "flow.lost", "flow.time_survived", "hud.paused"]
+const KEYS := ["flow.title", "flow.play", "flow.quit", "flow.resume", "flow.restart",
+	"flow.abandon", "flow.abandon_confirm", "flow.cancel", "flow.continue", "flow.hearts_earned",
+	"flow.unlocked", "flow.slow_time", "flow.won", "flow.lost", "flow.time_survived", "hud.paused"]
+const DIR := "user://test_menus/"
 
 var world: SimWorld
 var input: PlayerInput
@@ -14,6 +16,8 @@ var end: EndScreen
 
 
 func before_each() -> void:
+	DirAccess.make_dir_recursive_absolute(DIR)
+	RunFlow.save_dir = DIR
 	world = SimWorld.new(1)
 	var cam := IsoCamera.new()
 	var c3 := Camera3D.new()
@@ -37,12 +41,30 @@ func before_each() -> void:
 
 func after_each() -> void:
 	RunFlow.slow_time_placing = false
-	RunFlow.autostart = false
+	RunFlow.screen = RunFlow.Screen.START
+	RunFlow.restart_waifu = ""
+	for f in DirAccess.get_files_at(DIR):
+		DirAccess.remove_absolute(DIR + f)
+	DirAccess.remove_absolute(DIR)
+	RunFlow.save_dir = "user://"
 
 
 func _start() -> void:
 	world.queue(SimCommand.start_run(world.tick, 7, "run_m2"))
 	_step()
+
+
+# A paused run_m3 with Cinder's Guardian at run clock `clock`.
+func _paused_m3(clock: int) -> void:
+	world.queue(SimCommand.start_run(world.tick, 7, "run_m3", "guardian_cinder"))
+	world.queue(SimCommand.pause(world.tick, true))
+	_step()
+	world.clock = clock
+	pause.refresh()
+
+
+func _profile() -> MetaProfile:
+	return ProfileStore.load_profile(MetaCatalog.load_dir(), DIR)
 
 
 func _step() -> void:
@@ -131,10 +153,75 @@ func test_end_screen() -> void:
 	assert_eq(title.text, "flow.lost")
 	assert_eq((end.get_node("Panel/Box/Time") as Label).text,
 			tr("flow.time_survived").format({"time": Hud.mmss(world.clock / SimWorld.TICK_RATE)}))
-	assert_true(end.get_node("Panel/Box/Restart").has_focus())
+	assert_true(end.get_node("Panel/Box/Continue").has_focus())
+	assert_false(end.get_node("Panel/Box/Unlock").visible, "a loss unlocks nothing")
 	world.run_state = SimWorld.RunState.WON
 	end.refresh()
 	assert_eq(title.text, "flow.won")
+	assert_eq(_profile().runs, 1, "recorded once")
+
+
+func test_end_screen_win_records_and_shows_the_unlock() -> void:
+	world.queue(SimCommand.start_run(world.tick, 7, "run_m3", "guardian_cinder"))
+	_step()
+	world.run_state = SimWorld.RunState.WON
+	world.clock = 27000
+	end.refresh()
+	end._state = -1  # force a second refresh pass
+	end.refresh()
+	var p := _profile()
+	assert_eq([p.hearts, p.runs, p.wins], [100, 1, 1], "recorded once")
+	assert_eq(p.unlocked, PackedStringArray(["waifu_cinder"]))
+	assert_eq((end.get_node("Panel/Box/Hearts") as Label).text, tr("flow.hearts_earned").format({"n": 100}))
+	var unlock: Label = end.get_node("Panel/Box/Unlock")
+	assert_true(unlock.visible)
+	assert_string_contains(unlock.text, tr("waifu.cinder.name"))
+	watch_signals(end)
+	(end.get_node("Panel/Box/Continue") as Button).pressed.emit()
+	assert_signal_emitted(end, "continue_pressed")
+	assert_eq(RunFlow.screen, RunFlow.Screen.HUB)
+
+
+func test_abandon_confirm() -> void:
+	_paused_m3(13500)
+	watch_signals(pause)
+	(pause.get_node("Panel/Box/Abandon") as Button).pressed.emit()
+	assert_true(pause.get_node("Panel/Confirm").visible)
+	assert_eq((pause.get_node("Panel/Confirm/Text") as Label).text, tr("flow.abandon_confirm").format({"n": 40}))
+	assert_true(pause.get_node("Panel/Confirm/Cancel").has_focus(), "Cancel by default (D-155)")
+	(pause.get_node("Panel/Confirm/Cancel") as Button).pressed.emit()
+	assert_false(pause.get_node("Panel/Confirm").visible)
+	assert_false(FileAccess.file_exists(DIR + ProfileStore.FILE), "Cancel writes nothing")
+	(pause.get_node("Panel/Box/Abandon") as Button).pressed.emit()
+	pause._unhandled_input(_cancel())
+	assert_false(pause.get_node("Panel/Confirm").visible, "ui_cancel closes the confirm")
+	assert_true(world.paused, "and does not resume")
+	(pause.get_node("Panel/Box/Abandon") as Button).pressed.emit()
+	(pause.get_node("Panel/Confirm/Abandon") as Button).pressed.emit()
+	var p := _profile()
+	assert_eq([p.hearts, p.runs, p.losses], [40, 1, 1])
+	assert_eq(RunFlow.screen, RunFlow.Screen.HUB)
+	assert_signal_emitted(pause, "abandon_confirmed")
+
+
+func test_abandon_in_the_first_minute() -> void:
+	_paused_m3(0)
+	(pause.get_node("Panel/Box/Abandon") as Button).pressed.emit()
+	assert_eq((pause.get_node("Panel/Confirm/Text") as Label).text, tr("flow.abandon_confirm").format({"n": 0}))
+	(pause.get_node("Panel/Confirm/Abandon") as Button).pressed.emit()
+	var p := _profile()
+	assert_eq([p.hearts, p.runs, p.losses], [0, 1, 1], "D-165")
+
+
+func test_restart_confirm() -> void:
+	_paused_m3(13500)
+	watch_signals(pause)
+	(pause.get_node("Panel/Box/Restart") as Button).pressed.emit()
+	assert_true(pause.get_node("Panel/Confirm/Cancel").has_focus())
+	(pause.get_node("Panel/Confirm/Abandon") as Button).pressed.emit()
+	assert_eq(_profile().losses, 1)
+	assert_eq(RunFlow.restart_waifu, "waifu_cinder")
+	assert_signal_emitted(pause, "restart_confirmed")
 
 
 func test_start_screen_toggle_and_signals() -> void:
@@ -143,6 +230,9 @@ func test_start_screen_toggle_and_signals() -> void:
 	assert_true(start.get_node("Panel/Box/Start").has_focus())
 	(start.get_node("Panel/Box/SlowTime") as CheckButton).button_pressed = true
 	assert_true(RunFlow.slow_time_placing)
+	RunFlow.slow_time_placing = false
+	SettingsStore.load_into_run_flow(DIR)
+	assert_true(RunFlow.slow_time_placing, "the toggle was saved (D-157)")
 	watch_signals(start)
 	(start.get_node("Panel/Box/Start") as Button).pressed.emit()
 	(start.get_node("Panel/Box/Quit") as Button).pressed.emit()
@@ -150,16 +240,10 @@ func test_start_screen_toggle_and_signals() -> void:
 	assert_signal_emitted(start, "quit_pressed")
 
 
-func test_menu_signals() -> void:
-	watch_signals(pause)
-	watch_signals(end)
-	for m: CanvasLayer in [pause, end]:
-		(m.get_node("Panel/Box/Restart") as Button).pressed.emit()
-		(m.get_node("Panel/Box/MainMenu") as Button).pressed.emit()
-		assert_signal_emitted(m, "restart_pressed")
-		assert_signal_emitted(m, "main_menu_pressed")
+func test_pause_slow_time_toggle_saves() -> void:
 	(pause.get_node("Panel/Box/SlowTime") as CheckButton).button_pressed = true
 	assert_true(RunFlow.slow_time_placing)
+	assert_true(FileAccess.file_exists(DIR + SettingsStore.FILE))
 
 
 func test_readable_and_keys_translate() -> void:

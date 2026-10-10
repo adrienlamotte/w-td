@@ -50,7 +50,38 @@ layout_mode = 2
 custom_minimum_size = Vector2(560, 0)
 text = "flow.slow_time"
 
-[node name="MainMenu" type="Button" parent="Panel/Box"]
+[node name="Abandon" type="Button" parent="Panel/Box"]
 layout_mode = 2
 custom_minimum_size = Vector2(560, 0)
-text = "flow.main_menu"
+text = "flow.abandon"
+
+[node name="Confirm" type="VBoxContainer" parent="Panel"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 24
+
+[node name="Text" type="Label" parent="Panel/Confirm"]
+layout_mode = 2
+custom_minimum_size = Vector2(1000, 0)
+text = "flow.abandon_confirm"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Cancel" type="Button" parent="Panel/Confirm"]
+layout_mode = 2
+custom_minimum_size = Vector2(560, 0)
+size_flags_horizontal = 4
+text = "flow.cancel"
+
+[node name="Abandon" type="Button" parent="Panel/Confirm"]
+layout_mode = 2
+custom_minimum_size = Vector2(560, 0)
+size_flags_horizontal = 4
+text = "flow.abandon"
