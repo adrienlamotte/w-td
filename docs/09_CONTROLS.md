@@ -16,6 +16,7 @@ Gamepad names use the Xbox layout, which matches the Steam Deck A/B/X/Y position
 | `build_place` | left click | A | on a husk: RebuildTower; on a free spot with a tower selected: PlaceTower at the cursor; the selection stays (place several) |
 | `build_cancel` | right click; Esc while something is selected | B | clear selection / close menu (D-046) |
 | `tower_sell` | X (tower under the mouse) | X (tower under the cursor) | SellTower (live or husk) |
+| `tower_upgrade` | R (tower under the mouse) | d-pad up (tower under the cursor) | UpgradeTower of the tower under the cursor; the sim refuses a husk, max level, a locked level or short gold (D-141, D-151) |
 | `skill_1` / `skill_2` | Q / E | LT / RT | UseSkill of the Guardian's skill 1 / 2 (D-046); a trigger fires once per pull |
 | `pause` | Esc (nothing selected), P | Start (Menu) | Pause toggle, only while a run is running (D-125); pausing clears the selection and closes the radial |
 
@@ -27,14 +28,15 @@ All stick and trigger deadzones are 0.2 (placeholder).
 - The mode follows the last device used: mouse motion or button -> mouse; joypad button, or a stick/trigger past the deadzone -> gamepad. Keys do not switch it.
 
 ## Rules
-- Building actions (`build_menu`, `build_slot_*`, `build_place`, `tower_sell`) do nothing unless a run is running and not paused (D-105). Camera, skills and pause always pass (the sim gates skills, D-110).
+- Building actions (`build_menu`, `build_slot_*`, `build_place`, `tower_sell`, `tower_upgrade`) do nothing unless a run is running and not paused (D-105). Camera, skills and pause always pass (the sim gates skills, D-110).
 - Esc cancels first: with a tower selected or the menu open it only cancels; otherwise it pauses.
 
 ## Build UI (D-122, task 027)
 - **Build bar** (bottom centre, all devices): one button per run tower with name, current price and hotkey `[1]..[3]`. A click selects like the slot key; the selected button stays pressed. Greyed but clickable when gold is short (the ghost then says why); disabled unless a run is running and not paused. The buttons take no GUI focus (the gamepad uses the radial).
 - **Radial menu** (gamepad): shown while `build_menu` is held, centred on the screen; one slice per run tower, slice 0 centred at the top, then clockwise; each shows name and price, greyed when not affordable; the slice under the left stick is highlighted. Release on a slice selects its tower; release with the stick in the centre (under `radial_deadzone`) keeps the current selection.
 - **Placement ghost:** with a tower selected, a flat box of the tower footprint at the snapped position under the cursor plus its attack range ring, green when the placement is valid, red otherwise. A label next to the cursor shows the price, or why it cannot be built (occupied, too far from the Guardian, too close to the Guardian, not enough gold, not in this run). Verdict, position and price come from the sim's `check_place`.
-- **Hints** (nothing selected): on a tower, "{sell key}: sell (+refund)"; on a husk, "{place key}: rebuild (price)" and "{sell key}: sell (+0)". The key names follow the device mode (Left click / A, X / X).
+- **Hints** (nothing selected): on a tower, "{sell key}: sell (+refund)"; on a husk, "{place key}: rebuild (price)" and "{sell key}: sell (+0)". On a live tower that can level up (waifu towers; not the M2 towers), an upgrade line comes first, from the sim's `TowerUpgrade.check`: "{upgrade key}: upgrade to Lv n (price)", or "{upgrade key}: upgrade (price), not enough gold", "Lv 4 needs her signature card", "Max level"; a husk shows no upgrade line. The key names follow the device mode (Left click / A, X / X, R / D-pad up) (D-151).
+- **Level labels:** "Lv n" above every tower (live or husk) that can level up, at `level_label_height` (`data/ui`) above the tower (D-151).
 - The cursor label sits next to the mouse in mouse mode and under the screen centre in gamepad mode.
 
 ## Menus (D-125, task 021)
