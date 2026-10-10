@@ -1,5 +1,5 @@
 # 037 — UI: level-up draft, XP bar and card-unlocked towers in the build bar
-- Status: review
+- Status: done
 - Milestone: M3
 - Depends on: 033
 - Labels: needs-human:playtest
@@ -64,3 +64,4 @@ Decision ID: **D-153** (PROPOSED, rules below). About 190 lines of code (GDScrip
 - None blocking. The card-type labels and the overlay layout are placeholder wording and layout for the playtest (`needs-human:playtest`).
 
 ## Review log
+- 2026-10-10 lead-dev: approved and squash-merged PR #44 into m3/dev. All criteria met, matches plan D-153; test.ps1 322/322 GUT + 24 Python green, validate.ps1 0 errors (run in a worktree). Owner: playtest the draft overlay layout and card-type wording (needs-human:playtest).
