@@ -177,7 +177,7 @@ Guardian examples: with Cinder as Guardian, a Mallow 2-6 units from her edge get
 ### 6.1 Hearts per run (D-048)
 - **Win:** 100 hearts.
 - **Loss:** `floori(100 * (0.30 + 0.20 * min(1, clock / final_boss_tick)))`: 30 at 0:00, 40 at 7:30, 50 if she falls after the final boss spawned.
-- **Abandon** (Main menu from the pause menu, or discarding a suspended run) counts as a loss at the time reached. Hearts are added to the profile at run end only.
+- **Abandon** (Main menu from the pause menu, or discarding a suspended run) counts as a loss at the time reached. A loss or abandon before the first wave starts gives 0 hearts (D-158). The Main menu button asks for confirmation first (default Cancel) and goes to the hub (D-155). Hearts are added to the profile at run end only.
 - Run data: `hearts_win`, `hearts_loss_min`, `hearts_loss_max`.
 
 ### 6.2 Meta tree (12 nodes, flat permanent upgrades, D-052)
@@ -199,9 +199,10 @@ Data: `data/meta/meta_<id>.json` with `id`, `name_key`, `desc_key`, `cost`, `req
 | `meta_discount` | Towers | Tower placement price -5% | 150 | `meta_radius` |
 
 ## 7. Save scope (D-053)
-- **Meta profile** (`user://profile.json`, written at run end and after every hub purchase, atomically: write a temp file, then rename): `schema_version`; `unlocked` (rescued waifu ids; starters are implicit); `hearts`; `meta_nodes` (bought ids); `bond` (per waifu, an integer kept at 0 in M3: bond only gates outfits, D-052, D-054, and its gain rule comes with outfits); `stats` (runs, wins, losses, best time per Guardian). The Guardian offer (D-050) is derived from `unlocked` and the data offer order, not stored. Loading runs one migration step per older `schema_version`; an unreadable profile is kept aside as `profile.bad.json` and never silently overwritten.
+- **Meta profile** (`user://profile.json`, written at run end and after every hub purchase, atomically: write a temp file, then rename): `schema_version`; `unlocked` (rescued waifu ids; starters are implicit); `hearts`; `meta_nodes` (bought ids); `bond` (per waifu, an integer kept at 0 in M3: bond only gates outfits, D-052, D-054, and its gain rule comes with outfits); `stats` (runs, wins, losses, best time per Guardian = longest time survived with her, wins included, D-160). The Guardian offer (D-050) is derived from `unlocked` and the data offer order, not stored. Loading runs one migration step per older `schema_version`; an unreadable profile is kept aside as `profile.bad.json` and never silently overwritten.
 - **Suspend save** (`user://suspend.json`): written when a draft opens (card boundary) and at `WAVE_STARTED` (wave boundary), never mid-wave. Holds the run id, Guardian id, seed, the full sim state (entity arrays, gold, XP, level, open draft, picked cards, tower levels and paid, RNG states, command queue, clock) and `state_hash()` to check on load. On launch with a suspend file the start screen offers Resume or Abandon (abandon = loss, section 6.1). Deleted at run end. Technical note for the lead dev: a snapshot, not a replay from `(seed, commands)`, because replaying up to 27 000 ticks would take minutes.
-- Not saved: settings (session-only so far, D-125), the derived grids and fields (rebuilt on load).
+- Closing the app mid-wave rewinds the run to the last suspend save (D-156).
+- **Settings** (`user://settings.json`, toggles only, written on change, D-157). Not saved: the derived grids and fields (rebuilt on load).
 
 ## 8. Sim and data summary (for the implementation plan)
 - New data folders: `cards`, `synergies`, `meta`, `waifus`; new tower and guardian files per waifu; run file gains `xp_base`, `xp_step`, the hearts fields and drops `guardian` (now a StartRun field).

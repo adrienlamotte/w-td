@@ -23,6 +23,13 @@ Last reviewed: 2026-10-08 (daily docs review; owner answers recorded the same da
 | Q-67 How to upgrade a placed tower | Dedicated action (R / d-pad up) | D-141 |
 | Q-68 Offer after all 6 rescues | All 6 again, no new unlock | D-142 |
 | Q-69 M3 maze balance target | Maze beats spread by 20+ points | D-143 |
+| Q-70 Settings persist? (docs review PR #40) | Small `user://settings.json`, toggles only, written on change | D-157 |
+| Q-71 Resume after closing mid-wave (PR #40) | Rewind to the last suspend save (card or wave boundary) | D-156 |
+| Q-72 Pause menu "Main menu" (PR #40) | Confirm dialog, default Cancel, then the hub | D-155 |
+| Q-73 Unreadable profile (PR #40) | One-screen notice, fresh profile, `profile.bad.json` kept | D-161 |
+| Q-76 Heart farming by abandoning | No hearts for a loss or abandon before the first wave starts | D-158 |
+| Q-77 Poppy repair / Hymn aura readings | Keep all four plan readings | D-159 |
+| Q-78 Best time per Guardian | Longest time survived, wins included | D-160 |
 | Q-60 When higher tiers and rivals open | After all 6 rescues; Vexa Hard, Gilda Nightmare | D-131 |
 | Q-61 Guardian in relationship bonuses | She counts like a placed waifu | D-132 |
 | Q-59 Maze tick budget | Accept within noise for M2, track worst case | D-124 |
@@ -81,25 +88,6 @@ Last reviewed: 2026-10-08 (daily docs review; owner answers recorded the same da
 
 ---
 
-## M3 (not blocking implementation)
-
-### Q-76 Can a player farm hearts by abandoning at once? (raised by task 039, M3 balance)
-`10_M3_CONTENT.md` 6.1 gives an abandon the loss hearts at the time reached, and the minimum is 30 at 0:00. Start a run, pause, abandon: about 5 seconds for 30 hearts, so the whole 1240-heart tree takes about 42 abandons (a few minutes). Task 039 builds 6.1 as written; changing it is a small sim change in `MetaProfile.hearts_for` (D-152 rule 4).
-- A) **No hearts for a loss or abandon before the first wave starts (`run.first_wave_tick`); 6.1 unchanged after that** ★
-- B) An abandon gives 0 hearts; only a real defeat gives 30-50.
-- C) Keep 6.1 as written (farming possible).
-
-### Q-77 Poppy repair and Hymn aura readings (task 032, D-150, not blocking)
-The plan takes the literal reading of `10_M3_CONTENT.md` 3.1 / D-135 on four points: Poppy can heal herself; at Signature level the Guardian is healed only when no tower needs a heal; Hymn's aura also shortens Poppy's repair cooldown (Crescendo does not); a repair pulse with nothing to heal is spent.
-- A) **Keep all four readings** ★
-- B) Change one or more (say which).
-
-### Q-78 What is "best time per Guardian" in the profile? (task 035, D-152, not blocking)
-035 stores the longest time survived with her, wins included.
-- A) **Longest time survived, wins included** ★
-- B) Fastest win (no value until she has won once).
-
----
 
 ## A. Deferred until the first real asset arrives
 

@@ -1,6 +1,5 @@
 # 039 — UI: hub screen and M3 run flow
-- Status: blocked
-- Blocked on: Q-72 (on the unmerged docs review branch `docs/review-2026-10-10`; the plan below assumes its ★ A and needs no change if the owner picks it)
+- Status: todo
 - Milestone: M3
 - Depends on: 035
 - Labels: needs-human:playtest
