@@ -1,8 +1,8 @@
 # 035 — Meta: profile, hearts, meta tree, Guardian offer and win-unlock
-- Status: planned
+- Status: review
 - Milestone: M3
 - Depends on: 033, 034, 045
-- PR:
+- PR: #46
 
 ## Goal
 A persistent meta profile: hearts earned per run, the 12-node meta tree, the Guardian offer of 3 locked waifus, and the rescued Guardian unlocked as a tower on a win. The run gets everything from the profile through `START_RUN`, so a run stays a pure function of `(seed, start data, commands)`.
