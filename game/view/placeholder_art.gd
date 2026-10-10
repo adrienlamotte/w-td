@@ -37,7 +37,8 @@ static func enemy_strip(color: Color, frames: int, cell: int, shape: String = "b
 
 
 ## A single shape `cell` px wide and tall. shape (D-120): bare (body + head), single (tall),
-## splash (wide), slow (orb on top), husk (low broken block).
+## splash (wide), slow (orb on top), husk (low broken block); D-163: wall (wide low block),
+## aura (orb with a halo), repair (body + cross), mark (body + target dot), slow_area (wide body + 2 orbs).
 static func tower_image(color: Color, cell: int, shape: String = "bare") -> Image:
 	var img := Image.create_empty(cell, cell, false, Image.FORMAT_RGBA8)
 	match shape:
@@ -53,6 +54,25 @@ static func tower_image(color: Color, cell: int, shape: String = "bare") -> Imag
 		"husk":
 			img.fill_rect(Rect2i(int(cell * 0.2), int(cell * 0.7), int(cell * 0.6), int(cell * 0.3)), color)
 			img.fill_rect(Rect2i(int(cell * 0.45), int(cell * 0.7), int(cell * 0.1), int(cell * 0.12)), Color.TRANSPARENT)
+		"wall":
+			img.fill_rect(Rect2i(int(cell * 0.05), int(cell * 0.6), int(cell * 0.9), int(cell * 0.4)), color)
+			img.fill_rect(Rect2i(int(cell * 0.05), int(cell * 0.6), int(cell * 0.9), int(cell * 0.06)), color.lightened(0.3))
+		"aura":
+			img.fill_rect(Rect2i(int(cell * 0.38), int(cell * 0.5), int(cell * 0.24), int(cell * 0.5)), color.darkened(0.3))
+			_disc(img, cell * 0.5, cell * 0.3, cell * 0.28, color.lightened(0.6))
+			_disc(img, cell * 0.5, cell * 0.3, cell * 0.18, color)
+		"repair":
+			img.fill_rect(Rect2i(int(cell * 0.3), int(cell * 0.4), int(cell * 0.4), int(cell * 0.6)), color)
+			img.fill_rect(Rect2i(int(cell * 0.44), int(cell * 0.08), int(cell * 0.12), int(cell * 0.32)), Color.WHITE)
+			img.fill_rect(Rect2i(int(cell * 0.34), int(cell * 0.18), int(cell * 0.32), int(cell * 0.12)), Color.WHITE)
+		"mark":
+			img.fill_rect(Rect2i(int(cell * 0.35), int(cell * 0.35), int(cell * 0.3), int(cell * 0.65)), color)
+			_disc(img, cell * 0.5, cell * 0.2, cell * 0.16, Color.WHITE)
+			_disc(img, cell * 0.5, cell * 0.2, cell * 0.08, Color.RED)
+		"slow_area":
+			img.fill_rect(Rect2i(int(cell * 0.2), int(cell * 0.5), int(cell * 0.6), int(cell * 0.5)), color.darkened(0.3))
+			_disc(img, cell * 0.3, cell * 0.35, cell * 0.15, color.lightened(0.4))
+			_disc(img, cell * 0.7, cell * 0.35, cell * 0.15, color.lightened(0.4))
 		_:
 			img.fill_rect(Rect2i(int(cell * 0.3), int(cell * 0.4), int(cell * 0.4), int(cell * 0.6)), color)
 			_disc(img, cell * 0.5, cell * 0.25, cell * 0.18, color.lightened(0.3))

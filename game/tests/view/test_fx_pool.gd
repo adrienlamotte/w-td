@@ -90,3 +90,43 @@ func test_cap_drops_new_effects() -> void:
 		pool.add(FxPool.Kind.SPARK, n, 0, 0, 0, 1.0, Color.RED, 1.0)
 	assert_eq(pool.count(), pool.max_effects)
 	assert_eq(pool.x0[pool.count() - 1], float(pool.max_effects - 1), "the newest are dropped")
+
+
+func _built(id: String, x: float, z: float) -> int:
+	return TowerBuilding.add_built(world, world.tower_catalog.type_of(id), x, z)
+
+
+func test_repair_beam_from_repairer_to_healed_tower_or_guardian() -> void:
+	var u := _built("tower_pip", 7.0, 0.0)
+	_push(SimEvents.Kind.TOWER_REPAIRED, u, 5.0, 1.0, 20.0)
+	_push(SimEvents.Kind.TOWER_REPAIRED, -1, 5.0, 1.0, 10.0)
+	_push(SimEvents.Kind.TOWER_REPAIRED, u + 99, 5.0, 1.0, 20.0)  # sold: skipped
+	pool.read_events(world)
+	assert_eq(Array(pool.kind), [FxPool.Kind.BEAM, FxPool.Kind.BEAM])
+	assert_eq([pool.x0[0], pool.z0[0], pool.x1[0], pool.z1[0]], [5.0, 1.0, 7.0, 0.0])
+	assert_eq([pool.x0[1], pool.z0[1], pool.x1[1], pool.z1[1]], [5.0, 1.0, 0.0, 0.0], "a = -1: to the Guardian")
+	assert_eq(pool.color[0], HordeRenderer.rgb(cfg.fx.beam_color))
+
+
+func _cast_ring(guardian_id: String, skill: RunData.Skill) -> void:
+	world = SimWorld.new(1)
+	world.queue(SimCommand.start_run(0, 7, "run_m2", guardian_id))
+	world.step()
+	pool = FxPool.new(cfg, world)
+	world.events.clear()
+	_push(SimEvents.Kind.SKILL_USED, Array(world.run.skill_kind).find(skill), 0.0, 0.0, 0.0)
+	pool.read_events(world)
+	assert_eq(Array(pool.kind), [FxPool.Kind.RING])
+
+
+func test_tangle_ring() -> void:
+	_cast_ring("guardian_tansy", RunData.Skill.SNARE)
+	var slot := Array(world.run.skill_kind).find(RunData.Skill.SNARE)
+	assert_eq(pool.x1[0], world.run.skill_radius[slot])
+	assert_eq(pool.color[0], HordeRenderer.rgb(cfg.fx.snare_color))
+
+
+func test_emergency_rebuild_ring() -> void:
+	_cast_ring("guardian_poppy", RunData.Skill.REBUILD)
+	assert_eq(pool.x1[0], float(cfg.fx.rebuild_radius))
+	assert_eq(pool.color[0], HordeRenderer.rgb(cfg.fx.rebuild_color))
